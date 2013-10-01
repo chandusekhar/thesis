@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Extensions\NodeExtensions.cs" />
     <Compile Include="Core\IEdge.cs" />
     <Compile Include="Core\INode.cs" />
     <Compile Include="Core\IIdentity.cs" />
