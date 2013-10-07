@@ -6,9 +6,12 @@ using System.Text;
 
 namespace DMT.Partition.Interfaces
 {
+    /// <summary>
+    /// Host descriptor.
+    /// </summary>
     public class Host
     {
-        private IPAddress _ip;
+        private readonly IPAddress _ip;
 
         public Host(string ip)
             : this(IPAddress.Parse(ip))
