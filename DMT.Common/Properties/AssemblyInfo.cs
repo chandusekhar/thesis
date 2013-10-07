@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DMT.Interfaces")]
+[assembly: AssemblyTitle("DMT.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DMT.Interfaces")]
+[assembly: AssemblyProduct("DMT.Common")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c018a1bf-71e3-4bed-8b5c-5eae5f57cedb")]
+[assembly: Guid("ac906bc7-cbe4-46c2-a768-f8702af5baa2")]
 
 // Version information for an assembly consists of the following four values:
 //

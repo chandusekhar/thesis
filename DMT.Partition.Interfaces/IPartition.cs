@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
 
-namespace DMT.Interfaces.Core
+namespace DMT.Partition.Interfaces
 {
     /// <summary>
     /// General interface for graph partitions.
@@ -16,6 +17,9 @@ namespace DMT.Interfaces.Core
         /// </summary>
         ICollection<INode> Nodes { get; }
 
-        // TODO: host property
+        /// <summary>
+        /// Gets or sets the host machine descriptor of this partition.
+        /// </summary>
+        Host Host { get; set; }
     }
 }

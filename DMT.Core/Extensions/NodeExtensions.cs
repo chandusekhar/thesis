@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
 
-namespace DMT.Interfaces.Core.Extensions
+namespace DMT.Core.Extensions
 {
     public static class NodeExtensions
     {

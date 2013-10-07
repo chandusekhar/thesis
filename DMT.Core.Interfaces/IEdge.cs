@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DMT.Interfaces.Core
+namespace DMT.Core.Interfaces
 {
     /// <summary>
     /// General interface for the edge elements in the graph.
