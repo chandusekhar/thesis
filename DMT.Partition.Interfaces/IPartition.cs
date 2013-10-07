@@ -20,6 +20,6 @@ namespace DMT.Partition.Interfaces
         /// <summary>
         /// Gets or sets the host machine descriptor of this partition.
         /// </summary>
-        Host Host { get; set; }
+        IHost Host { get; set; }
     }
 }
