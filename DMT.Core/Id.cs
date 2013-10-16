@@ -21,6 +21,11 @@ namespace DMT.Core
             return new Id(Guid.NewGuid());
         }
 
+        public static Id FromGuid(Guid guid)
+        {
+            return new Id(guid);
+        }
+
         private Id(Guid value)
         {
             this.value = value;
@@ -28,6 +33,11 @@ namespace DMT.Core
 
         public bool Equals(IId other)
         {
+            if (other == null)
+            {
+                return false;
+            }
+
             if (object.ReferenceEquals(this, other))
             {
                 return true;
@@ -42,6 +52,16 @@ namespace DMT.Core
             Id other2 = (Id)other;
 
             return this.value.Equals(other2.value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as IId);
+        }
+
+        public override int GetHashCode()
+        {
+            return value.GetHashCode();
         }
     }
 }
