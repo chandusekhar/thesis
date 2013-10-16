@@ -11,6 +11,6 @@ namespace DMT.Core.Interfaces
         /// <summary>
         /// Gets the unique identifier for the entity.
         /// </summary>
-        uint Id { get; }
+        IId Id { get; }
     }
 }

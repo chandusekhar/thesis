@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="IDataSource.cs" />
     <Compile Include="IEdge.cs" />
+    <Compile Include="IId.cs" />
     <Compile Include="IIdentity.cs" />
     <Compile Include="IModelLoader.cs" />
     <Compile Include="INode.cs" />
