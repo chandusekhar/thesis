@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F9E8B121-A7D2-4D33-82FC-99826B3BD9AE}</ProjectGuid>
+    <ProjectGuid>{DD7A9AC4-F35C-47CB-A81E-19CF45FC1B80}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Core.Test</RootNamespace>
-    <AssemblyName>DMT.Core.Test</AssemblyName>
+    <RootNamespace>DMT.Test.Utils</RootNamespace>
+    <AssemblyName>DMT.Test.Utils</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,34 +37,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityTest.cs" />
-    <Compile Include="IdTest.cs" />
+    <Compile Include="SerializerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
-      <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
-      <Name>DMT.Core.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DMT.Core\DMT.Core.csproj">
-      <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
-      <Name>DMT.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DMT.Test.Utils\DMT.Test.Utils.csproj">
-      <Project>{dd7a9ac4-f35c-47cb-a81e-19cf45fc1b80}</Project>
-      <Name>DMT.Test.Utils</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

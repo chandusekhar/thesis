@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using DMT.Test.Utils;
 using Xunit;
 
 namespace DMT.Core.Test
@@ -20,9 +22,39 @@ namespace DMT.Core.Test
         }
 
         [Fact]
+        public void IdEqualityUsingBuiltInFunction()
+        {
+            Guid g = Guid.NewGuid();
+            Id id = Id.FromGuid(g);
+            Id id2 = Id.FromGuid(g);
+
+            Assert.True(id.Equals((object)id2));
+        }
+
+
+        [Fact]
         public void IdNotEquiality()
         {
             Assert.False(Id.NewId().Equals(Id.NewId()));
         }
+
+        [Fact]
+        public void SerializeId()
+        {
+            var id = Id.NewId();
+            XDocument doc = SerializerHelper.SerializeObject(id);
+            Assert.Equal("Id", doc.Root.Name);
+            Assert.Equal(id, Id.FromGuid(Guid.Parse(doc.Root.Value)));
+        }
+
+        [Fact]
+        public void DeserializeId()
+        {
+            var id = Id.NewId();
+            var id2 = SerializerHelper.DeserializeObject<Id>(SerializerHelper.SerializeObject(id));
+
+            Assert.Equal(id, id2);
+        }
+
     }
 }

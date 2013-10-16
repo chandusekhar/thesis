@@ -8,9 +8,9 @@ using NLog;
 
 namespace DMT.Core
 {
-    public struct Id : IId
+    public class Id : IId
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static readonly Id Empty = new Id(Guid.Empty);
         
@@ -24,6 +24,11 @@ namespace DMT.Core
         public static Id FromGuid(Guid guid)
         {
             return new Id(guid);
+        }
+
+        public Id()
+        {
+            this.value = Guid.Empty;
         }
 
         private Id(Guid value)
@@ -63,5 +68,33 @@ namespace DMT.Core
         {
             return value.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("DMT.Core.Id [{0}]", value);
+        }
+
+        #region IXmlSerializable
+
+        System.Xml.Schema.XmlSchema System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            // http://msdn.microsoft.com/en-us/library/system.xml.serialization.ixmlserializable.getschema.aspx
+            return null;
+        }
+
+        void System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        {
+            string idString = reader.ReadElementContentAsString();
+            logger.Trace("Id [{0}] was read from xml.", idString);
+            this.value = Guid.Parse(idString);
+        }
+
+        void System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
+        {
+            logger.Trace("Id [{0}] was written to xml", this.value);
+            writer.WriteValue(this.value.ToString());
+        } 
+
+        #endregion
     }
 }

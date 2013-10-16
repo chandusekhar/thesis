@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using DMT.Core.Interfaces;
+using DMT.Test.Utils;
+using Xunit;
+
+namespace DMT.Core.Test
+{
+    public class EntityTest
+    {
+        public class EntityMock : Entity { }
+
+        [Fact]
+        public void EntitySerializationHasId()
+        {
+            EntityMock em = new EntityMock();
+            XDocument doc = SerializerHelper.SerializeObject(em);
+
+            Assert.NotEmpty(doc.Descendants(CoreConstants.IdTagName));
+        }
+
+        [Fact]
+        public void EntityDeserializerHasCorrectId()
+        {
+            var em = new EntityMock();
+
+            var em2 = SerializerHelper.DeserializeObject<EntityMock>(SerializerHelper.SerializeObject(em));
+            Assert.Equal(em.Id, em2.Id);
+        }
+
+    }
+}
