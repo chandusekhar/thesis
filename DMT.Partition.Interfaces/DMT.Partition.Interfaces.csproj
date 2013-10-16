@@ -41,6 +41,9 @@
   <ItemGroup>
     <Compile Include="IHost.cs" />
     <Compile Include="IPartition.cs" />
+    <Compile Include="IPartitionedModel.cs" />
+    <Compile Include="IPartitioner.cs" />
+    <Compile Include="ISendPartitionResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

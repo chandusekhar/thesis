@@ -21,5 +21,12 @@ namespace DMT.Partition.Interfaces
         /// Gets or sets the host machine descriptor of this partition.
         /// </summary>
         IHost Host { get; set; }
+
+        /// <summary>
+        /// Sends the partition and its corresponding nodes (with all the available data)
+        /// to the host specfied by the <c>Host property</c>.
+        /// </summary>
+        /// <returns>The result of the send process.</returns>
+        Task<ISendPartitionResponse> SendToHost();
     }
 }
