@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using DMT.Core.Interfaces;
 using NLog;
@@ -25,12 +27,14 @@ namespace DMT.Core
             get { return _id; }
         }
 
-        System.Xml.Schema.XmlSchema System.Xml.Serialization.IXmlSerializable.GetSchema()
+        #region IXmlSerializable members
+
+        public XmlSchema GetSchema()
         {
             return null;
         }
 
-        void System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        public virtual void ReadXml(XmlReader reader)
         {
             // id
             if (!reader.ReadToFollowing(CoreConstants.IdTagName))
@@ -41,12 +45,14 @@ namespace DMT.Core
             logger.Trace("Read entity's id from xml. [{0}]", _id);
         }
 
-        void System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
+        public virtual void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement(CoreConstants.IdTagName);
             ((IXmlSerializable)_id).WriteXml(writer);
             writer.WriteEndElement();
             logger.Trace("Written entity's id to xml. [{0}]", _id);
         }
+ 
+        #endregion
     }
 }
