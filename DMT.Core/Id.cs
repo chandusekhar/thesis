@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
+using NLog;
 
 namespace DMT.Core
 {
     public struct Id : IId
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static readonly Id Empty = new Id(Guid.Empty);
         
         private Guid value;
@@ -32,7 +35,8 @@ namespace DMT.Core
 
             if (!(other is Id))
             {
-                throw new ArgumentException("Not compatible Ids");
+                logger.Error("Comparing incompatible IId implementations. {0} and {1}", typeof(Id), other.GetType());
+                return false;
             }
 
             Id other2 = (Id)other;
