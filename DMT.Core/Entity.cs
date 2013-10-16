@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using DMT.Core.Serialization;
 using DMT.Core.Interfaces;
 using NLog;
 
@@ -27,32 +28,27 @@ namespace DMT.Core
             get { return _id; }
         }
 
-        #region IXmlSerializable members
+        #region ISerializable members
 
-        public XmlSchema GetSchema()
+        public virtual void Serialize(XmlWriter writer)
         {
-            return null;
+            writer.WriteStartElement(CoreConstants.IdTagName);
+            ((ISerializable)_id).Serialize(writer);
+            writer.WriteEndElement();
+            logger.Trace("Written entity's id to xml. [{0}]", _id);
         }
 
-        public virtual void ReadXml(XmlReader reader)
+        public virtual void Deserialize(XmlReader reader, IContext context)
         {
             // id
             if (!reader.ReadToFollowing(CoreConstants.IdTagName))
             {
                 logger.Error("No id for entity.");
             }
-            ((IXmlSerializable)_id).ReadXml(reader);
+            ((ISerializable)_id).Deserialize(reader, context);
             logger.Trace("Read entity's id from xml. [{0}]", _id);
-        }
+        } 
 
-        public virtual void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement(CoreConstants.IdTagName);
-            ((IXmlSerializable)_id).WriteXml(writer);
-            writer.WriteEndElement();
-            logger.Trace("Written entity's id to xml. [{0}]", _id);
-        }
- 
         #endregion
     }
 }

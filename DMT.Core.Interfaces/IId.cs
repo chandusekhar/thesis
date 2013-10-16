@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using DMT.Core.Serialization;
 
 namespace DMT.Core.Interfaces
 {
     /// <summary>
     /// Abstraction over a general ID for nodes, edges and everything.
     /// </summary>
-    public interface IId : IXmlSerializable
+    public interface IId : ISerializable
     {
         /// <summary>
         /// Determines whether two ids are identical or not.

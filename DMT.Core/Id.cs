@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using DMT.Core.Serialization;
 using DMT.Core.Interfaces;
 using NLog;
 
@@ -74,27 +76,20 @@ namespace DMT.Core
             return string.Format("DMT.Core.Id [{0}]", value);
         }
 
-        #region IXmlSerializable
+        #region ISerializable
 
-        System.Xml.Schema.XmlSchema System.Xml.Serialization.IXmlSerializable.GetSchema()
+        void ISerializable.Serialize(XmlWriter writer)
         {
-            // http://msdn.microsoft.com/en-us/library/system.xml.serialization.ixmlserializable.getschema.aspx
-            return null;
+            logger.Trace("Id [{0}] was written to xml", this.value);
+            writer.WriteValue(this.value.ToString());
         }
 
-        void System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        void ISerializable.Deserialize(XmlReader reader, IContext context)
         {
             string idString = reader.ReadElementContentAsString();
             logger.Trace("Id [{0}] was read from xml.", idString);
             this.value = Guid.Parse(idString);
         }
-
-        void System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
-        {
-            logger.Trace("Id [{0}] was written to xml", this.value);
-            writer.WriteValue(this.value.ToString());
-        } 
-
         #endregion
     }
 }

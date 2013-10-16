@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using DMT.Test.Utils;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Core.Test
@@ -43,7 +43,7 @@ namespace DMT.Core.Test
         {
             var id = Id.NewId();
             XDocument doc = SerializerHelper.SerializeObject(id);
-            Assert.Equal("Id", doc.Root.Name);
+            Assert.Equal("root", doc.Root.Name);
             Assert.Equal(id, Id.FromGuid(Guid.Parse(doc.Root.Value)));
         }
 

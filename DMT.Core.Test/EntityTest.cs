@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DMT.Core.Interfaces;
-using DMT.Test.Utils;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Core.Test
