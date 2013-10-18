@@ -54,5 +54,34 @@ namespace DMT.Core
             _end.Id.Serialize(writer);
             writer.WriteEndElement();
         }
+
+        public override void Deserialize(XmlReader reader, IContext context)
+        {
+            // id
+            base.Deserialize(reader, context);
+
+            // start node
+            IId startNodeId = context.EntityFactory.CreateId();
+            startNodeId.Deserialize(reader, context);
+
+            // end node
+            IId endNodeId = context.EntityFactory.CreateId();
+            endNodeId.Deserialize(reader, context);
+
+            INode start = context.GetNode(startNodeId);
+            INode end = context.GetNode(endNodeId);
+
+            this.ConnectNodes(start, end);
+
+        }
+
+        public void ConnectNodes(INode start, INode end)
+        {
+            _start = start;
+            _start.OutboundEdges.Add(this);
+
+            _end = end;
+            _end.InboundEdges.Add(this);
+        }
     }
 }
