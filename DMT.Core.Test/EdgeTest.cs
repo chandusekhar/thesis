@@ -73,6 +73,14 @@ namespace DMT.Core.Test
             Assert.Equal(n2, e.End);
         }
 
+        [Fact]
+        public void ConnectingNodesThrowsExceptionForNullNode()
+        {
+            Edge e = new Edge();
+            Assert.Throws(typeof(ArgumentNullException), () => e.ConnectNodes(null, null));
+        }
+
+
         private static void SerializeAndDeserializeEdgeWithContext(out Edge e, out Edge e2)
         {
             DeserializationContext ctx = new DeserializationContext(new CoreEntityFactory());

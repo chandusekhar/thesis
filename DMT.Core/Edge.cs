@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 
@@ -14,17 +15,20 @@ namespace DMT.Core
         public const string StartNodeTag = "StartNode";
         public const string EndNodeTag = "EndNode";
 
-        private INode _start;
-        private INode _end;
+        private INode _start = null;
+        private INode _end = null;
 
         public Edge()
-            : this(null, null)
         { }
 
+        /// <summary>
+        /// Instantiates a new <c>Edge</c> object and sets its endpoints.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         public Edge(INode start, INode end)
         {
-            this._start = start;
-            this._end = end;
+            this.ConnectNodes(start, end);
         }
 
         public INode Start
@@ -77,6 +81,9 @@ namespace DMT.Core
 
         public void ConnectNodes(INode start, INode end)
         {
+            Objects.RequireNonNull(start);
+            Objects.RequireNonNull(end);
+            
             _start = start;
             _start.OutboundEdges.Add(this);
 
