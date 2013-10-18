@@ -13,5 +13,20 @@ namespace DMT.Core.Serialization
         {
             return Id.NewId();
         }
+
+        public Interfaces.INode CreateNode()
+        {
+            return new Node();
+        }
+
+        public Interfaces.IEdge CreateEdge()
+        {
+            return new Edge();
+        }
+
+        public Interfaces.IEdge CreateEdge(Interfaces.INode start, Interfaces.INode end)
+        {
+            return new Edge(start, end);
+        }
     }
 }
