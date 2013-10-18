@@ -16,17 +16,37 @@ namespace DMT.Core.Interfaces
     /// 
     /// An edge is always directed. It goes from start to end. To build an undirected
     /// graph add edges for both directions on every node.
+    ///
+    /// If <c>Start</c> or <c>End</c> nodes are null that means that
+    /// the edge has not been added (connected) to the graph.
     /// </summary>
     public interface IEdge : IIdentity
     {
         /// <summary>
         /// Gets or sets the start node of the edge.
         /// </summary>
-        INode Start { get; set; }
+        INode Start { get; }
 
         /// <summary>
         /// Gets or sets the end node of the edge.
         /// </summary>
-        INode End { get; set; }
+        INode End { get; }
+
+        /// <summary>
+        /// Sets the <c>start</c> and <c>end</c> nodes of this edge and sets up connections
+        /// which means that <c>this</c> edge will be added to the <c>start</c> node's
+        /// outbound edges collection and the the <c>end</c> node's inbound edges collections.
+        /// </summary>
+        /// <param name="start">start node of the relationship</param>
+        /// <param name="end">end node of the relationship</param>
+        void ConnectNodes(INode start, INode end);
+
+        /// <summary>
+        /// Cuts the connection between the <c>start</c> and <c>end</c> nodes.
+        ///
+        /// Removes the <c>this</c> edge from the endpoint nodes, and sets
+        /// the appropriate variables <c>null</c>.
+        /// </summary>
+        void Remove();
     }
 }

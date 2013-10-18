@@ -47,6 +47,8 @@
     <Compile Include="CoreConstants.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
+    <Compile Include="Exceptions\EdgeNotYetConnectedException.cs" />
     <Compile Include="Exceptions\NodeMissingException.cs" />
     <Compile Include="Extensions\NodeExtensions.cs" />
     <Compile Include="Id.cs" />
