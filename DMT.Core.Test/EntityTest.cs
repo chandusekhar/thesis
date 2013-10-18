@@ -20,7 +20,7 @@ namespace DMT.Core.Test
             EntityMock em = new EntityMock();
             XDocument doc = SerializerHelper.SerializeObject(em);
 
-            Assert.NotEmpty(doc.Descendants(CoreConstants.IdTagName));
+            Assert.NotEmpty(doc.Descendants(Id.IdTagName));
         }
 
         [Fact]

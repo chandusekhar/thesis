@@ -8,6 +8,6 @@ namespace DMT.Core
 {
     public static class CoreConstants
     {
-        public const string IdTagName = "Id";
+        public const string ModelFileNameSettingsKey = "model-filename";
     }
 }

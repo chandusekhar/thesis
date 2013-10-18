@@ -15,6 +15,7 @@ namespace DMT.Core
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static readonly Id Empty = new Id(Guid.Empty);
+        public const string IdTagName = "Id";
         
         private Guid value;
 

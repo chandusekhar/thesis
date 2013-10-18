@@ -32,21 +32,21 @@ namespace DMT.Core
 
         public virtual void Serialize(XmlWriter writer)
         {
-            writer.WriteStartElement(CoreConstants.IdTagName);
+            writer.WriteStartElement(Core.Id.IdTagName);
             ((ISerializable)_id).Serialize(writer);
             writer.WriteEndElement();
-            logger.Trace("Written entity's id to xml. [{0}]", _id);
+            logger.Trace("Written {0}'s id to xml. [{1}]", this.GetType().Name, _id);
         }
 
         public virtual void Deserialize(XmlReader reader, IContext context)
         {
             // id
-            if (!reader.ReadToFollowing(CoreConstants.IdTagName))
+            if (!reader.ReadToFollowing(Core.Id.IdTagName))
             {
                 logger.Error("No id for entity.");
             }
             ((ISerializable)_id).Deserialize(reader, context);
-            logger.Trace("Read entity's id from xml. [{0}]", _id);
+            logger.Trace("Read {0}'s id from xml. [{1}]", this.GetType().Name, _id);
         } 
 
         #endregion
