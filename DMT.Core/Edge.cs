@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.Core
 {

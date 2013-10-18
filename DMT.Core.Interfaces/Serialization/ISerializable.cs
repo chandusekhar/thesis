@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace DMT.Core.Serialization
+namespace DMT.Core.Interfaces.Serialization
 {
     /// <summary>
     /// Generic serializable interface. It provides context for the deserialization.

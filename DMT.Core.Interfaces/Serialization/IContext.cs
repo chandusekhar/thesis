@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DMT.Core.Interfaces;
 
-namespace DMT.Core.Serialization
+namespace DMT.Core.Interfaces.Serialization
 {
     public interface IContext
     {

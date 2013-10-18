@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using DMT.Core.Serialization;
+using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.Core.Test.Utils
 {
@@ -20,6 +20,11 @@ namespace DMT.Core.Test.Utils
             {
                 return XDocument.Load(SerializeObjectIntoStream(ms, obj));
             }
+        }
+
+        public static T SerializeAndDeserialize<T>(T obj, IContext context = null) where T : ISerializable
+        {
+            return DeserializeObject<T>(SerializeObject(obj), context);
         }
 
         public static T DeserializeObject<T>(XDocument doc, IContext context = null) where T : ISerializable

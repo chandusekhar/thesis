@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using DMT.Core.Serialization;
+using DMT.Core.Interfaces.Serialization;
 using DMT.Core.Interfaces;
 using NLog;
 
