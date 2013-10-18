@@ -80,6 +80,15 @@ namespace DMT.Core.Test
             Assert.Throws(typeof(ArgumentNullException), () => e.ConnectNodes(null, null));
         }
 
+        [Fact]
+        public void ToStringContainsClassNameAndId()
+        {
+            Edge e = new Edge();
+            var toString = string.Format("DMT.Core.Edge [{0}]", e.Id);
+            Assert.Equal(toString, e.ToString());
+        }
+
+
 
         private static void SerializeAndDeserializeEdgeWithContext(out Edge e, out Edge e2)
         {
