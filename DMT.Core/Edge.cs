@@ -7,11 +7,14 @@ using System.Xml;
 using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
+using NLog;
 
 namespace DMT.Core
 {
     public class Edge : Entity, IEdge
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public const string StartNodeTag = "StartNode";
         public const string EndNodeTag = "EndNode";
 
@@ -61,34 +64,39 @@ namespace DMT.Core
 
         public override void Deserialize(XmlReader reader, IContext context)
         {
+            logger.Trace("Starting Core.Edge deserialization.");
+
             // id
             base.Deserialize(reader, context);
 
             // start node
             IId startNodeId = context.EntityFactory.CreateId();
             startNodeId.Deserialize(reader, context);
+            logger.Trace("Deserialized edge start node: {0}", startNodeId);
 
             // end node
             IId endNodeId = context.EntityFactory.CreateId();
             endNodeId.Deserialize(reader, context);
+            logger.Trace("Deserialized edge end node: {0}", endNodeId);
 
             INode start = context.GetNode(startNodeId);
             INode end = context.GetNode(endNodeId);
 
             this.ConnectNodes(start, end);
-
+            logger.Trace("Finishing Core.Edge deserialization.");
         }
 
         public void ConnectNodes(INode start, INode end)
         {
             Objects.RequireNonNull(start);
             Objects.RequireNonNull(end);
-            
+
             _start = start;
             _start.OutboundEdges.Add(this);
 
             _end = end;
             _end.InboundEdges.Add(this);
+            logger.Debug("Connected nodes ({0}, {1}) with edge {2}", start, end, this);
         }
     }
 }
