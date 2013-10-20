@@ -17,5 +17,26 @@ namespace DMT.Core.Extensions
         {
             return self.InboundEdges.Union(self.OutboundEdges);
         }
+
+        /// <summary>
+        /// Find all adjacent nodes.
+        /// </summary>
+        /// <returns>a list of adjacent nodes including both inbound and outbound</returns>
+        public static IEnumerable<INode> AdjacentNodes(this INode self)
+        {
+            List<INode> nodeList = new List<INode>();
+
+            foreach (var edge in self.InboundEdges)
+            {
+                nodeList.Add(edge.Start);
+            }
+
+            foreach (var edge in self.OutboundEdges)
+            {
+                nodeList.Add(edge.End);
+            }
+
+            return nodeList;
+        }
     }
 }
