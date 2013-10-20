@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Exceptions;
 using DMT.Core.Serialization;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Core.Test.Serialization
@@ -26,14 +27,8 @@ namespace DMT.Core.Test.Serialization
         {
             Stream stream = new MemoryStream(Encoding.UTF8.GetBytes("<Model></Model>"));
             var ds = new XmlDataSource();
-            try
-            {
-                var res = ds.UseStream(stream).LoadModelAsync().Result;
-            }
-            catch (AggregateException ex)
-            {
-                Assert.True(ex.InnerExceptions.Any(e=>e is ModelXmlFormatException));
-            }
+
+            AssertEx.ThrowsAsync(typeof(ModelXmlFormatException), () => ds.UseStream(stream).LoadModelAsync());
         }
 
     }
