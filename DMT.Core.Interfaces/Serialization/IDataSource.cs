@@ -15,11 +15,11 @@ namespace DMT.Core.Interfaces.Serialization
         /// Loads the model.
         /// </summary>
         /// <returns>The root nodes of the graph components as a collection.</returns>
-        Task<IEnumerable<INode>> LoadModelAsync();
+        Task<IModel> LoadModelAsync();
 
         /// <summary>
         /// Saves the model.
         /// </summary>
-        Task SaveModelAsync();
+        Task SaveModelAsync(IModel model);
     }
 }

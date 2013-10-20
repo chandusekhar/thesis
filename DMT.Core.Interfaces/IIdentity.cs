@@ -7,7 +7,7 @@ using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.Core.Interfaces
 {
-    public interface IIdentity: ISerializable
+    public interface IIdentity : ISerializable
     {
         /// <summary>
         /// Gets the unique identifier for the entity.

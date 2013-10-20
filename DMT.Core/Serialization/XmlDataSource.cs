@@ -30,48 +30,89 @@ namespace DMT.Core.Serialization
         public const string NodeTag = "Node";
         public const string EdgesTag = "Edges";
         public const string EdgeTag = "Edge";
+        public const string RootTag = "Model";
 
         private Stream stream;
 
-        public Task<IEnumerable<INode>> LoadModelAsync()
+        public Task<IModel> LoadModelAsync()
         {
-            return Task.Run(new Func<IEnumerable<INode>>(this.LoadModel));
+            return Task.Run(new Func<IModel>(LoadModel));
         }
 
-        public Task SaveModelAsync()
+        public Task SaveModelAsync(IModel model)
         {
-            throw new NotImplementedException();
+            return Task.Run(new Action(SaveModel));
         }
 
-        public XmlDataSource UseStream(Stream stream)
+        /// <summary>
+        /// For testing purposes!
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        internal XmlDataSource UseStream(Stream stream)
         {
             this.stream = stream;
             return this;
         }
 
-        private Stream GetStream()
+        private void SaveModel()
+        {
+            logger.Debug("Model saving started");
+
+            using (var writer = XmlWriter.Create(GetOutputStream()))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement(XmlDataSource.RootTag);
+
+
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            logger.Debug("Model saving done.");
+        }
+
+        private Stream GetOutputStream()
         {
             if (this.stream != null)
             {
                 return this.stream;
             }
 
+            string filepath = GetModelFilePath();
+            return File.Create(filepath);
+        }
+
+        private Stream GetInputStream()
+        {
+            if (this.stream != null)
+            {
+                return this.stream;
+            }
+
+            string modelFilePath = GetModelFilePath();
+            return File.OpenRead(modelFilePath);
+        }
+
+        private string GetModelFilePath()
+        {
             string modelFilePath = ConfigurationManager.AppSettings[CoreConstants.ModelFileNameSettingsKey];
             if (modelFilePath == null)
             {
                 logger.Debug("No model file sepcified. Falling back to default model filename.");
                 modelFilePath = XmlDataSource.BaseModelFileName;
             }
-            return File.OpenRead(modelFilePath);
+            return modelFilePath;
         }
 
-        private IEnumerable<INode> LoadModel()
+        private IModel LoadModel()
         {
             logger.Debug("Started loading model.");
             IContext context = new DeserializationContext(new CoreEntityFactory());
             List<INode> nodeList;
 
-            using (var reader = XmlReader.Create(GetStream()))
+            using (var reader = XmlReader.Create(GetInputStream()))
             {
                 // read nodes
                 logger.Trace("Starting to read nodes.");
@@ -103,7 +144,7 @@ namespace DMT.Core.Serialization
             t.Traverse(nodeList);
 
             logger.Debug("Finished loading model.");
-            return componentRoots;
+            return new Model(componentRoots);
         }
 
         private void ReadEdges(XmlReader reader, IContext context)

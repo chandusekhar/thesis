@@ -18,8 +18,8 @@ namespace DMT.Core.Test.Serialization
         public void LoadModelFromXml()
         {
             var ds = new XmlDataSource();
-            var roots = ds.LoadModelAsync().Result;
-            Assert.Equal(1, roots.Count());
+            var model = ds.LoadModelAsync().Result;
+            Assert.Equal(1, model.ComponentRoots.Count());
         }
 
         [Fact]
