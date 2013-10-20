@@ -28,9 +28,18 @@ namespace DMT.Core.Serialization
 
         }
 
-        public DeserializationContext(IEntityFactory entityFactory, Dictionary<IId, INode> nodes)
+        public DeserializationContext(IEntityFactory ef, IEnumerable<INode> nodes)
+            : this(ef, new Dictionary<IId, INode>())
         {
-            this.nodes = new Dictionary<IId, INode>(nodes);
+            foreach (var node in nodes)
+            {
+                this.AddNode(node);
+            }
+        }
+
+        protected DeserializationContext(IEntityFactory entityFactory, Dictionary<IId, INode> nodes)
+        {
+            this.nodes = nodes;
             this.entityFactory = entityFactory;
         }
 

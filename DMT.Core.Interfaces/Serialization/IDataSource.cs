@@ -9,12 +9,12 @@ namespace DMT.Core.Interfaces.Serialization
     /// <summary>
     /// Interface for loading nodes from raw source.
     /// </summary>
-    public interface IDataSource : IDisposable
+    public interface IDataSource
     {
         /// <summary>
         /// Loads the model.
         /// </summary>
-        /// <returns<>The root nodes of the graph components as a collection./returns>
+        /// <returns>The root nodes of the graph components as a collection.</returns>
         Task<IEnumerable<INode>> LoadModelAsync();
 
         /// <summary>

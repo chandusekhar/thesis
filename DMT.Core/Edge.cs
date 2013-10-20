@@ -73,11 +73,19 @@ namespace DMT.Core
 
             // start node
             IId startNodeId = context.EntityFactory.CreateId();
+            if (reader.Name != Edge.StartNodeTag)
+            {
+                reader.ReadToFollowing(Edge.StartNodeTag);
+            }
             startNodeId.Deserialize(reader, context);
             logger.Trace("Deserialized edge start node: {0}", startNodeId);
 
             // end node
             IId endNodeId = context.EntityFactory.CreateId();
+            if (reader.Name != Edge.EndNodeTag)
+            {
+                reader.ReadToFollowing(Edge.EndNodeTag);
+            }
             endNodeId.Deserialize(reader, context);
             logger.Trace("Deserialized edge end node: {0}", endNodeId);
 

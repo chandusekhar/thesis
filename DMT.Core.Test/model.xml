@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Model>
+    <Nodes>
+        <Node>
+            <!-- n1 -->
+            <Id>5537b137-1a57-4107-bd64-9bf855aea1be</Id>
+        </Node>
+        <Node>
+            <!-- n2 -->
+            <Id>3118c8c9-e83d-4363-a849-b0e13431fbaa</Id>
+        </Node>
+        <Node>
+            <!-- n3 -->
+            <Id>644dce7a-4525-40fb-be6e-4c4d277d37e6</Id>
+        </Node>
+    </Nodes>
+    <Edges>
+        <Edge>
+            <Id>fcbf2cac-074a-4ff3-b8ab-1c976289f81f</Id>
+            <StartNode>5537b137-1a57-4107-bd64-9bf855aea1be</StartNode>
+            <EndNode>3118c8c9-e83d-4363-a849-b0e13431fbaa</EndNode>
+        </Edge>
+        <Edge>
+            <Id>631c3c92-8a58-43cc-be96-72f3714c9a21</Id>
+            <StartNode>5537b137-1a57-4107-bd64-9bf855aea1be</StartNode>
+            <EndNode>644dce7a-4525-40fb-be6e-4c4d277d37e6</EndNode>
+        </Edge>
+    </Edges>
+    <!-- 
+        connections:
+   
+        n1 -> n2
+        n1 -> n3
+    -->
+</Model>
