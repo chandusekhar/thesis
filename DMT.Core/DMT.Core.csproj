@@ -51,6 +51,9 @@
     <Compile Include="Exceptions\EdgeNotYetConnectedException.cs" />
     <Compile Include="Exceptions\NodeMissingException.cs" />
     <Compile Include="Extensions\NodeExtensions.cs" />
+    <Compile Include="Graph\BFSGraphTraverser.cs" />
+    <Compile Include="Graph\Traverser.cs" />
+    <Compile Include="Graph\VisitedNodeCollection.cs" />
     <Compile Include="Id.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

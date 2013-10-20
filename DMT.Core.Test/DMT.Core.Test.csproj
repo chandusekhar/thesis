@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="EdgeTest.cs" />
     <Compile Include="EntityTest.cs" />
+    <Compile Include="Graph\BFSTest.cs" />
     <Compile Include="IdTest.cs" />
     <Compile Include="NodeExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
