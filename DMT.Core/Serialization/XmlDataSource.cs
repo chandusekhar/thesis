@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using DMT.Core.Exceptions;
+using DMT.Core.Extensions;
 using DMT.Core.Graph;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
@@ -41,7 +42,7 @@ namespace DMT.Core.Serialization
 
         public Task SaveModelAsync(IModel model)
         {
-            return Task.Run(new Action(SaveModel));
+            return Task.Run(() => SaveModel(model));
         }
 
         /// <summary>
@@ -55,17 +56,32 @@ namespace DMT.Core.Serialization
             return this;
         }
 
-        private void SaveModel()
+        private void SaveModel(IModel model)
         {
             logger.Debug("Model saving started");
 
             using (var writer = XmlWriter.Create(GetOutputStream()))
             {
+                // opening tag
                 writer.WriteStartDocument();
                 writer.WriteStartElement(XmlDataSource.RootTag);
 
+                IEnumerable<INode> nodes;
+                IEnumerable<IEdge> edges;
 
+                CollectNodesAndEdges(model, out nodes, out edges);
 
+                // nodes
+                logger.Debug("Saving nodes.");
+                WriteCollectionToXml(nodes, writer, XmlDataSource.NodesTag, XmlDataSource.NodeTag);
+                logger.Debug("End of saving nodes.");
+
+                // edges
+                logger.Debug("Saving edges.");
+                WriteCollectionToXml(edges, writer, XmlDataSource.EdgesTag, XmlDataSource.EdgeTag);
+                logger.Debug("End of saving edges.");
+
+                // closing root
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
@@ -168,6 +184,42 @@ namespace DMT.Core.Serialization
             }
 
             return nodes;
+        }
+
+        private void CollectNodesAndEdges(IModel model, out IEnumerable<INode> nodes, out IEnumerable<IEdge> edges)
+        {
+            var nodeList = new List<INode>();
+            var edgeDict = new Dictionary<IId, IEdge>();
+
+            var t = Traverser.GetDefault();
+            t.VisitingNode += (s, e) =>
+            {
+                nodeList.Add(e.Node);
+                foreach (var edge in e.Node.AllEdges())
+                {
+                    if (!edgeDict.ContainsKey(edge.Id))
+                    {
+                        edgeDict.Add(edge.Id, edge);
+                    }
+                }
+            };
+
+            t.Traverse(model.ComponentRoots);
+
+            nodes = nodeList;
+            edges = edgeDict.Values;
+        }
+
+        private void WriteCollectionToXml(IEnumerable<ISerializable> elements, XmlWriter writer, string collectionTag, string elementTag)
+        {
+            writer.WriteStartElement(collectionTag);
+            foreach (var element in elements)
+            {
+                writer.WriteStartElement(elementTag);
+                element.Serialize(writer);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
         }
     }
 }
