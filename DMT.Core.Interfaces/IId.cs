@@ -10,13 +10,7 @@ namespace DMT.Core.Interfaces
     /// <summary>
     /// Abstraction over a general ID for nodes, edges and everything.
     /// </summary>
-    public interface IId : ISerializable
+    public interface IId : ISerializable, IEquatable<IId>
     {
-        /// <summary>
-        /// Determines whether two ids are identical or not.
-        /// </summary>
-        /// <param name="other">the other id</param>
-        /// <returns>true only if the two id are identical, false otherwise</returns>
-        bool Equals(IId other);
     }
 }

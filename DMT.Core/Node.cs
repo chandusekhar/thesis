@@ -28,5 +28,10 @@ namespace DMT.Core
             _outboundEdges = new List<IEdge>();
             _inboundEdges = new List<IEdge>();
         }
+
+        public override bool Remove()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

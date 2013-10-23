@@ -10,7 +10,7 @@ namespace DMT.Partition.Interfaces
     /// <summary>
     /// General interface for graph partitions.
     /// </summary>
-    public interface IPartition : IIdentity
+    public interface IPartition : IIdentifiable
     {
         /// <summary>
         /// Gets the collection of nodes in the partition.

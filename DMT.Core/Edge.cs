@@ -122,7 +122,13 @@ namespace DMT.Core
             logger.Debug("Connected nodes (start: {0}, end: {1}) with edge {2}", start, end, this);
         }
 
-        public void Remove()
+        /// <summary>
+        /// Cuts the connection between the <c>start</c> and <c>end</c> nodes.
+        ///
+        /// Removes the <c>this</c> edge from the endpoint nodes, and sets
+        /// the appropriate variables <c>null</c>.
+        /// </summary>
+        public override bool Remove()
         {
             if (this.start == null || this.end == null)
             {
@@ -137,6 +143,8 @@ namespace DMT.Core
 
             this.start = null;
             this.end = null;
+
+            return true;
         }
     }
 }

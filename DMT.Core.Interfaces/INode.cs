@@ -9,7 +9,7 @@ namespace DMT.Core.Interfaces
     /// <summary>
     /// General interface for node elements in the graph.
     /// </summary>
-    public interface INode : IIdentity
+    public interface INode : IEntity
     {
         /// <summary>
         /// Gets the collection of outbound edges.

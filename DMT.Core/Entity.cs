@@ -12,7 +12,7 @@ using NLog;
 
 namespace DMT.Core
 {
-    public abstract class Entity : IIdentity
+    public abstract class Entity : IEntity
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -27,6 +27,8 @@ namespace DMT.Core
         {
             get { return _id; }
         }
+
+        public abstract bool Remove();
 
         #region ISerializable members
 
@@ -55,5 +57,7 @@ namespace DMT.Core
         {
             return string.Format("{0} [{1}]", this.GetType().FullName, this.Id);
         }
+
+
     }
 }
