@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{05451933-9105-4935-9D93-CF9B9831A2AD}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DMT.Partition</RootNamespace>
     <AssemblyName>DMT.Partition</AssemblyName>
@@ -47,11 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -65,10 +63,6 @@
     <ProjectReference Include="..\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
       <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
       <Name>DMT.Core.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DMT.Core\DMT.Core.csproj">
-      <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
-      <Name>DMT.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
       <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
