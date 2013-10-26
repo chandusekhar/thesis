@@ -11,6 +11,7 @@ namespace DMT.Common
     public static class Configuration
     {
         public const string EnvironmentKey = "env";
+        public const string EnvironmentFile = "." + EnvironmentKey;
         
         private static Environment env = Environment.DEVELOPMENT;
         private static bool isEnvSet = false;
@@ -21,7 +22,7 @@ namespace DMT.Common
         /// <para>The enviroment can only be set once. The lookup path is the following:</para>
         /// 
         /// <para>1. 'env' environment variable</para>
-        /// <para>2. a file called 'env' in the <c>System.Environment.CurrentDirectory</c> which is by default the directory of the dll/exe.</para>
+        /// <para>2. a file called '.env' in the <c>System.Environment.CurrentDirectory</c> which is by default the directory of the dll/exe.</para>
         /// <para>3. 'env' appsettings in the application config file</para>
         /// <para>4. it defaults to DEVELOPMENT</para>
         /// </summary>
@@ -33,7 +34,7 @@ namespace DMT.Common
                 isEnvSet = true;
 
                 String envString = System.Environment.GetEnvironmentVariable(Configuration.EnvironmentKey);
-                string path = Path.Combine(System.Environment.CurrentDirectory, Configuration.EnvironmentKey);
+                string path = Path.Combine(System.Environment.CurrentDirectory, Configuration.EnvironmentFile);
                 if (envString == null && File.Exists(path))
                 {
                     envString = File.ReadAllText(path).Trim();
