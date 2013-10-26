@@ -10,7 +10,7 @@ using NLog;
 
 namespace DMT.Core.Serialization
 {
-    public class DeserializationContext : IContext
+    internal class DeserializationContext : IContext
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

@@ -7,7 +7,7 @@ using DMT.Core.Interfaces;
 
 namespace DMT.Core.Extensions
 {
-    public static class NodeExtensions
+    internal static class NodeExtensions
     {
         /// <summary>
         /// Union of inbound and outbound edges.

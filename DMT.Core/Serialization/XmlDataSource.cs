@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,8 +19,10 @@ namespace DMT.Core.Serialization
     /// 
     /// It only loads only the a stub of nodes and edges.
     /// Loads the node's and edge's id-s, and also it builds the connection between
+    /// 
     /// </summary>
-    public class XmlDataSource : IDataSource
+    [Export(typeof(IDataSource))]
+    internal class XmlDataSource : IDataSource
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -35,6 +38,8 @@ namespace DMT.Core.Serialization
 
         private Stream stream;
 
+        #region IDataSource
+
         public Task<IModel> LoadModelAsync()
         {
             return Task.Run(new Func<IModel>(LoadModel));
@@ -43,7 +48,9 @@ namespace DMT.Core.Serialization
         public Task SaveModelAsync(IModel model)
         {
             return Task.Run(() => SaveModel(model));
-        }
+        } 
+
+        #endregion
 
         /// <summary>
         /// For testing purposes!
@@ -55,6 +62,8 @@ namespace DMT.Core.Serialization
             this.stream = stream;
             return this;
         }
+
+        #region private methods
 
         private void SaveModel(IModel model)
         {
@@ -220,6 +229,8 @@ namespace DMT.Core.Serialization
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
-        }
+        } 
+
+        #endregion
     }
 }
