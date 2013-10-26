@@ -39,6 +39,7 @@ namespace DMT.Core.Interfaces
         /// </summary>
         /// <param name="start">start node of the relationship</param>
         /// <param name="end">end node of the relationship</param>
+        /// <exception cref="EdgeAlreadyConnectedException">When an edge has been already added to a graph.</exception>
         void ConnectNodes(INode start, INode end);
     }
 }

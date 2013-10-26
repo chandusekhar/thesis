@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="Serialization\IDataSource.cs" />

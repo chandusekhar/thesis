@@ -7,6 +7,7 @@ using System.Xml;
 using DMT.Common;
 using DMT.Core.Exceptions;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
@@ -103,6 +104,7 @@ namespace DMT.Core
         /// </summary>
         /// <param name="start">start node of the relationship</param>
         /// <param name="end">end node of the relationship</param>
+        /// <exception cref="EdgeAlreadyConnectedException">When an edge has been already added to a graph.</exception>
         public void ConnectNodes(INode start, INode end)
         {
             Objects.RequireNonNull(start);

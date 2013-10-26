@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Exceptions;
+using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Serialization;
 using DMT.Core.Test.Utils;
 using Xunit;
