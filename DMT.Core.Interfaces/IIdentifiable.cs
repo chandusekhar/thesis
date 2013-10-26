@@ -7,6 +7,9 @@ using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.Core.Interfaces
 {
+    /// <summary>
+    /// Describes an identifiable entity. It has only an id.
+    /// </summary>
     public interface IIdentifiable : ISerializable
     {
         /// <summary>
