@@ -132,8 +132,8 @@ namespace DMT.Core
         {
             if (this.start == null || this.end == null)
             {
-                logger.Error("Edge has not been added to the graph before removing.");
-                throw new EdgeNotYetConnectedException("Add the edge to the graph first.");
+                logger.Warn("Edge has not been added to the graph before removing.");
+                return false;
             }
 
             this.start.OutboundEdges.Remove(this);

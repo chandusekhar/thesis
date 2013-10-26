@@ -122,12 +122,11 @@ namespace DMT.Core.Test
         }
 
         [Fact]
-        public void RemovingNotConnectedEdgeThrowsException()
+        public void RemovingNotConnectedEdgeReturnsFalse()
         {
             Edge e = new Edge();
-            Assert.Throws(typeof(EdgeNotYetConnectedException), () => e.Remove());
+            Assert.Equal(false, e.Remove());
         }
-
 
         #region private helper methods
 

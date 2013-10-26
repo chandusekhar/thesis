@@ -50,7 +50,6 @@
     <Compile Include="Edge.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
-    <Compile Include="Exceptions\EdgeNotYetConnectedException.cs" />
     <Compile Include="Exceptions\ModelXmlFormatException.cs" />
     <Compile Include="Extensions\NodeExtensions.cs" />
     <Compile Include="Graph\BFSGraphTraverser.cs" />
