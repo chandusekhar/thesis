@@ -47,11 +47,12 @@ namespace DMT.Core.Serialization
         {
             if (nodes.ContainsKey(id))
             {
+                logger.Trace("Node was found with id {0}", id);
                 return nodes[id];
             }
 
-            logger.Error("No node with id [{0}] was found in the context!");
-            throw new NodeMissingException(id);
+            logger.Warn("No node with id [{0}] was found in the context!");
+            return null;
         }
 
         public void AddNode(INode node)

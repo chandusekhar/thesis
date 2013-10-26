@@ -19,8 +19,7 @@ namespace DMT.Core.Interfaces.Serialization
         /// Gets a node with a specfied id.
         /// </summary>
         /// <param name="id">The node id to look for.</param>
-        /// <returns>The node with the specfied id</returns>
-        /// <exception cref="NodeMissingException">If the node does not exist in the context.</exception>
+        /// <returns>The node with the specfied id or <c>null</c> if the id is not found.</returns>
         INode GetNode(IId id);
 
         /// <summary>
