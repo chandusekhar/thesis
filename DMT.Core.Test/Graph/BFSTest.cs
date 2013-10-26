@@ -8,6 +8,7 @@ using DMT.Core.Interfaces;
 using Xunit;
 using DMT.Core.Extensions;
 using DMT.Core.Test.Utils;
+using DMT.Core.Interfaces.Graph;
 
 namespace DMT.Core.Test.Graph
 {
@@ -16,7 +17,7 @@ namespace DMT.Core.Test.Graph
     /// </summary>
     public class BFSTest
     {
-        private BFSGraphTraverser t = new BFSGraphTraverser();
+        private Traverser t = new Traverser();
 
         [Fact]
         public void TraverseSingleComponentGraph()
@@ -26,7 +27,7 @@ namespace DMT.Core.Test.Graph
             Edge e = new Edge(new Node(), new Node());
 
             t.VisitingNode += (s, ee) => visitedNodes.Add(ee.Node);
-            t.Traverse(new INode[] { e.Start, e.End });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e.Start, e.End });
 
             Assert.Equal(new INode[] { e.Start, e.End }, visitedNodes);
         }
@@ -39,7 +40,7 @@ namespace DMT.Core.Test.Graph
             Edge e2 = new Edge(new Node(), new Node());
             t.VisitingNode += (s, e) => visitedNodes.Add(e.Node);
 
-            t.Traverse(new INode[] { e1.Start, e1.End, e2.Start, e2.End });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e1.Start, e1.End, e2.Start, e2.End });
 
             Assert.Equal(new INode[] { e1.Start, e1.End, e2.Start, e2.End }, visitedNodes);
         }
@@ -58,7 +59,7 @@ namespace DMT.Core.Test.Graph
             };
 
             // it works with partial node lis as well. :)
-            var found = t.Traverse(n1.AdjacentNodes());
+            var found = t.Traverse(n1.AdjacentNodes(), ComponentTraversalStrategy.BFS);
 
             Assert.Equal(n1, found);
         }
@@ -73,7 +74,7 @@ namespace DMT.Core.Test.Graph
             Edge e2 = new Edge(n2 = new Node(), new Node());
             t.VisitedComponent += (s, e) => componentRoots.Add(e.RootNode);
 
-            t.Traverse(e1.Start, e1.End, e2.Start, e2.End);
+            t.Traverse(ComponentTraversalStrategy.BFS, e1.Start, e1.End, e2.Start, e2.End);
 
             Assert.Equal(new INode[] { n1, n2 }, componentRoots);
         }

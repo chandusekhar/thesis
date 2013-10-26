@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Core.Extensions;
+using DMT.Core.Interfaces.Graph;
 
 namespace DMT.Core.Graph
 {
     /// <summary>
     /// Traversing a graph using the breadth-first search algorithm.
     /// </summary>
-    internal class BFSGraphTraverser : Traverser
+    internal class BFSGraphTraverser : ComponentTraverser
     {
-        protected override INode TraverseComponent(INode root)
+        public override INode Traverse(INode root)
         {
             VisitedNodeCollection visited = new VisitedNodeCollection();
             Queue<INode> nodeQueue = new Queue<INode>();
@@ -26,7 +27,7 @@ namespace DMT.Core.Graph
             while (nodeQueue.Any())
             {
                 curr = nodeQueue.Dequeue();
-                OnVisitingNode(e = new VisitingNodeEventArgs(curr));
+                this.OnVisitingNode(e = new VisitingNodeEventArgs(curr));
 
                 if (e.Found)
                 {
@@ -34,8 +35,7 @@ namespace DMT.Core.Graph
                     return curr;
                 }
 
-                // remove node from component cache
-                this.components.Remove(curr.Id);
+                this.OnVisitedNode(curr);
 
                 foreach (var adjacentNode in curr.AdjacentNodes())
                 {

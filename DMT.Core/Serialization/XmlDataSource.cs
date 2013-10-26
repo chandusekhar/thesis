@@ -9,6 +9,7 @@ using DMT.Core.Exceptions;
 using DMT.Core.Extensions;
 using DMT.Core.Graph;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Graph;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
@@ -164,9 +165,9 @@ namespace DMT.Core.Serialization
             // at this point the whole graph is built
             // we only have to select one (root) node from each connected component.
             List<INode> componentRoots = new List<INode>();
-            var t = Traverser.GetDefault();
+            var t = new Traverser();
             t.VisitedComponent += (_, e) => componentRoots.Add(e.RootNode);
-            t.Traverse(nodeList);
+            t.Traverse(nodeList, ComponentTraversalStrategy.BFS);
 
             logger.Debug("Finished loading model.");
             return new Model(componentRoots);
@@ -200,7 +201,7 @@ namespace DMT.Core.Serialization
             var nodeList = new List<INode>();
             var edgeDict = new Dictionary<IId, IEdge>();
 
-            var t = Traverser.GetDefault();
+            var t = new Traverser();
             t.VisitingNode += (s, e) =>
             {
                 nodeList.Add(e.Node);
@@ -213,7 +214,7 @@ namespace DMT.Core.Serialization
                 }
             };
 
-            t.Traverse(model.ComponentRoots);
+            t.Traverse(model.ComponentRoots, ComponentTraversalStrategy.BFS);
 
             nodes = nodeList;
             edges = edgeDict.Values;

@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
+    <Compile Include="Graph\ComponentTraversalStrategy.cs" />
+    <Compile Include="Graph\ITraverser.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="Serialization\IDataSource.cs" />

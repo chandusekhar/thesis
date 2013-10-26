@@ -52,6 +52,8 @@
     <Compile Include="Exceptions\ModelXmlFormatException.cs" />
     <Compile Include="Extensions\NodeExtensions.cs" />
     <Compile Include="Graph\BFSGraphTraverser.cs" />
+    <Compile Include="Graph\ComponentTraverser.cs" />
+    <Compile Include="Graph\DFSGraphTraverser.cs" />
     <Compile Include="Graph\Traverser.cs" />
     <Compile Include="Graph\VisitedNodeCollection.cs" />
     <Compile Include="Id.cs" />
