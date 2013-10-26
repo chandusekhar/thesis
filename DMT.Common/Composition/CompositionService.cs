@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,10 +14,13 @@ namespace DMT.Common.Composition
     /// <summary>
     /// Singleton class for all the composition related tasks
     /// </summary>
-    public class CompositionService : IDisposable
+    public sealed class CompositionService : IDisposable
     {
+        public const string DefaultCatalogPathKey = "default-catalog";
+        public const string ExtensionCatalogPathKey = "ext-catalog";
+
         private static CompositionService instance;
-        public static CompositionService Default
+        public static CompositionService Instance
         {
             get
             {
@@ -28,55 +32,41 @@ namespace DMT.Common.Composition
             }
         }
 
-        /// <summary>
-        /// Overrides the default implementation of the CompositionService. 
-        /// </summary>
-        /// <param name="newDefault"></param>
-        public static void OverrideDefault(CompositionService newDefault)
-        {
-            instance.Dispose();
-            instance = newDefault;
-        }
+        private CompositionContainer container;
+        private string defaultsPath;
+        private string extensionsPath;
 
-        protected CompositionContainer container;
+        private CompositionService() { }
 
-        protected AggregateCatalog aggregateCatalog;
-
-        protected CompositionService()
-        {
-            this.aggregateCatalog = new AggregateCatalog();
-            this.container = new CompositionContainer(aggregateCatalog);
-        }
+        #region public methods
 
         /// <summary>
-        /// Adds a new catalog to the container. This method is chainable.
+        /// Initializes the composition container with two paths. Dlls on the defaults
+        /// path used as a fallback for import satisfaction. All extension dll should be placed
+        /// in the extension directory.
+        /// 
+        /// <para>This method uses the value of 'default-catalog' and 'ext-catalog' key in appsettings.</para>
         /// </summary>
-        /// <param name="catalog">The catalog that contains the types annotated with <c>ExportAttribute</c>.</param>
-        /// <returns>the <c>CompositionService</c> instance</returns>
-        public CompositionService AddCatalog(ComposablePartCatalog catalog)
+        public void Initialize()
         {
-            this.aggregateCatalog.Catalogs.Add(catalog);
-            return this;
+            var def = ConfigurationManager.AppSettings[CompositionService.DefaultCatalogPathKey];
+            var ext = ConfigurationManager.AppSettings[CompositionService.ExtensionCatalogPathKey];
+
+            this.Initialize(def, ext);
         }
 
         /// <summary>
-        /// Adds a new directory (which cointains assemblies) to the container. This method is chainable.
+        /// Initializes the composition container with two paths. Dlls on the defaults
+        /// path used as a fallback for import satisfaction. All extension dll should be placed
+        /// in the extension directory.
         /// </summary>
-        /// <param name="catalog">The catalog that contains the types annotated with <c>ExportAttribute</c>.</param>
-        /// <returns>the <c>CompositionService</c> instance</returns>
-        public CompositionService AddDirectory(string path)
+        /// <param name="defaultsPath">path of the assemblies containing the default implementation</param>
+        /// <param name="extensionsPath">path of the assemblies containing the extension implementation</param>
+        public void Initialize(string defaultsPath, string extensionsPath)
         {
-            return this.AddCatalog(new DirectoryCatalog(path));
-        }
-
-        /// <summary>
-        /// Adds a single assembly to the container. This method is chainable.
-        /// </summary>
-        /// <param name="catalog">The catalog that contains the types annotated with <c>ExportAttribute</c>.</param>
-        /// <returns>the <c>CompositionService</c> instance</returns>
-        public CompositionService AddAssembly(Assembly assembly)
-        {
-            return this.AddCatalog(new AssemblyCatalog(assembly));
+            this.defaultsPath = defaultsPath;
+            this.extensionsPath = extensionsPath;
+            InitializeContainer();
         }
 
         /// <summary>
@@ -120,8 +110,30 @@ namespace DMT.Common.Composition
         public void Dispose()
         {
             container.Dispose();
-        } 
+        }
 
         #endregion
+
+        #endregion
+
+        private void InitializeContainer()
+        {
+            if (this.container != null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.defaultsPath) || string.IsNullOrEmpty(this.extensionsPath))
+            {
+                throw new InvalidOperationException(
+                    "The defaults or extensions path have not been set. Put the appropriate values in your App.config or use the Initialize(String, String) method to initialize the composotion service.");
+            }
+
+            var extensionCatalog = new DirectoryCatalog(this.extensionsPath);
+            var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
+
+            this.container = new CompositionContainer(extensionCatalog, defaultCatalogEP);
+            defaultCatalogEP.SourceProvider = this.container;
+        }
     }
 }

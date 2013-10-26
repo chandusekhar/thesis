@@ -16,7 +16,7 @@ namespace DMT.Common.Composition
         {
             if (Configuration.GetEnvironment() != Environment.TEST)
             {
-                CompositionService.Default.Inject(this);
+                CompositionService.Instance.Inject(this);
             }
         }
     }
