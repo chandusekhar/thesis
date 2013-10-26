@@ -12,7 +12,7 @@ using NLog;
 
 namespace DMT.Core
 {
-    public abstract class Entity : IEntity
+    internal abstract class Entity : IEntity
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

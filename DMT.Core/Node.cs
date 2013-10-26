@@ -7,7 +7,7 @@ using DMT.Core.Interfaces;
 
 namespace DMT.Core
 {
-    public class Node : Entity, INode
+    internal class Node : Entity, INode
     {
         protected List<IEdge> _outboundEdges;
         protected List<IEdge> _inboundEdges;

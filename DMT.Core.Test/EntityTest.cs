@@ -12,7 +12,7 @@ namespace DMT.Core.Test
 {
     public class EntityTest
     {
-        public class EntityMock : Entity
+        class EntityMock : Entity
         {
             public override bool Remove()
             {

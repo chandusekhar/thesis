@@ -52,7 +52,6 @@
     <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
     <Compile Include="Exceptions\EdgeNotYetConnectedException.cs" />
     <Compile Include="Exceptions\ModelXmlFormatException.cs" />
-    <Compile Include="Exceptions\NodeMissingException.cs" />
     <Compile Include="Extensions\NodeExtensions.cs" />
     <Compile Include="Graph\BFSGraphTraverser.cs" />
     <Compile Include="Graph\Traverser.cs" />

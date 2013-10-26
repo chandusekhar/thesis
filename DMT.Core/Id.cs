@@ -10,7 +10,7 @@ using NLog;
 
 namespace DMT.Core
 {
-    public sealed class Id : IId
+    internal sealed class Id : IId
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

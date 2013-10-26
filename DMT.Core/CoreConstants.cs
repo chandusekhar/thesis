@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DMT.Core
 {
-    public static class CoreConstants
+    internal static class CoreConstants
     {
         public const string ModelFileNameSettingsKey = "model-filename";
     }
