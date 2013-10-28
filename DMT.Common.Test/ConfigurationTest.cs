@@ -10,29 +10,23 @@ namespace DMT.Common.Test
 {
     public class ConfigurationTest
     {
-        public ConfigurationTest()
-        {
-            ClearInitializedFlag();
-        }
-
         [Fact]
         public void EnvironmentSetToTest()
         {
-            Assert.Equal(Environment.TEST, Configuration.GetEnvironment());
+            Assert.Equal(Environment.Test, Configuration.Current.Environment);
         }
 
         [Fact]
         public void DefaultEnvironmentOverriddenByEnvironmentVariable()
         {
-            System.Environment.SetEnvironmentVariable(Configuration.EnvironmentKey, "production");
-            Assert.Equal(Environment.PRODUCTION, Configuration.GetEnvironment());
-            System.Environment.SetEnvironmentVariable(Configuration.EnvironmentKey, null);
-        }
+            Configuration.OverrideCurrent(new Configuration());
 
-        private void ClearInitializedFlag()
-        {
-            var field = typeof(Configuration).GetField("isEnvSet", BindingFlags.Static | BindingFlags.NonPublic);
-            field.SetValue(null, false);
+            System.Environment.SetEnvironmentVariable(Configuration.EnvironmentKey, "production");
+            Assert.Equal(Environment.Production, Configuration.Current.Environment);
+            System.Environment.SetEnvironmentVariable(Configuration.EnvironmentKey, null);
+
+            // clear config values
+            Configuration.OverrideCurrent(new Configuration());
         }
     }
 }

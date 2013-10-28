@@ -8,13 +8,39 @@ using System.Threading.Tasks;
 
 namespace DMT.Common
 {
-    public static class Configuration
+    public class Configuration
     {
         public const string EnvironmentKey = "env";
         public const string EnvironmentFile = "." + EnvironmentKey;
         
-        private static Environment env = Environment.DEVELOPMENT;
-        private static bool isEnvSet = false;
+        private Environment env = Environment.Development;
+        private bool isEnvSet = false;
+
+        #region singleton
+
+        private static Configuration current;
+        public static Configuration Current
+        {
+            get
+            {
+                if (current == null)
+                {
+                    current = new Configuration();
+                }
+                return current;
+            }
+        }
+
+        /// <summary>
+        /// Override the current configuration object
+        /// </summary>
+        /// <param name="config"></param>
+        public static void OverrideCurrent(Configuration config)
+        {
+            current = config;
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets the enviroment for the currently running process. 
@@ -27,34 +53,48 @@ namespace DMT.Common
         /// <para>4. it defaults to DEVELOPMENT</para>
         /// </summary>
         /// <returns>The current environment</returns>
-        public static Environment GetEnvironment()
+        public Environment Environment
         {
-            if (!isEnvSet)
+            get
             {
-                isEnvSet = true;
-
-                String envString = System.Environment.GetEnvironmentVariable(Configuration.EnvironmentKey);
-                string path = Path.Combine(System.Environment.CurrentDirectory, Configuration.EnvironmentFile);
-                if (envString == null && File.Exists(path))
+                if (!this.isEnvSet)
                 {
-                    envString = File.ReadAllText(path).Trim();
+                    InitializeEnvironment();
                 }
-                envString = envString ?? ConfigurationManager.AppSettings[Configuration.EnvironmentKey];
 
-                if (!Enum.TryParse(envString, true, out env))
-                {
-                    env = Environment.DEVELOPMENT;
-                }
+                return this.env;
             }
+        }
 
-            return env;
+        internal void SetEnvironment(Environment env)
+        {
+            this.isEnvSet = true;
+            this.env = env;
+        }
+
+        private void InitializeEnvironment()
+        {
+            this.isEnvSet = true;
+
+            String envString = System.Environment.GetEnvironmentVariable(Configuration.EnvironmentKey);
+            string path = Path.Combine(System.Environment.CurrentDirectory, Configuration.EnvironmentFile);
+            if (envString == null && File.Exists(path))
+            {
+                envString = File.ReadAllText(path).Trim();
+            }
+            envString = envString ?? ConfigurationManager.AppSettings[Configuration.EnvironmentKey];
+
+            if (!Enum.TryParse(envString, true, out env))
+            {
+                this.env = Environment.Development;
+            }
         }
     }
 
     public enum Environment
     {
-        DEVELOPMENT,
-        TEST,
-        PRODUCTION
+        Development,
+        Test,
+        Production
     }
 }

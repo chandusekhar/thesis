@@ -13,12 +13,38 @@ namespace DMT.Common.Composition
     /// </summary>
     public abstract class InjectableBase : IPartImportsSatisfiedNotification
     {
-        public InjectableBase()
+        private Configuration config;
+
+        protected Configuration Config
         {
-            if (Configuration.GetEnvironment() != Environment.TEST)
+            get { return config; }
+        }
+
+        public InjectableBase()
+            : this(Configuration.Current)
+        {
+        }
+
+        public InjectableBase(Configuration config)
+            : this(config, false)
+        {
+        }
+
+        public InjectableBase(Configuration config, bool allowRecomposition)
+        {
+            this.config = config;
+            if (this.config.Environment != Environment.Test)
             {
-                CompositionService.Instance.Inject(this);
+                if (allowRecomposition)
+                {
+                    CompositionService.Instance.Inject(this);
+                }
+                else
+                {
+                    CompositionService.Instance.InjectOnce(this);
+                }
             }
+
         }
 
         /// <summary>

@@ -73,26 +73,19 @@ namespace DMT.Common.Composition
         /// Satisfies imports on the target object. It does not allow automatic recomposition.
         /// </summary>
         /// <param name="target">the object in which the imports should be satisfied.</param>
-        public void Inject(object target)
+        public void InjectOnce(object target)
         {
-            this.Inject(target, false);
+            this.container.SatisfyImportsOnce(target);
         }
 
         /// <summary>
-        /// Satisfies imports on the target object.
+        /// Satisfies imports on the target object. It does allow automatic recomposition if
+        /// the composition container changes. It must be allowed on the <c>Import</c> attribute too.
         /// </summary>
         /// <param name="target">the object in which the imports should be satisfied.</param>
-        /// <param name="allowRecomposition">if true it allows automatic recomposition</param>
-        public void Inject(object target, bool allowRecomposition)
+        public void Inject(object target)
         {
-            if (allowRecomposition)
-            {
                 this.container.ComposeParts(target);
-            }
-            else
-            {
-                this.container.SatisfyImportsOnce(target);
-            }
         }
 
         /// <summary>
