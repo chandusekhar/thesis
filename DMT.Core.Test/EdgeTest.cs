@@ -47,7 +47,7 @@ namespace DMT.Core.Test
             Edge e, e2;
             SerializeAndDeserializeEdgeWithContext(out e, out e2);
 
-            Assert.Equal(e.Start.Id, e2.Start.Id);
+            Assert.Equal(e.Source.Id, e2.Source.Id);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace DMT.Core.Test
             Edge e, e2;
             SerializeAndDeserializeEdgeWithContext(out e, out e2);
 
-            Assert.Equal(e.End.Id, e2.End.Id);
+            Assert.Equal(e.Target.Id, e2.Target.Id);
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace DMT.Core.Test
 
             e.ConnectNodes(n1, n2);
 
-            Assert.Equal(n1, e.Start);
-            Assert.Equal(n2, e.End);
+            Assert.Equal(n1, e.Source);
+            Assert.Equal(n2, e.Target);
         }
 
         [Fact]
@@ -118,8 +118,8 @@ namespace DMT.Core.Test
         {
             e.Remove();
 
-            Assert.Null(e.Start);
-            Assert.Null(e.End);
+            Assert.Null(e.Source);
+            Assert.Null(e.Target);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace DMT.Core.Test
             DeserializationContext ctx = new DeserializationContext(new CoreEntityFactory());
 
             e = new Edge(new Node(), new Node());
-            ctx.AddNodes(e.Start, e.End);
+            ctx.AddNodes(e.Source, e.Target);
 
             e2 = SerializerHelper.SerializeAndDeserialize(e, ctx);
         }

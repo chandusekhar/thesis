@@ -27,9 +27,9 @@ namespace DMT.Core.Test.Graph
             Edge e = new Edge(new Node(), new Node());
 
             t.VisitingNode += (s, ee) => visitedNodes.Add(ee.Node);
-            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e.Start, e.End });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e.Source, e.Target });
 
-            Assert.Equal(new INode[] { e.Start, e.End }, visitedNodes);
+            Assert.Equal(new INode[] { e.Source, e.Target }, visitedNodes);
         }
 
         [Fact]
@@ -40,9 +40,9 @@ namespace DMT.Core.Test.Graph
             Edge e2 = new Edge(new Node(), new Node());
             t.VisitingNode += (s, e) => visitedNodes.Add(e.Node);
 
-            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e1.Start, e1.End, e2.Start, e2.End });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e1.Source, e1.Target, e2.Source, e2.Target });
 
-            Assert.Equal(new INode[] { e1.Start, e1.End, e2.Start, e2.End }, visitedNodes);
+            Assert.Equal(new INode[] { e1.Source, e1.Target, e2.Source, e2.Target }, visitedNodes);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace DMT.Core.Test.Graph
             Edge e2 = new Edge(n2 = new Node(), new Node());
             t.VisitedComponent += (s, e) => componentRoots.Add(e.RootNode);
 
-            t.Traverse(ComponentTraversalStrategy.BFS, e1.Start, e1.End, e2.Start, e2.End);
+            t.Traverse(ComponentTraversalStrategy.BFS, e1.Source, e1.Target, e2.Source, e2.Target);
 
             Assert.Equal(new INode[] { n1, n2 }, componentRoots);
         }

@@ -14,23 +14,25 @@ namespace DMT.Core.Interfaces
     /// a full blown node with all the data, or a proxy node which indicates that
     /// the actual node is in another partition.
     /// 
-    /// An edge is always directed. It goes from start to end. To build an undirected
+    /// An edge is always directed. It goes from source to target. To build an undirected
     /// graph add edges for both directions on every node.
     ///
-    /// If <c>Start</c> or <c>End</c> nodes are null that means that
+    /// An edge also has a weight which plays a role during the partitioning phase.
+    ///
+    /// If <c>Source</c> or <c>Target</c> nodes are <c>null</c> that means that
     /// the edge has not been added (connected) to the graph.
     /// </summary>
-    public interface IEdge : IEntity
+    public interface IEdge : IEntity, IWeighted
     {
         /// <summary>
         /// Gets or sets the start node of the edge.
         /// </summary>
-        INode Start { get; }
+        INode Source { get; }
 
         /// <summary>
         /// Gets or sets the end node of the edge.
         /// </summary>
-        INode End { get; }
+        INode Target { get; }
 
         /// <summary>
         /// Sets the <c>start</c> and <c>end</c> nodes of this edge and sets up connections

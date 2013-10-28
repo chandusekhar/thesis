@@ -19,8 +19,8 @@ namespace DMT.Core.Test
 
             var neighbours = n1.AdjacentNodes();
 
-            Assert.Contains(e1.End, neighbours);
-            Assert.Contains(e1.End, neighbours);
+            Assert.Contains(e1.Target, neighbours);
+            Assert.Contains(e1.Target, neighbours);
         }
 
     }

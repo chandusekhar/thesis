@@ -20,34 +20,36 @@ namespace DMT.Core
         public const string StartNodeTag = "StartNode";
         public const string EndNodeTag = "EndNode";
 
-        private INode start = null;
-        private INode end = null;
+        private INode source = null;
+        private INode target = null;
 
         public Edge()
         { }
 
         /// <summary>
         /// Instantiates a new <c>Edge</c> object and connects its endpoints
-        /// which means that start and end will be set, also <c>this</c> edge will be
-        /// added to the <c>start</c> node's outbound edges collection and the
-        /// the <c>end</c> node's inbound edges collections.
+        /// which means that source and target will be set, also <c>this</c> edge will be
+        /// added to the <c>source</c> node's outbound edges collection and the
+        /// the <c>target</c> node's inbound edges collections.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
         public Edge(INode start, INode end)
         {
             this.ConnectNodes(start, end);
         }
 
-        public INode Start
+        public INode Source
         {
-            get { return start; }
+            get { return source; }
         }
 
-        public INode End
+        public INode Target
         {
-            get { return end; }
+            get { return target; }
         }
+
+        #region ISerializable
 
         public override void Serialize(XmlWriter writer)
         {
@@ -56,12 +58,12 @@ namespace DMT.Core
 
             // startnode
             writer.WriteStartElement(Edge.StartNodeTag);
-            start.Id.Serialize(writer);
+            source.Id.Serialize(writer);
             writer.WriteEndElement();
 
             // endnode
             writer.WriteStartElement(Edge.EndNodeTag);
-            end.Id.Serialize(writer);
+            target.Id.Serialize(writer);
             writer.WriteEndElement();
         }
 
@@ -72,7 +74,7 @@ namespace DMT.Core
             // id
             base.Deserialize(reader, context);
 
-            // start node
+            // source node
             IId startNodeId = context.EntityFactory.CreateId();
             if (reader.Name != Edge.StartNodeTag)
             {
@@ -81,7 +83,7 @@ namespace DMT.Core
             startNodeId.Deserialize(reader, context);
             logger.Trace("Deserialized edge start node: {0}", startNodeId);
 
-            // end node
+            // target node
             IId endNodeId = context.EntityFactory.CreateId();
             if (reader.Name != Edge.EndNodeTag)
             {
@@ -97,56 +99,64 @@ namespace DMT.Core
             logger.Trace("Finishing Core.Edge deserialization.");
         }
 
+        #endregion
+
         /// <summary>
-        /// Sets the <c>start</c> and <c>end</c> nodes of this edge and sets up connections
-        /// which means that <c>this</c> edge will be added to the <c>start</c> node's
-        /// outbound edges collection and the the <c>end</c> node's inbound edges collections.
+        /// Sets the <c>source</c> and <c>target</c> nodes of this edge and sets up connections
+        /// which means that <c>this</c> edge will be added to the <c>source</c> node's
+        /// outbound edges collection and the the <c>target</c> node's inbound edges collections.
         /// </summary>
-        /// <param name="start">start node of the relationship</param>
-        /// <param name="end">end node of the relationship</param>
+        /// <param name="source">source node of the relationship</param>
+        /// <param name="target">target node of the relationship</param>
         /// <exception cref="EdgeAlreadyConnectedException">When an edge has been already added to a graph.</exception>
         public void ConnectNodes(INode start, INode end)
         {
             Objects.RequireNonNull(start);
             Objects.RequireNonNull(end);
 
-            if (this.start != null || this.end != null)
+            if (this.source != null || this.target != null)
             {
                 logger.Error("Connecting already connected edge to node (start: {0}, end: {1})", start, end);
                 throw new EdgeAlreadyConnectedException("Remove edge from graph before re-adding.");
             }
 
-            this.start = start;
-            this.start.OutboundEdges.Add(this);
+            this.source = start;
+            this.source.OutboundEdges.Add(this);
 
-            this.end = end;
-            this.end.InboundEdges.Add(this);
+            this.target = end;
+            this.target.InboundEdges.Add(this);
             logger.Debug("Connected nodes (start: {0}, end: {1}) with edge {2}", start, end, this);
         }
 
         /// <summary>
-        /// Cuts the connection between the <c>start</c> and <c>end</c> nodes.
+        /// Cuts the connection between the <c>source</c> and <c>target</c> nodes.
         ///
         /// Removes the <c>this</c> edge from the endpoint nodes, and sets
         /// the appropriate variables <c>null</c>.
         /// </summary>
         public override bool Remove()
         {
-            if (this.start == null || this.end == null)
+            if (this.source == null || this.target == null)
             {
                 logger.Warn("Edge has not been added to the graph before removing.");
                 return false;
             }
 
-            this.start.OutboundEdges.Remove(this);
-            this.end.InboundEdges.Remove(this);
+            this.source.OutboundEdges.Remove(this);
+            this.target.InboundEdges.Remove(this);
 
-            logger.Debug("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.start, this.end);
+            logger.Debug("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.source, this.target);
 
-            this.start = null;
-            this.end = null;
+            this.source = null;
+            this.target = null;
 
             return true;
+        }
+
+        public double GetWeight()
+        {
+            // basic implementation for the moment
+            return 1.0;
         }
     }
 }

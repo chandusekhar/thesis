@@ -28,12 +28,12 @@ namespace DMT.Core.Extensions
 
             foreach (var edge in self.InboundEdges)
             {
-                nodeList.Add(edge.Start);
+                nodeList.Add(edge.Source);
             }
 
             foreach (var edge in self.OutboundEdges)
             {
-                nodeList.Add(edge.End);
+                nodeList.Add(edge.Target);
             }
 
             return nodeList;
