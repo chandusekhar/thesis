@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
@@ -14,25 +15,25 @@ namespace DMT.Core.Serialization
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public Interfaces.IId CreateId()
+        public virtual IId CreateId()
         {
             logger.Trace("Created new id.");
             return Id.NewId();
         }
 
-        public Interfaces.INode CreateNode()
+        public virtual INode CreateNode()
         {
             logger.Trace("Created new node.");
             return new Node();
         }
 
-        public Interfaces.IEdge CreateEdge()
+        public virtual IEdge CreateEdge()
         {
             logger.Trace("Created new edge.");
             return new Edge();
         }
 
-        public Interfaces.IEdge CreateEdge(Interfaces.INode start, Interfaces.INode end)
+        public virtual IEdge CreateEdge(INode start, INode end)
         {
             logger.Trace("Created new edge.");
             return new Edge(start, end);
