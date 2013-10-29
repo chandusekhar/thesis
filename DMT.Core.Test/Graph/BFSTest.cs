@@ -9,6 +9,7 @@ using Xunit;
 using DMT.Core.Extensions;
 using DMT.Core.Test.Utils;
 using DMT.Core.Interfaces.Graph;
+using DMT.Core.Entities;
 
 namespace DMT.Core.Test.Graph
 {

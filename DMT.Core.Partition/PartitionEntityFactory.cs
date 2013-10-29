@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMT.Core.Serialization;
+using DMT.Core.Entities;
 using DMT.Partition.Interfaces;
 
 namespace DMT.Core.Partition
@@ -14,7 +14,7 @@ namespace DMT.Core.Partition
     {
         public IMultiNode CreateMultiNode()
         {
-            throw new NotImplementedException();
+            return new MultiNode();
         }
     }
 }

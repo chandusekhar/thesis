@@ -8,33 +8,33 @@ using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
-namespace DMT.Core
+namespace DMT.Core.Entities
 {
-    internal sealed class Id : IId
+    internal sealed class DMTId : IId
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public static readonly Id Empty = new Id(Guid.Empty);
+        public static readonly DMTId Empty = new DMTId(Guid.Empty);
         public const string IdTagName = "Id";
         
         private Guid value;
 
-        public static Id NewId()
+        public static DMTId NewId()
         {
-            return new Id(Guid.NewGuid());
+            return new DMTId(Guid.NewGuid());
         }
 
-        public static Id FromGuid(Guid guid)
+        public static DMTId FromGuid(Guid guid)
         {
-            return new Id(guid);
+            return new DMTId(guid);
         }
 
-        public Id()
+        public DMTId()
         {
             this.value = Guid.Empty;
         }
 
-        private Id(Guid value)
+        private DMTId(Guid value)
         {
             this.value = value;
         }
@@ -51,13 +51,13 @@ namespace DMT.Core
                 return true;
             }
 
-            if (!(other is Id))
+            if (!(other is DMTId))
             {
-                logger.Error("Comparing incompatible IId implementations. {0} and {1}", typeof(Id), other.GetType());
+                logger.Error("Comparing incompatible IId implementations. {0} and {1}", typeof(DMTId), other.GetType());
                 return false;
             }
 
-            Id other2 = (Id)other;
+            DMTId other2 = (DMTId)other;
 
             return this.value.Equals(other2.value);
         }

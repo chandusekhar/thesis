@@ -11,7 +11,7 @@ using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
-namespace DMT.Core
+namespace DMT.Core.Entities
 {
     public class Edge : Entity, IEdge
     {

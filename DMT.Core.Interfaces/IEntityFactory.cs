@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DMT.Core.Interfaces.Serialization
+namespace DMT.Core.Interfaces
 {
     /// <summary>
     /// Interface for entity creation.

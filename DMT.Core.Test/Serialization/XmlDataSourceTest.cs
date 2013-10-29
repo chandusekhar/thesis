@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DMT.Core.Entities;
 using DMT.Core.Exceptions;
 using DMT.Core.Serialization;
 using DMT.Core.Test.Utils;
@@ -18,7 +19,7 @@ namespace DMT.Core.Test.Serialization
         [Fact]
         public void LoadModelFromXml()
         {
-            var ds = new XmlDataSource();
+            var ds = new XmlDataSource(new CoreEntityFactory());
             var model = ds.LoadModelAsync().Result;
             Assert.Equal(1, model.ComponentRoots.Count());
         }
@@ -27,7 +28,7 @@ namespace DMT.Core.Test.Serialization
         public void EmptyModelThrownFormatException()
         {
             Stream stream = new MemoryStream(Encoding.UTF8.GetBytes("<Model></Model>"));
-            var ds = new XmlDataSource();
+            var ds = new XmlDataSource(new CoreEntityFactory());
 
             AssertEx.ThrowsAsync(typeof(ModelXmlFormatException), () => ds.UseStream(stream).LoadModelAsync());
         }
@@ -70,7 +71,7 @@ namespace DMT.Core.Test.Serialization
             new Edge(n1, new Node());
             Model m = new Model(new Node[] { n1 });
             MemoryStream target = new MemoryStream();
-            var ds = new XmlDataSource();
+            var ds = new XmlDataSource(new CoreEntityFactory());
 
             ds.UseStream(target).SaveModelAsync(m).Wait();
 

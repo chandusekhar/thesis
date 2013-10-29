@@ -10,17 +10,17 @@ using DMT.Core.Interfaces.Serialization;
 using DMT.Core.Interfaces;
 using NLog;
 
-namespace DMT.Core
+namespace DMT.Core.Entities
 {
     public abstract class Entity : IEntity
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private Id _id;
+        private DMTId _id;
 
         public Entity()
         {
-            _id = Core.Id.NewId();
+            _id = DMTId.NewId();
         }
 
         public IId Id
@@ -34,7 +34,7 @@ namespace DMT.Core
 
         public virtual void Serialize(XmlWriter writer)
         {
-            writer.WriteStartElement(Core.Id.IdTagName);
+            writer.WriteStartElement(DMTId.IdTagName);
             ((ISerializable)_id).Serialize(writer);
             writer.WriteEndElement();
             logger.Trace("Written {0}'s id to xml. [{1}]", this.GetType().Name, _id);
@@ -43,7 +43,7 @@ namespace DMT.Core
         public virtual void Deserialize(XmlReader reader, IContext context)
         {
             // id
-            if (!reader.ReadToFollowing(Core.Id.IdTagName))
+            if (!reader.ReadToFollowing(DMTId.IdTagName))
             {
                 logger.Error("No id for entity.");
             }

@@ -8,7 +8,7 @@ using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
-namespace DMT.Core.Serialization
+namespace DMT.Core.Entities
 {
     [Export(typeof(IEntityFactory))]
     public class CoreEntityFactory : IEntityFactory
@@ -18,7 +18,7 @@ namespace DMT.Core.Serialization
         public virtual IId CreateId()
         {
             logger.Trace("Created new id.");
-            return Id.NewId();
+            return DMTId.NewId();
         }
 
         public virtual INode CreateNode()

@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using DMT.Core.Entities;
 using DMT.Core.Exceptions;
 using DMT.Core.Extensions;
 using DMT.Core.Graph;
@@ -37,7 +38,15 @@ namespace DMT.Core.Serialization
         public const string EdgeTag = "Edge";
         public const string RootTag = "Model";
 
+        private IEntityFactory entityFactory;
+
         private Stream stream;
+
+        [ImportingConstructor]
+        public XmlDataSource(IEntityFactory entityFactory)
+        {
+            this.entityFactory = entityFactory;
+        }
 
         #region IDataSource
 
@@ -135,7 +144,7 @@ namespace DMT.Core.Serialization
         private IModel LoadModel()
         {
             logger.Debug("Started loading model.");
-            IContext context = new DeserializationContext(new CoreEntityFactory());
+            IContext context = new DeserializationContext(entityFactory);
             List<INode> nodeList;
 
             using (var reader = XmlReader.Create(GetInputStream()))

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 
-namespace DMT.Core
+namespace DMT.Core.Entities
 {
     public class Node : Entity, INode
     {

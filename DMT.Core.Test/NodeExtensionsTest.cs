@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using DMT.Core.Extensions;
+using DMT.Core.Entities;
 
 namespace DMT.Core.Test
 {

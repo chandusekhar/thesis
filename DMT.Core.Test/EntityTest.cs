@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Test.Utils;
 using Xunit;
@@ -26,7 +27,7 @@ namespace DMT.Core.Test
             EntityMock em = new EntityMock();
             XDocument doc = SerializerHelper.SerializeObject(em);
 
-            Assert.NotEmpty(doc.Descendants(Id.IdTagName));
+            Assert.NotEmpty(doc.Descendants(DMTId.IdTagName));
         }
 
         [Fact]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Entities;
 using DMT.Core.Exceptions;
 using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Serialization;
@@ -100,7 +101,7 @@ namespace DMT.Core.Test
         public void ToStringContainsClassNameAndId()
         {
             Edge e = new Edge();
-            var toString = string.Format("DMT.Core.Edge [{0}]", e.Id);
+            var toString = string.Format("DMT.Core.Entities.Edge [{0}]", e.Id);
             Assert.Equal(toString, e.ToString());
         }
 
