@@ -16,8 +16,9 @@ namespace DMT.Common.Composition
     /// </summary>
     public sealed class CompositionService : IDisposable
     {
-        public const string DefaultCatalogPathKey = "default-catalog";
-        public const string ExtensionCatalogPathKey = "ext-catalog";
+        public const string DefaultCatalogPathKey = "default";
+        public const string ExtensionCatalogPathKey = "extension";
+        public const string ThirdPartyCatalogPathKey = "third-party";
 
         private static CompositionService instance;
         public static CompositionService Instance
@@ -33,8 +34,18 @@ namespace DMT.Common.Composition
         }
 
         private CompositionContainer container;
+        /// <summary>
+        /// Path of the default DLLs, such as DMT.Core
+        /// </summary>
         private string defaultsPath;
+        /// <summary>
+        /// Path of the extension DLLs such as DMT.Core.Partition.
+        /// </summary>
         private string extensionsPath;
+        /// <summary>
+        /// Path of the third party impelementations. If present this is the prefered one.
+        /// </summary>
+        private string thirdPartyPath;
 
         private CompositionService() { }
 
@@ -51,8 +62,9 @@ namespace DMT.Common.Composition
         {
             var def = ConfigurationManager.AppSettings[CompositionService.DefaultCatalogPathKey];
             var ext = ConfigurationManager.AppSettings[CompositionService.ExtensionCatalogPathKey];
+            var tp = ConfigurationManager.AppSettings[CompositionService.ThirdPartyCatalogPathKey];
 
-            this.Initialize(def, ext);
+            this.Initialize(def, ext, tp);
         }
 
         /// <summary>
@@ -62,10 +74,12 @@ namespace DMT.Common.Composition
         /// </summary>
         /// <param name="defaultsPath">path of the assemblies containing the default implementation</param>
         /// <param name="extensionsPath">path of the assemblies containing the extension implementation</param>
-        public void Initialize(string defaultsPath, string extensionsPath)
+        /// <param name="thirdPartyPath">path of the assemblies containing the third party implementation</param>
+        public void Initialize(string defaultsPath, string extensionsPath, string thirdPartyPath)
         {
             this.defaultsPath = defaultsPath;
             this.extensionsPath = extensionsPath;
+            this.thirdPartyPath = thirdPartyPath;
             InitializeContainer();
         }
 
@@ -116,16 +130,18 @@ namespace DMT.Common.Composition
                 return;
             }
 
-            if (string.IsNullOrEmpty(this.defaultsPath) || string.IsNullOrEmpty(this.extensionsPath))
+            if (string.IsNullOrEmpty(this.defaultsPath) || string.IsNullOrEmpty(this.extensionsPath) || string.IsNullOrEmpty(this.thirdPartyPath))
             {
                 throw new InvalidOperationException(
-                    "The defaults or extensions path have not been set. Put the appropriate values in your App.config or use the Initialize(String, String) method to initialize the composotion service.");
+                    "Some DLL paths has not been set up. " +
+                    "Put the appropriate values in your App.config or use the Initialize(String, String, String) method to initialize the composotion service.");
             }
 
-            var extensionCatalog = new DirectoryCatalog(this.extensionsPath);
+            var thirdPartyCatalog = new DirectoryCatalog(this.thirdPartyPath);
             var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
+            var extensionCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.extensionsPath));
 
-            this.container = new CompositionContainer(extensionCatalog, defaultCatalogEP);
+            this.container = new CompositionContainer(thirdPartyCatalog, extensionCatalogEP, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
         }
     }
