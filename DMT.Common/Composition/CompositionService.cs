@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -137,12 +138,23 @@ namespace DMT.Common.Composition
                     "Put the appropriate values in your App.config or use the Initialize(String, String, String) method to initialize the composotion service.");
             }
 
+
+            CreateDirectoryIfNeeded(this.thirdPartyPath);
             var thirdPartyCatalog = new DirectoryCatalog(this.thirdPartyPath);
             var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
             var extensionCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.extensionsPath));
 
             this.container = new CompositionContainer(thirdPartyCatalog, extensionCatalogEP, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
+            extensionCatalogEP.SourceProvider = this.container;
+        }
+
+        private void CreateDirectoryIfNeeded(string dir)
+        {
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
         }
     }
 }
