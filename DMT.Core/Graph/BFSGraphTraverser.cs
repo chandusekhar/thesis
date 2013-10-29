@@ -12,7 +12,7 @@ namespace DMT.Core.Graph
     /// <summary>
     /// Traversing a graph using the breadth-first search algorithm.
     /// </summary>
-    internal class BFSGraphTraverser : ComponentTraverser
+    public class BFSGraphTraverser : ComponentTraverser
     {
         public override INode Traverse(INode root)
         {

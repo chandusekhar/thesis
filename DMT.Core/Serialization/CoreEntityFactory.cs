@@ -10,7 +10,7 @@ using NLog;
 namespace DMT.Core.Serialization
 {
     [Export(typeof(IEntityFactory))]
-    internal class CoreEntityFactory : IEntityFactory
+    public class CoreEntityFactory : IEntityFactory
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

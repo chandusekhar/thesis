@@ -13,7 +13,7 @@ using NLog;
 
 namespace DMT.Core
 {
-    internal class Edge : Entity, IEdge
+    public class Edge : Entity, IEdge
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

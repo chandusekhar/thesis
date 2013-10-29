@@ -23,7 +23,7 @@ namespace DMT.Core.Serialization
     /// 
     /// </summary>
     [Export(typeof(IDataSource))]
-    internal class XmlDataSource : IDataSource
+    public class XmlDataSource : IDataSource
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

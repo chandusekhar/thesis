@@ -11,7 +11,7 @@ using NLog;
 namespace DMT.Core.Graph
 {
     [Export(typeof(ITraverser))]
-    internal class Traverser : ITraverser
+    public class Traverser : ITraverser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

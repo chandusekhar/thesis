@@ -7,7 +7,7 @@ using DMT.Core.Interfaces.Graph;
 
 namespace DMT.Core.Graph
 {
-    internal class DFSGraphTraverser : ComponentTraverser
+    public class DFSGraphTraverser : ComponentTraverser
     {
         public override Interfaces.INode Traverse(Interfaces.INode root)
         {

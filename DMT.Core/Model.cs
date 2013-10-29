@@ -7,7 +7,7 @@ using DMT.Core.Interfaces;
 
 namespace DMT.Core
 {
-    internal class Model : IModel
+    public class Model : IModel
     {
         private List<INode> componentRootList;
 

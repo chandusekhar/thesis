@@ -7,7 +7,7 @@ using DMT.Core.Interfaces.Graph;
 
 namespace DMT.Core.Graph
 {
-    internal abstract class ComponentTraverser
+    public abstract class ComponentTraverser
     {
         public event VisitedNodeEventHandler VisitedNode;
         public event VisitingNodeEventHandler VisitingNode;
@@ -38,9 +38,9 @@ namespace DMT.Core.Graph
         }
     }
 
-    internal delegate void VisitedNodeEventHandler(object sender, VisitedNodeEventArgs e);
+    public delegate void VisitedNodeEventHandler(object sender, VisitedNodeEventArgs e);
 
-    internal class VisitedNodeEventArgs : EventArgs
+    public class VisitedNodeEventArgs : EventArgs
     {
         public INode Node { get; private set; }
 

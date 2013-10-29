@@ -11,7 +11,7 @@ namespace DMT.Core.Graph
     /// Collection for visited nodes during graph traversal. It has O(1) lookup time for
     /// Contains and NotContains methods.
     /// </summary>
-    internal class VisitedNodeCollection
+    public class VisitedNodeCollection
     {
         // TODO: implement a better collection with O(1) check for containing an element
         Dictionary<IId, object> nodes = new Dictionary<IId, object>();
