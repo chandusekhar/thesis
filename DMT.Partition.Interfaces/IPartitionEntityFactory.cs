@@ -10,7 +10,7 @@ namespace DMT.Partition.Interfaces
     /// <summary>
     /// Entity factory with partition specific entity types.
     /// </summary>
-    public interface IPartitionEntityFactory : IEntityFactory
+    public interface IPartitionEntityFactory
     {
         /// <summary>
         /// Creates a IMutliNode object.
