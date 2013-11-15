@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using DMT.Core.Entities;
 using DMT.Core.Exceptions;
 using DMT.Core.Extensions;
-using DMT.Core.Graph;
 using DMT.Core.Interfaces;
-using DMT.Core.Interfaces.Graph;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
@@ -28,10 +23,6 @@ namespace DMT.Core.Serialization
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// Fallback name for the model file
-        /// </summary>
-        public const string BaseModelFileName = "model.xml";
         public const string NodesTag = "Nodes";
         public const string NodeTag = "Node";
         public const string EdgesTag = "Edges";
@@ -39,8 +30,6 @@ namespace DMT.Core.Serialization
         public const string RootTag = "Model";
 
         private IEntityFactory entityFactory;
-
-        private Stream stream;
 
         [ImportingConstructor]
         public XmlDataSource(IEntityFactory entityFactory)
@@ -50,36 +39,25 @@ namespace DMT.Core.Serialization
 
         #region IDataSource
 
-        public Task<IModel> LoadModelAsync()
+        public Task<IModel> LoadModelAsync(Stream stream)
         {
-            return Task.Run(new Func<IModel>(LoadModel));
+            return Task.Run(() => LoadModel(stream));
         }
 
-        public Task SaveModelAsync(IModel model)
+        public Task SaveModelAsync(Stream stream, IModel model)
         {
-            return Task.Run(() => SaveModel(model));
+            return Task.Run(() => SaveModel(stream, model));
         } 
 
         #endregion
 
-        /// <summary>
-        /// For testing purposes!
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        internal XmlDataSource UseStream(Stream stream)
-        {
-            this.stream = stream;
-            return this;
-        }
-
         #region private methods
 
-        private void SaveModel(IModel model)
+        private void SaveModel(Stream stream, IModel model)
         {
             logger.Debug("Model saving started");
 
-            using (var writer = XmlWriter.Create(GetOutputStream()))
+            using (var writer = XmlWriter.Create(stream))
             {
                 // opening tag
                 writer.WriteStartDocument();
@@ -106,46 +84,13 @@ namespace DMT.Core.Serialization
             logger.Debug("Model saving done.");
         }
 
-        private Stream GetOutputStream()
-        {
-            if (this.stream != null)
-            {
-                return this.stream;
-            }
-
-            string filepath = GetModelFilePath();
-            return File.Create(filepath);
-        }
-
-        private Stream GetInputStream()
-        {
-            if (this.stream != null)
-            {
-                return this.stream;
-            }
-
-            string modelFilePath = GetModelFilePath();
-            return File.OpenRead(modelFilePath);
-        }
-
-        private string GetModelFilePath()
-        {
-            string modelFilePath = ConfigurationManager.AppSettings[CoreConstants.ModelFileNameSettingsKey];
-            if (modelFilePath == null)
-            {
-                logger.Debug("No model file sepcified. Falling back to default model filename.");
-                modelFilePath = XmlDataSource.BaseModelFileName;
-            }
-            return modelFilePath;
-        }
-
-        private IModel LoadModel()
+        private IModel LoadModel(Stream stream)
         {
             logger.Debug("Started loading model.");
             IContext context = new DeserializationContext(entityFactory);
             List<INode> nodeList;
 
-            using (var reader = XmlReader.Create(GetInputStream()))
+            using (var reader = XmlReader.Create(stream))
             {
                 // read nodes
                 logger.Trace("Starting to read nodes.");
