@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultiNode.cs" />
+    <Compile Include="SuperNode.cs" />
     <Compile Include="PartitionEntityFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -72,6 +72,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-      <Copy SourceFiles="$(TargetPath)" DestinationFolder="../DMT.Master.App/bin/$(Configuration)/Ext" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="../DMT.Master.App/bin/$(Configuration)/Ext" />
   </Target>
 </Project>

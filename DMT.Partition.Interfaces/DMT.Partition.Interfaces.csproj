@@ -39,12 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICoarsener.cs" />
     <Compile Include="IHost.cs" />
-    <Compile Include="IMultiNode.cs" />
+    <Compile Include="ISuperNode.cs" />
     <Compile Include="IPartition.cs" />
     <Compile Include="IPartitionedModel.cs" />
     <Compile Include="IPartitionEntityFactory.cs" />
     <Compile Include="IPartitioner.cs" />
+    <Compile Include="IPartitionRefiner.cs" />
     <Compile Include="ISendPartitionResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
