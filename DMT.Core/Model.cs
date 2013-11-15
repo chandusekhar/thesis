@@ -9,11 +9,11 @@ namespace DMT.Core
 {
     public class Model : IModel
     {
-        private List<INode> componentRootList;
+        private List<INode> nodesList;
 
-        public ICollection<INode> ComponentRoots
+        public ICollection<INode> Nodes
         {
-            get { return componentRootList; }
+            get { return nodesList; }
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace DMT.Core
         /// <param name="nodes">Root nodes of the components. A new list will be instantiated with the specified element.</param>
         public Model(IEnumerable<INode> nodes)
         {
-            this.componentRootList = new List<INode>(nodes);
+            this.nodesList = new List<INode>(nodes);
         }
     }
 }

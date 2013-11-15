@@ -10,7 +10,7 @@ namespace DMT.Core.Interfaces
     /// Interface for model specific properties. It encapsulates the model.
     ///
     /// The model is represented as a graph and this graph can contain more than one
-    /// component. The component root nodes are kept in this object.
+    /// component.
     ///
     /// This is not an entity! This will not be persisted. It does not need an id. It is merely
     /// an encapsulation for model specific properties and methods.
@@ -18,8 +18,8 @@ namespace DMT.Core.Interfaces
     public interface IModel
     {
         /// <summary>
-        /// Gets the root nodes of the connected graph components.
+        /// Gets the nodes of the graph.
         /// </summary>
-        ICollection<INode> ComponentRoots { get; }
+        ICollection<INode> Nodes { get; }
     }
 }

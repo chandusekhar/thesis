@@ -21,7 +21,8 @@ namespace DMT.Core.Test.Serialization
         {
             var ds = new XmlDataSource(new CoreEntityFactory());
             var model = ds.LoadModelAsync().Result;
-            Assert.Equal(1, model.ComponentRoots.Count());
+            // model.xml has 3 nodes
+            Assert.Equal(3, model.Nodes.Count());
         }
 
         [Fact]
@@ -67,9 +68,10 @@ namespace DMT.Core.Test.Serialization
 
         private static XDocument SaveModel()
         {
-            Node n1 = new Node();
-            new Edge(n1, new Node());
-            Model m = new Model(new Node[] { n1 });
+            Node n1, n2;
+            n1 = new Node();
+            new Edge(n1, n2 = new Node());
+            Model m = new Model(new Node[] { n1, n2 });
             MemoryStream target = new MemoryStream();
             var ds = new XmlDataSource(new CoreEntityFactory());
 

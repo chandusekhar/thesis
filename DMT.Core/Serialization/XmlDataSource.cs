@@ -85,10 +85,8 @@ namespace DMT.Core.Serialization
                 writer.WriteStartDocument();
                 writer.WriteStartElement(XmlDataSource.RootTag);
 
-                IEnumerable<INode> nodes;
-                IEnumerable<IEdge> edges;
-
-                CollectNodesAndEdges(model, out nodes, out edges);
+                IEnumerable<INode> nodes = model.Nodes;
+                IEnumerable<IEdge> edges = CollectEdges(model);
 
                 // nodes
                 logger.Debug("Saving nodes.");
@@ -171,15 +169,8 @@ namespace DMT.Core.Serialization
                 logger.Trace("Reading edges done.");
             }
 
-            // at this point the whole graph is built
-            // we only have to select one (root) node from each connected component.
-            List<INode> componentRoots = new List<INode>();
-            var t = new Traverser();
-            t.VisitedComponent += (_, e) => componentRoots.Add(e.RootNode);
-            t.Traverse(nodeList, ComponentTraversalStrategy.BFS);
-
             logger.Debug("Finished loading model.");
-            return new Model(componentRoots);
+            return new Model(nodeList);
         }
 
         private void ReadEdges(XmlReader reader, IContext context)
@@ -205,28 +196,22 @@ namespace DMT.Core.Serialization
             return nodes;
         }
 
-        private void CollectNodesAndEdges(IModel model, out IEnumerable<INode> nodes, out IEnumerable<IEdge> edges)
+        private IEnumerable<IEdge> CollectEdges(IModel model)
         {
-            var nodeList = new List<INode>();
             var edgeDict = new Dictionary<IId, IEdge>();
 
-            var t = new Traverser();
-            t.VisitingNode += (s, e) =>
+            foreach (var node in model.Nodes)
             {
-                nodeList.Add(e.Node);
-                foreach (var edge in e.Node.AllEdges())
+                foreach (var edge in node.AllEdges())
                 {
                     if (!edgeDict.ContainsKey(edge.Id))
                     {
                         edgeDict.Add(edge.Id, edge);
                     }
                 }
-            };
+            }
 
-            t.Traverse(model.ComponentRoots, ComponentTraversalStrategy.BFS);
-
-            nodes = nodeList;
-            edges = edgeDict.Values;
+            return edgeDict.Values;
         }
 
         private void WriteCollectionToXml(IEnumerable<ISerializable> elements, XmlWriter writer, string collectionTag, string elementTag)
