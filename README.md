@@ -23,9 +23,9 @@ interface and the common library. The other category is for internal usage. Its
 aim is to extend implementation, reuse code, and to support OO features like
 inheritance.
 
-To preserve full consistency during dependency injection **service** interfaces
-cannot extend other interfaces from other assemblies. For example there is an
-`IPartitionEntityFactory` interface for instantiating partition specific
+To preserve full consistency during dependency injection interfaces that will be
+exported cannot extend other interfaces from other assemblies. For example there
+is an `IPartitionEntityFactory` interface for instantiating partition specific
 entities. If it had extended the `IEntityFactory` it could have caused
 inconsistency when `IEntityFactory` is redefined by a plug-in, but
 `IPartitionEntityFactory` is not.
@@ -70,3 +70,5 @@ inconsistency when `IEntityFactory` is redefined by a plug-in, but
 	* Slave module
 	* Administrative tasks (communicating between instances, reporting back to master module, etc.).
 * __DMT.Slave.App__:  merely a facade for DMT.Slave.Module, a console application
+
+For more information on submodules see the corresponding README files in the module directories.
