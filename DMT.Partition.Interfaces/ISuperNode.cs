@@ -8,9 +8,9 @@ using DMT.Core.Interfaces;
 namespace DMT.Partition.Interfaces
 {
     /// <summary>
-    /// A node containing multiple other nodes. 
+    /// A node containing multiple other nodes.
     /// </summary>
-    public interface IMultiNode : INode
+    public interface ISuperNode : INode
     {
         /// <summary>
         /// Gets the nodes that belongs to this multinode.

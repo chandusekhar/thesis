@@ -14,9 +14,9 @@ namespace DMT.Core.Partition
     [Export(typeof(IPartitionEntityFactory))]
     internal class PartitionEntityFactory : CoreEntityFactory, IPartitionEntityFactory
     {
-        public IMultiNode CreateMultiNode()
+        public ISuperNode CreateSuperNode()
         {
-            return new MultiNode();
+            return new SuperNode();
         }
     }
 }

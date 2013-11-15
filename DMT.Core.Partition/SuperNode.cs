@@ -9,7 +9,7 @@ using DMT.Partition.Interfaces;
 
 namespace DMT.Core.Partition
 {
-    internal class MultiNode : Node, IMultiNode
+    internal class SuperNode : Node, ISuperNode
     {
         List<INode> nodes = new List<INode>();
 

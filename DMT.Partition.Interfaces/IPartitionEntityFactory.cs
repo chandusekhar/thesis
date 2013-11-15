@@ -16,6 +16,6 @@ namespace DMT.Partition.Interfaces
         /// Creates a IMutliNode object.
         /// </summary>
         /// <returns></returns>
-        IMultiNode CreateMultiNode();
+        ISuperNode CreateSuperNode();
     }
 }
