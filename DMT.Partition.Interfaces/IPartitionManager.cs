@@ -21,6 +21,11 @@ namespace DMT.Partition.Interfaces
         /// Gets the partition refiner.
         /// </summary>
         IPartitionRefiner Refiner { get; }
+
+        /// <summary>
+        /// Gets the partitioner object.
+        /// </summary>
+        IPartitioner Partitioner { get; }
         
         /// <summary>
         /// Partitions the model.
