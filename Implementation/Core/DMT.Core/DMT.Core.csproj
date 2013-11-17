@@ -84,6 +84,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="../DMT.Master.App/bin/$(Configuration)/Defaults" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Master.App/bin/$(Configuration)/Defaults" />
   </Target>
 </Project>
