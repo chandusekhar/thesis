@@ -17,5 +17,12 @@ namespace DMT.Partition.Interfaces
         /// </summary>
         /// <returns></returns>
         ISuperNode CreateSuperNode();
+
+        /// <summary>
+        /// Creates an ISuperNode object and wraps the <c>node</c> in it.
+        /// </summary>
+        /// <param name="node">The node to wrap.</param>
+        /// <returns></returns>
+        ISuperNode CreateSuperNode(INode node);
     }
 }

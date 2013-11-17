@@ -18,5 +18,13 @@ namespace DMT.Core.Partition
         {
             return new SuperNode();
         }
+
+
+        public ISuperNode CreateSuperNode(INode node)
+        {
+            ISuperNode sn = CreateSuperNode();
+            sn.Nodes.Add(node);
+            return sn;
+        }
     }
 }
