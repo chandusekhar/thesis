@@ -28,5 +28,17 @@ namespace DMT.Core.Interfaces
         /// </summary>
         /// <param name="node">A node to connecto to.</param>
         void ConnectTo(INode node);
+
+        /// <summary>
+        /// Gets all (in- and outbound) edges in one collection.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IEdge> GetAllEdges();
+
+        /// <summary>
+        /// Gets the adjacent nodes (including every direction)
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<INode> GetAdjacentNodes();
     }
 }

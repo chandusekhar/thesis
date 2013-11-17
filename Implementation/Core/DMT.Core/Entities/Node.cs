@@ -52,5 +52,28 @@ namespace DMT.Core.Entities
             var edge = factory.CreateEdge();
             edge.ConnectNodes(this, node);
         }
+
+
+        public IEnumerable<IEdge> GetAllEdges()
+        {
+            return this._inboundEdges.Union(this._outboundEdges);
+        }
+
+        public IEnumerable<INode> GetAdjacentNodes()
+        {
+            List<INode> neighbours = new List<INode>(this._outboundEdges.Count + this._inboundEdges.Count);
+
+            foreach (var edge in this._inboundEdges)
+            {
+                neighbours.Add(edge.Source);
+            }
+
+            foreach (var edge in this._outboundEdges)
+            {
+                neighbours.Add(edge.Target);
+            }
+
+            return neighbours;
+        }
     }
 }

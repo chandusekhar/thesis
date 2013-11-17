@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using DMT.Core.Exceptions;
-using DMT.Core.Extensions;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
@@ -147,7 +146,7 @@ namespace DMT.Core.Serialization
 
             foreach (var node in model.Nodes)
             {
-                foreach (var edge in node.AllEdges())
+                foreach (var edge in node.GetAllEdges())
                 {
                     if (!edgeDict.ContainsKey(edge.Id))
                     {

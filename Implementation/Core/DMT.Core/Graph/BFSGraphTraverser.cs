@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
-using DMT.Core.Extensions;
 using DMT.Core.Interfaces.Graph;
 
 namespace DMT.Core.Graph
@@ -37,7 +36,7 @@ namespace DMT.Core.Graph
 
                 this.OnVisitedNode(curr);
 
-                foreach (var adjacentNode in curr.AdjacentNodes())
+                foreach (var adjacentNode in curr.GetAdjacentNodes())
                 {
                     if (visited.NotContains(adjacentNode))
                     {

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DMT.Core.Graph;
 using DMT.Core.Interfaces;
 using Xunit;
-using DMT.Core.Extensions;
 using DMT.Core.Test.Utils;
 using DMT.Core.Interfaces.Graph;
 using DMT.Core.Entities;
@@ -60,7 +59,7 @@ namespace DMT.Core.Test.Graph
             };
 
             // it works with partial node lis as well. :)
-            var found = t.Traverse(n1.AdjacentNodes(), ComponentTraversalStrategy.BFS);
+            var found = t.Traverse(n1.GetAdjacentNodes(), ComponentTraversalStrategy.BFS);
 
             Assert.Equal(n1, found);
         }

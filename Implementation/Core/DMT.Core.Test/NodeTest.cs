@@ -25,5 +25,18 @@ namespace DMT.Core.Test
             var n1 = new Node();
             Assert.Throws(typeof(ArgumentNullException), () => n1.ConnectTo(null));
         }
+
+        [Fact]
+        public void GetAdjacentNodes()
+        {
+            Node n1 = new Node();
+            Edge e1 = new Edge(n1, new Node());
+            Edge e2 = new Edge(n1, new Node());
+
+            var neighbours = n1.GetAdjacentNodes();
+
+            Assert.Contains(e1.Target, neighbours);
+            Assert.Contains(e1.Target, neighbours);
+        }
     }
 }
