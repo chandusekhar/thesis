@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common;
 using DMT.Core.Interfaces;
 
 namespace DMT.Core.Entities
@@ -11,6 +13,8 @@ namespace DMT.Core.Entities
     {
         protected List<IEdge> _outboundEdges;
         protected List<IEdge> _inboundEdges;
+
+        protected IEntityFactory factory;
 
         public ICollection<IEdge> OutboundEdges
         {
@@ -29,9 +33,24 @@ namespace DMT.Core.Entities
             _inboundEdges = new List<IEdge>();
         }
 
+        [ImportingConstructor]
+        public Node(IEntityFactory factory)
+            : this()
+        {
+            this.factory = factory;
+        }
+
         public override bool Remove()
         {
             throw new NotImplementedException();
+        }
+
+        public void ConnectTo(INode node)
+        {
+            Objects.RequireNonNull(node);
+
+            var edge = factory.CreateEdge();
+            edge.ConnectNodes(this, node);
         }
     }
 }
