@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="ICoarsener.cs" />
     <Compile Include="IHost.cs" />
+    <Compile Include="IPartitionManager.cs" />
     <Compile Include="ISuperNode.cs" />
     <Compile Include="IPartition.cs" />
     <Compile Include="IPartitionedModel.cs" />
