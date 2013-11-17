@@ -18,12 +18,12 @@ namespace DMT.Partition.Interfaces
     public interface ICoarsener
     {
         /// <summary>
-        /// Gets the factor of coarsening.
+        /// Gets or sets the factor of coarsening.
         ///
         /// The factor shows how big the coearsend graph should be compared to
         /// the original graph. So ideally the number_of_node * factor = coarsening_steps.
         /// </summary>
-        double Factor { get; }
+        double Factor { get; set; }
 
         /// <summary>
         /// Coarsen a graph. It produces a (final) coarsening that tries to match the <c>Factor</c>
