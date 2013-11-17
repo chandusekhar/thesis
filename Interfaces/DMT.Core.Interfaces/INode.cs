@@ -22,6 +22,11 @@ namespace DMT.Core.Interfaces
         ICollection<IEdge> InboundEdges { get; }
 
         /// <summary>
+        /// Gets the degree of the node. Including in and out edges.
+        /// </summary>
+        int Degree { get; }
+
+        /// <summary>
         /// Connects this node with the specified node. It should create a new edge
         /// between the two nodes. The new edge is an outbound edge for <c>this</c>
         /// node.

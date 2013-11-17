@@ -26,6 +26,11 @@ namespace DMT.Core.Entities
             get { return _inboundEdges; }
         }
 
+        public int Degree
+        {
+            get { return this._outboundEdges.Count + this._inboundEdges.Count; }
+        }
+
         public Node()
             : base()
         {

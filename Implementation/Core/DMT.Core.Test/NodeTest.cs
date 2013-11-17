@@ -38,5 +38,17 @@ namespace DMT.Core.Test
             Assert.Contains(e1.Target, neighbours);
             Assert.Contains(e1.Target, neighbours);
         }
+
+        [Fact]
+        public void DegreeOfNode()
+        {
+            // degree of node is the number of in and out edges
+            var n1 = new Node(new CoreEntityFactory());
+            n1.ConnectTo(new Node());
+            n1.ConnectTo(new Node());
+
+            Assert.Equal(2, n1.Degree);
+        }
+
     }
 }
