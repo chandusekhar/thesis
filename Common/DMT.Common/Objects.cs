@@ -12,7 +12,7 @@ namespace DMT.Common
         {
             if (obj == null)
             {
-                throw new ArgumentNullException(message, (Exception)null);
+                throw new ArgumentNullException(message ?? "Object must not be null.", (Exception)null);
             }
         }
     }
