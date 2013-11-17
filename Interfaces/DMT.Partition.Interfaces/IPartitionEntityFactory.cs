@@ -13,7 +13,7 @@ namespace DMT.Partition.Interfaces
     public interface IPartitionEntityFactory
     {
         /// <summary>
-        /// Creates a IMutliNode object.
+        /// Creates a ISuperNode object.
         /// </summary>
         /// <returns></returns>
         ISuperNode CreateSuperNode();
