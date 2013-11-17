@@ -44,3 +44,6 @@ algorithm. These are:
 Implement any of these and mark them with an `Export` attribute. Copy the
 resulting dll into the specified folder (see config options for details) and it's
 done.
+
+To have **full control** over the partitioning, implement the `IPartitionManager`
+interface.
