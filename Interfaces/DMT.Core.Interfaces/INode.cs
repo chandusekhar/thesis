@@ -32,7 +32,12 @@ namespace DMT.Core.Interfaces
         /// node.
         /// </summary>
         /// <param name="node">A node to connecto to.</param>
-        void ConnectTo(INode node);
+        /// <param name="direction">
+        /// The direction of the edge relative to the node. Inbound means that it will be an
+        /// edge that is inbound to the receiver node.
+        /// </param>
+        /// <returns>The newly created edge.</returns>
+        IEdge ConnectTo(INode node, EdgeDirection direction);
 
         /// <summary>
         /// Gets all (in- and outbound) edges in one collection.

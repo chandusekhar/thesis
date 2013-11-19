@@ -50,12 +50,25 @@ namespace DMT.Core.Entities
             throw new NotImplementedException();
         }
 
-        public void ConnectTo(INode node)
+        public IEdge ConnectTo(INode node, EdgeDirection direction)
         {
             Objects.RequireNonNull(node);
 
             var edge = factory.CreateEdge();
-            edge.ConnectNodes(this, node);
+
+            switch (direction)
+            {
+                case EdgeDirection.Inbound:
+                    edge.ConnectNodes(node, this);
+                    break;
+                case EdgeDirection.Outbound:
+                    edge.ConnectNodes(this, node);
+                    break;
+                default:
+                    throw new ArgumentException("direction", "Not recognized direction.");
+            }
+
+            return edge;
         }
 
 

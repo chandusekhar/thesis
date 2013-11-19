@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EdgeDirection.cs" />
     <Compile Include="Exceptions\EdgeAlreadyConnectedException.cs" />
     <Compile Include="Graph\ComponentTraversalStrategy.cs" />
     <Compile Include="Graph\ITraverser.cs" />
