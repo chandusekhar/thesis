@@ -13,6 +13,12 @@ namespace DMT.Core.Partition
     {
         List<INode> nodes = new List<INode>();
 
+        public SuperNode(IEntityFactory factory)
+            : base(factory)
+        {
+
+        }
+
         public ICollection<INode> Nodes
         {
             get { return nodes; }

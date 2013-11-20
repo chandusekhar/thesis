@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +37,6 @@ namespace DMT.Core.Entities
             _inboundEdges = new List<IEdge>();
         }
 
-        [ImportingConstructor]
         public Node(IEntityFactory factory)
             : this()
         {

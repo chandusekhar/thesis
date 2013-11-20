@@ -24,7 +24,7 @@ namespace DMT.Core.Entities
         public virtual INode CreateNode()
         {
             logger.Trace("Created new node.");
-            return new Node();
+            return new Node(this);
         }
 
         public virtual IEdge CreateEdge()

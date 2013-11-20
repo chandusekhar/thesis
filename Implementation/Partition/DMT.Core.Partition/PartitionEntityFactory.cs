@@ -10,15 +10,21 @@ using DMT.Partition.Interfaces;
 
 namespace DMT.Core.Partition
 {
-    [Export(typeof(IEntityFactory))]
     [Export(typeof(IPartitionEntityFactory))]
-    internal class PartitionEntityFactory : CoreEntityFactory, IPartitionEntityFactory
+    internal class PartitionEntityFactory : IPartitionEntityFactory
     {
-        public ISuperNode CreateSuperNode()
+        private IEntityFactory baseEntityFactory;
+
+        [ImportingConstructor]
+        public PartitionEntityFactory(IEntityFactory entityFactory)
         {
-            return new SuperNode();
+            this.baseEntityFactory = entityFactory;
         }
 
+        public ISuperNode CreateSuperNode()
+        {
+            return new SuperNode(this.baseEntityFactory);
+        }
 
         public ISuperNode CreateSuperNode(INode node)
         {
