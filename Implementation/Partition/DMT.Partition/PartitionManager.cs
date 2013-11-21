@@ -9,7 +9,8 @@ using DMT.Partition.Interfaces;
 
 namespace DMT.Partition
 {
-    internal class PartitionManager : IPartitionManager
+    [Export(typeof(IPartitionManager))]
+    internal class PartitionManager : IThreeStepPartitionManager
     {
         private ICoarsener coarsener;
         private IPartitionRefiner refiner;

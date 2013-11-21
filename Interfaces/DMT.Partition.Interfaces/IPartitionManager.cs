@@ -13,26 +13,10 @@ namespace DMT.Partition.Interfaces
     public interface IPartitionManager
     {
         /// <summary>
-        /// Gets coarsener.
-        /// </summary>
-        ICoarsener Coarsener { get; }
-
-        /// <summary>
-        /// Gets the partition refiner.
-        /// </summary>
-        IPartitionRefiner Refiner { get; }
-
-        /// <summary>
-        /// Gets the partitioner object.
-        /// </summary>
-        IPartitioner Partitioner { get; }
-        
-        /// <summary>
         /// Partitions the model.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         IEnumerable<IPartition> PartitionModel(IModel model);
-
     }
 }
