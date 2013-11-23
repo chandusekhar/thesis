@@ -14,17 +14,21 @@ namespace DMT.Partition.Interfaces
     public interface IPartitioner
     {
         /// <summary>
-        /// Produces a k-way partitioning of the graph.
+        /// Gets or sets the (approximate) number of partitions to be produced.
+        /// </summary>
+        int NumberOfPartitions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the (approximate) number of nodes that will be put into one partition.
+        /// </summary>
+        int NumberOfNodesInPartition { get; set; }
+
+        /// <summary>
+        /// Produces a k-way partitioning of the graph. The number of partitions are controlled
+        /// by the <c>NumberOfPartitions</c> property.
         /// </summary>
         /// <param name="nodes">Nodes of the graph to partition.</param>
         /// <returns>A list of partitions.</returns>
         IEnumerable<IPartition> Partition(IEnumerable<INode> nodes);
-
-        /// <summary>
-        /// Produces a 2-way partitioning of the graph.
-        /// </summary>
-        /// <param name="nodes">Nodes of the graph to partition.</param>
-        /// <returns>Array of partitions, it always has 2 elements.</returns>
-        IPartition[] BisectGraph(IEnumerable<INode> nodes);
     }
 }

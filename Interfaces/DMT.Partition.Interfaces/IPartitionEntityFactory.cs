@@ -24,5 +24,11 @@ namespace DMT.Partition.Interfaces
         /// <param name="node">The node to wrap.</param>
         /// <returns></returns>
         ISuperNode CreateSuperNode(INode node);
+
+        /// <summary>
+        /// Creates an object that implements hte IPartition interface.
+        /// </summary>
+        /// <returns></returns>
+        IPartition CreatePartition();
     }
 }

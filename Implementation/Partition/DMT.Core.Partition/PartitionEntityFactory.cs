@@ -32,5 +32,10 @@ namespace DMT.Core.Partition
             sn.Nodes.Add(node);
             return sn;
         }
+
+        public IPartition CreatePartition()
+        {
+            return new Partition(baseEntityFactory);
+        }
     }
 }
