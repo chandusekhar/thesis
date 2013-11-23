@@ -18,14 +18,14 @@ namespace DMT.Partition.Test
         [Fact]
         public void SizeOfSuperNodeWithOnlyNormalNodes()
         {
-            var sn = CreateWithChildren(Count, f => new Node(f));
+            var sn = SuperNodeTestFactory.CreateWithChildren(Count, f => new Node(f));
             Assert.Equal(Count, sn.Size);
         }
 
         [Fact]
         public void SizeOfSuperNodeWhenContainingOtherSuperNodes()
         {
-            var sn = CreateWithChildren(Count, _ => { return CreateWithChildren(Count, a => new Node(a)); });
+            var sn = SuperNodeTestFactory.CreateWithChildren(Count, _ => { return SuperNodeTestFactory.CreateWithChildren(Count, a => new Node(a)); });
             Assert.Equal(Count * Count, sn.Size);
         }
 
@@ -33,22 +33,11 @@ namespace DMT.Partition.Test
         [Fact]
         public void SizeOfSuperNodeWhenMixingContainingNodes()
         {
-            var sn = CreateWithChildren(Count, f => new Node(f));
-            sn.Nodes.Add(CreateWithChildren(Count, f => new Node(f)));
+            var sn = SuperNodeTestFactory.CreateWithChildren(Count, f => new Node(f));
+            sn.Nodes.Add(SuperNodeTestFactory.CreateWithChildren(Count, f => new Node(f)));
             Assert.Equal(Count+Count, sn.Size);
         }
 
-        private SuperNode CreateWithChildren(int count, Func<IEntityFactory, INode> createFunc)
-        {
-            IEntityFactory f = new CoreEntityFactory();
-            SuperNode sn = new SuperNode(f);
 
-            for (int i = 0; i < count; i++)
-            {
-                sn.Nodes.Add(createFunc(f));
-            }
-
-            return sn;
-        }
     }
 }
