@@ -26,7 +26,30 @@ namespace DMT.Core.Partition
 
         public int Size
         {
-            get { return nodes.Count; }
+            // TODO: look into caching this value
+            get { return CountChildren(); }
+        }
+
+        private int CountChildren()
+        {
+            int sum = 0;
+            ISuperNode sn;
+
+            foreach (var n in this.nodes)
+            {
+                sn = n as ISuperNode;
+
+                if (sn != null)
+                {
+                    sum += sn.Size;
+                }
+                else
+                {
+                    ++sum;
+                }
+            }
+
+            return sum;
         }
     }
 }
