@@ -82,7 +82,17 @@ namespace DMT.Partition
 
         public void Uncoarsen(IEnumerable<IPartition> partitions, IPartitionRefiner refiner)
         {
-            throw new NotImplementedException();
+            logger.Info("Starting uncoarsening.");
+            foreach (var p in partitions)
+            {
+                p.Inflate();
+            }
+            if (refiner != null)
+            {
+                refiner.Refine(partitions);
+            }
+
+            logger.Info("Uncoarsening finished.");
         }
 
         /// <summary>
@@ -102,7 +112,6 @@ namespace DMT.Partition
             BuildEdgesBetweenClusters(clusters);
             return clusters;
         }
-
 
         public void BuildEdgesBetweenClusters(IEnumerable<ISuperNode> clusters)
         {
@@ -201,6 +210,5 @@ namespace DMT.Partition
                 this.nodeCache.Remove(nodeid);
             }
         }
-
     }
 }
