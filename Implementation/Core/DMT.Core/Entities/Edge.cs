@@ -23,7 +23,22 @@ namespace DMT.Core.Entities
         private INode source = null;
         private INode target = null;
 
+        /// <summary>
+        /// FOR TESTS ONLY!
+        /// </summary>
         public Edge()
+            : this(new CoreEntityFactory())
+        { }
+
+        public Edge(IEntityFactory factory)
+            : base(factory)
+        { }
+
+        /// <summary>
+        /// FOR TESTS ONLY!
+        /// </summary>
+        public Edge(INode start, INode end)
+            : this(start, end, new CoreEntityFactory())
         { }
 
         /// <summary>
@@ -34,7 +49,8 @@ namespace DMT.Core.Entities
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Edge(INode start, INode end)
+        public Edge(INode start, INode end, IEntityFactory factory)
+            : base(factory)
         {
             this.ConnectNodes(start, end);
         }

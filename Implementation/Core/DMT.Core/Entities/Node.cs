@@ -31,16 +31,17 @@ namespace DMT.Core.Entities
         }
 
         public Node()
-            : base()
+            : this(new CoreEntityFactory())
         {
-            _outboundEdges = new List<IEdge>();
-            _inboundEdges = new List<IEdge>();
+
         }
 
         public Node(IEntityFactory factory)
-            : this()
+            : base(factory)
         {
             this.factory = factory;
+            _outboundEdges = new List<IEdge>();
+            _inboundEdges = new List<IEdge>();
         }
 
         public override bool Remove()

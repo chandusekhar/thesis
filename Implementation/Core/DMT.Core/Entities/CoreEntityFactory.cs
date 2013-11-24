@@ -30,13 +30,13 @@ namespace DMT.Core.Entities
         public virtual IEdge CreateEdge()
         {
             logger.Trace("Created new edge.");
-            return new Edge();
+            return new Edge(this);
         }
 
         public virtual IEdge CreateEdge(INode start, INode end)
         {
             logger.Trace("Created new edge.");
-            return new Edge(start, end);
+            return new Edge(start, end, this);
         }
     }
 }

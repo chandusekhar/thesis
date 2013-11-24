@@ -16,16 +16,16 @@ namespace DMT.Core.Entities
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private DMTId _id;
-
-        public Entity()
-        {
-            _id = DMTId.NewId();
-        }
+        private IId _id;
 
         public IId Id
         {
             get { return _id; }
+        }
+
+        public Entity(IEntityFactory factory)
+        {
+            _id = factory.CreateId();
         }
 
         public abstract bool Remove();

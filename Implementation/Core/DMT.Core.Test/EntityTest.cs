@@ -15,6 +15,12 @@ namespace DMT.Core.Test
     {
         class EntityMock : Entity
         {
+            public EntityMock()
+                : base(new CoreEntityFactory())
+            {
+
+            }
+
             public override bool Remove()
             {
                 throw new NotSupportedException();
