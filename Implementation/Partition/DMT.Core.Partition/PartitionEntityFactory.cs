@@ -37,5 +37,10 @@ namespace DMT.Core.Partition
         {
             return new Partition(baseEntityFactory);
         }
+
+        internal static PartitionEntityFactory New()
+        {
+            return new PartitionEntityFactory(new CoreEntityFactory());
+        }
     }
 }

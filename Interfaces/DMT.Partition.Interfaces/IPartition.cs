@@ -28,5 +28,10 @@ namespace DMT.Partition.Interfaces
         /// </summary>
         /// <returns>The result of the send process.</returns>
         Task<ISendPartitionResponse> SendToHost();
+
+        /// <summary>
+        /// Inflate partition by swapping SuperNodes with their children.
+        /// </summary>
+        void Inflate();
     }
 }

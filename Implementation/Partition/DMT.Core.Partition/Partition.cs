@@ -47,5 +47,27 @@ namespace DMT.Core.Partition
         {
             throw new NotImplementedException();
         }
+
+        public void Inflate()
+        {
+            List<INode> newNodes = new List<INode>();
+            ISuperNode sn;
+
+            foreach (var node in nodes)
+            {
+                sn = node as ISuperNode;
+
+                if (sn != null)
+                {
+                    newNodes.AddRange(sn.Nodes);
+                }
+                else
+                {
+                    newNodes.Add(node);
+                }
+            }
+
+            this.nodes = newNodes;
+        }
     }
 }

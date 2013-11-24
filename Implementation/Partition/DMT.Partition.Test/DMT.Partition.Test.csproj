@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BucketPartitionerTest.cs" />
     <Compile Include="GreedyCoarsenerTest.cs" />
+    <Compile Include="PartitionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuperNodeTest.cs" />
     <Compile Include="SuperNodeTestFactory.cs" />
