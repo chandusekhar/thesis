@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
+using NLog;
 
 namespace DMT.Partition
 {
@@ -16,6 +17,8 @@ namespace DMT.Partition
     [Export(typeof(IPartitioner))]
     internal class BucketPartitioner : IPartitioner
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private IPartitionEntityFactory factory;
 
         public int NumberOfPartitions { get; set; }
@@ -31,6 +34,7 @@ namespace DMT.Partition
 
         public IEnumerable<IPartition> Partition(IEnumerable<INode> nodes)
         {
+            logger.Info("Starting partitioning.");
             List<IPartition> partitions = new List<IPartition>();
 
             IPartition current = factory.CreatePartition();
@@ -69,6 +73,8 @@ namespace DMT.Partition
                 current.Nodes.Add(node);
 
             }
+
+            logger.Info("Partition done. Produced {0} partitions.", partitions.Count);
 
             return partitions;
         }
