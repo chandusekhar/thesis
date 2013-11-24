@@ -58,6 +58,18 @@ namespace DMT.Core.Entities
             return string.Format("{0} [{1}]", this.GetType().FullName, this.Id);
         }
 
+        public bool Equals(IEntity other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (Object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
 
+            return this.Id.Equals(other.Id);
+        }
     }
 }

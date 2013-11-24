@@ -9,7 +9,7 @@ namespace DMT.Core.Interfaces
     /// <summary>
     /// Entity interface.
     /// </summary>
-    public interface IEntity : IIdentifiable
+    public interface IEntity : IIdentifiable, IEquatable<IEntity>
     {
         /// <summary>
         /// Remove an entity from its context.
