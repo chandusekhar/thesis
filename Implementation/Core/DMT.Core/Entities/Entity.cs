@@ -71,5 +71,20 @@ namespace DMT.Core.Entities
 
             return this.Id.Equals(other.Id);
         }
+
+        public override bool Equals(object obj)
+        {
+            Entity e = obj as Entity;
+            if (e == null)
+            {
+                return false;
+            }
+            return this.Equals(e);
+        }
+
+        public override int GetHashCode()
+        {
+            return 17 * _id.GetHashCode();
+        }
     }
 }
