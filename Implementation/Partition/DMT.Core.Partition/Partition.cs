@@ -7,13 +7,14 @@ using System.Xml;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using DMT.Partition.Interfaces;
+using DMT.Common.Extensions;
 
 namespace DMT.Core.Partition
 {
     internal class Partition : IPartition
     {
         private IId id;
-        private List<INode> nodes;
+        private HashSet<INode> nodes;
 
         public ICollection<INode> Nodes
         {
@@ -27,10 +28,15 @@ namespace DMT.Core.Partition
             get { return id; }
         }
 
+        public bool IsEmpty
+        {
+            get { return !this.nodes.Any(); }
+        }
+
         public Partition(IEntityFactory factory)
         {
             this.id = factory.CreateId();
-            this.nodes = new List<INode>();
+            this.nodes = new HashSet<INode>();
         }
 
         public Task<ISendPartitionResponse> SendToHost()
@@ -50,7 +56,7 @@ namespace DMT.Core.Partition
 
         public void Inflate()
         {
-            List<INode> newNodes = new List<INode>();
+            HashSet<INode> newNodes = new HashSet<INode>();
             ISuperNode sn;
 
             foreach (var node in nodes)
@@ -59,7 +65,7 @@ namespace DMT.Core.Partition
 
                 if (sn != null)
                 {
-                    newNodes.AddRange(sn.Nodes);
+                    newNodes.AddAll(sn.Nodes);
                 }
                 else
                 {
@@ -68,6 +74,66 @@ namespace DMT.Core.Partition
             }
 
             this.nodes = newNodes;
+        }
+
+        public IEnumerable<IEdge> GetExternalEdges()
+        {
+            List<IEdge> external = new List<IEdge>(); ;
+
+            foreach (var node in this.nodes)
+            {
+                // checking only the outbound edges
+                // inbound edges does not count into external edges
+                foreach (var edge in node.OutboundEdges)
+                {
+                    if (!this.HasNode(edge.Target))
+                    {
+                        external.Add(edge);
+                    }
+                }
+            }
+
+            return external;
+        }
+
+        public bool HasNode(INode node)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            return this.nodes.Contains(node);
+        }
+
+        public IEnumerable<IEdge> GetEdgesBetween(IPartition other)
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
+            // shortcut for empty partitions and the same partition checking
+            if (this.Equals(other) || this.IsEmpty || other.IsEmpty)
+            {
+                return new IEdge[0];
+            }
+
+            List<IEdge> edges = new List<IEdge>();
+            foreach (IEdge edge in this.GetExternalEdges())
+            {
+                if (other.HasNode(edge.Target))
+                {
+                    edges.Add(edge);
+                }
+            }
+
+            return edges;
+        }
+
+        public void Add(INode node)
+        {
+            this.nodes.Add(node);
         }
     }
 }
