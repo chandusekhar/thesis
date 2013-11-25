@@ -18,6 +18,7 @@ namespace DMT.Partition.Interfaces
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="p2"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         void Refine(IPartition p1, IPartition p2);
 
         /// <summary>
