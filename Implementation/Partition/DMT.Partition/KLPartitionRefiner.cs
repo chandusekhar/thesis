@@ -17,6 +17,14 @@ namespace DMT.Partition
     internal class KLPartitionRefiner : IPartitionRefiner
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const double refinePercentage = 0.1;
+
+        public int Seed { get; set; }
+
+        public KLPartitionRefiner()
+        {
+            this.Seed = (int)(DateTime.Now - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+        }
 
         public void Refine(IPartition p1, IPartition p2)
         {
@@ -54,9 +62,14 @@ namespace DMT.Partition
             } while (gain > 0);
         }
 
+        // refine only some percentage of all the pairs
         public void Refine(IEnumerable<IPartition> partitions)
         {
-            throw new NotImplementedException();
+            var pairs = MakePairsOfPartitions(partitions);
+            foreach (var pair in pairs)
+            {
+                this.Refine(pair.Item1, pair.Item2);
+            }
         }
 
         /// <summary>
@@ -262,6 +275,40 @@ namespace DMT.Partition
                 p1.Add(pair.NodeB.Node);
                 p2.Nodes.Add(pair.NodeA.Node);
             }
+        }
+
+        internal IEnumerable<Tuple<IPartition, IPartition>> MakePairsOfPartitions(IEnumerable<IPartition> partitions)
+        {
+            List<Tuple<IPartition, IPartition>> pairs = new List<Tuple<IPartition, IPartition>>();
+            
+            foreach (var p1 in partitions)
+            {
+                foreach (var p2 in partitions)
+                {
+                    if (p1 != p2)
+                    {
+                        pairs.Add(Tuple.Create(p1, p2));
+                    }
+                }
+            }
+
+            return PickN((int)(refinePercentage * pairs.Count), pairs);
+        }
+
+        internal IEnumerable<Tuple<IPartition, IPartition>> PickN(int n, List<Tuple<IPartition, IPartition>> pairs)
+        {
+            Random rnd = new Random(this.Seed);
+            List<Tuple<IPartition, IPartition>> selected = new List<Tuple<IPartition, IPartition>>();
+
+            while (n > 0)
+            {
+                int i = rnd.Next(pairs.Count);
+                selected.Add(pairs[i]);
+                pairs.RemoveAt(i);
+                n--;
+            }
+
+            return selected;
         }
     }
 }

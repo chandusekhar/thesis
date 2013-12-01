@@ -105,5 +105,17 @@ namespace DMT.Partition.Test
 
             Assert.Equal(1, refiner.ComputeInternalCost(n1, p1));
         }
+
+        [Fact]
+        public void PickNPicksExactlyNPairs()
+        {
+            List<Tuple<IPartition, IPartition>> list = new List<Tuple<IPartition, IPartition>>();
+            for (int i = 0; i < 10; i++)
+            {
+                list.Add(Tuple.Create((IPartition)PartitionTest.P(), (IPartition)PartitionTest.P()));
+            }
+
+            Assert.Equal(5, refiner.PickN(5, list).Count());
+        }
     }
 }
