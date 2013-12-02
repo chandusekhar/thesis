@@ -34,7 +34,7 @@ namespace DMT.Partition
 
         public IEnumerable<IPartition> Partition(IEnumerable<INode> nodes)
         {
-            logger.Info("Starting partitioning.");
+            logger.Info("Starting partitioning, number of nodes: {0}", nodes.Count());
             List<IPartition> partitions = new List<IPartition>();
 
             IPartition current = factory.CreatePartition();
@@ -50,12 +50,12 @@ namespace DMT.Partition
                 if (sn != null)
                 {
                     size = sn.Size;
+                    logger.Debug("Current node is a SuperNode and has {0} simple nodes.", size);
                 }
                 else
                 {
                     size = 1;
                 }
-
                 
                 if (count + size <= this.NumberOfNodesInPartition)
                 {
@@ -70,11 +70,16 @@ namespace DMT.Partition
                     partitions.Add(current);
                     current = this.factory.CreatePartition();
                 }
-                current.Nodes.Add(node);
 
+                current.Nodes.Add(node);
             }
 
             logger.Info("Partition done. Produced {0} partitions.", partitions.Count);
+
+            foreach (var p in partitions)
+            {
+                logger.Debug("Partition ({0}) has {1} nodes.", p.Id, p.Nodes.Count);
+            }
 
             return partitions;
         }

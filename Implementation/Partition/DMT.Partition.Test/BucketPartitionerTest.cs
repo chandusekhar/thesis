@@ -56,6 +56,25 @@ namespace DMT.Partition.Test
             var ps = partitioner.Partition(nodes);
             var expected = (int) Math.Ceiling(nodes.Sum(n => ((SuperNode)n).Size) / (double)numberOfNodesInPartition);
             Assert.Equal(expected, ps.Count());
+            Assert.True(ps.All(p => p.Nodes.Count == 2));
+        }
+
+        [Fact]
+        public void PartitionWhenFirstNodeIsTooBig()
+        {
+            const int nodeCount = 75;
+            const int innerNodeCount = 50;
+            List<INode> nodes = new List<INode>();
+
+            for (int i = 0; i < nodeCount - 1; i++)
+            {
+                nodes.Add(SuperNodeTestFactory.CreateWithChildren(innerNodeCount, f => new Node()));
+            }
+
+            nodes.Insert(0, SuperNodeTestFactory.CreateWithChildren(150, _ => new Node()));
+
+            var ps = partitioner.Partition(nodes);
+            Assert.NotEmpty(ps.First().Nodes);
         }
     }
 }
