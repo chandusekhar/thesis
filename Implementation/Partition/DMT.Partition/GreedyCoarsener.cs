@@ -83,13 +83,20 @@ namespace DMT.Partition
         public void Uncoarsen(IEnumerable<IPartition> partitions, IPartitionRefiner refiner)
         {
             logger.Info("Starting uncoarsening.");
-            foreach (var p in partitions)
+            int cntr = 1;
+
+            // TODO: find better algo for testing exsistence of a supernode in partition
+            while (partitions.Any(p => p.Nodes.Any(n => n is ISuperNode)))
             {
-                p.Inflate();
-            }
-            if (refiner != null)
-            {
-                refiner.Refine(partitions);
+                foreach (var p in partitions)
+                {
+                    p.Inflate();
+                }
+                if (refiner != null)
+                {
+                    refiner.Refine(partitions);
+                }
+                logger.Debug("Number {0} pass of uncoarsening is done.", cntr++);
             }
 
             logger.Info("Uncoarsening finished.");
