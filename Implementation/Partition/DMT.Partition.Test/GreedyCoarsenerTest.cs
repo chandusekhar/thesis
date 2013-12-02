@@ -16,7 +16,9 @@ namespace DMT.Partition.Test
 
         public GreedyCoarsenerTest()
         {
-            this.coarsener = new GreedyCoarsener(new PartitionEntityFactory(new CoreEntityFactory()));
+            this.coarsener = new GreedyCoarsener(
+                new PartitionEntityFactory(new CoreEntityFactory()),
+                new CoreEntityFactory());
         }
 
         [Fact]
@@ -96,14 +98,25 @@ namespace DMT.Partition.Test
         [Fact]
         public void Circle5ConnectionsAfterBuild()
         {
-            var clusters = coarsener.BuildClusters(Circle5());
-            coarsener.BuildEdgesBetweenClusters(clusters);
+            var clusters = coarsener.CoarsenOnce(Circle5());
 
             var cl = clusters.Single(c => c.Nodes.Count > 1);
             Assert.Single(cl.InboundEdges);
             Assert.Single(cl.OutboundEdges);
         }
 
+        [Fact]
+        public void TotalEdgeCountDoesNotIncreaseDuringCoarseningForSmallGraph()
+        {
+            foreach (var nodes in new[] { StarLike(), Circle5() })
+            {
+                int edgeCount = nodes.SelectMany(n => n.GetAllEdges()).Count() / 2;
+                var clusters = coarsener.CoarsenOnce(nodes);
+                int newEdgeCount = clusters.SelectMany(n => n.GetAllEdges()).Count() / 2;
+
+                Assert.True(edgeCount >= newEdgeCount);
+            }
+        }
 
         private List<INode> StarLike()
         {

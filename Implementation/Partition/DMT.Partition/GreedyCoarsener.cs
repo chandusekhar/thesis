@@ -11,12 +11,15 @@ using NLog;
 namespace DMT.Partition
 {
     [Export(typeof(ICoarsener))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class GreedyCoarsener : ICoarsener
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private double reductionFactor;
+
         private IPartitionEntityFactory factory;
+        private IEntityFactory entityFactory;
         
         /// <summary>
         /// Node cache to speed up node lookup when building connections between supernodes.
@@ -47,9 +50,10 @@ namespace DMT.Partition
         public double Factor { get; set; }
 
         [ImportingConstructor]
-        public GreedyCoarsener(IPartitionEntityFactory factory)
+        public GreedyCoarsener(IPartitionEntityFactory factory, IEntityFactory entityFactory)
         {
             this.factory = factory;
+            this.entityFactory = entityFactory;
 
             this.Factor = 0.1;
             // halve the number of nodes on every pass
@@ -63,6 +67,7 @@ namespace DMT.Partition
         {
             int count = nodes.Count();
             int passes = this.GetNumberOfRequiredPasses(count);
+
             logger.Info("Starting coarsening with {0} factor in {1}-node graph.", this.Factor, count);
 
             IEnumerable<ISuperNode> result = null;
@@ -76,6 +81,9 @@ namespace DMT.Partition
                 passes--;
                 logger.Info("Pass of coarsening is done. Remaining passes: {0}. New graph has {1} nodes.", passes, result.Count());
             }
+
+            // cleanup
+            this.nodeCache = null;
 
             return result;
         }
@@ -131,14 +139,9 @@ namespace DMT.Partition
             {
                 foreach (var node in supernode.Nodes)
                 {
-                    foreach (var edge in node.InboundEdges)
+                    foreach (var edge in node.GetAllEdges())
                     {
-                        ConnectSupernodes(supernode, edge.Source.Id, EdgeDirection.Inbound);
-                    }
-
-                    foreach (var edge in node.OutboundEdges)
-                    {
-                        ConnectSupernodes(supernode, edge.Target.Id, EdgeDirection.Outbound);
+                        ConnectSupernodes(edge);
                     }
                 }
             }
@@ -156,6 +159,7 @@ namespace DMT.Partition
             // number of nodes to remove by making node clasters
             int countOfNodesToLose = (int)(nodeList.Count * (1 - this.ReductionFactor));
             var result = new List<ISuperNode>();
+            var newlyMarked = new HashSet<INode>();
 
             INode node;
             IEnumerable<INode> neighbours;
@@ -164,7 +168,7 @@ namespace DMT.Partition
             while (countOfNodesToLose > 0 && nodeList.Count > 0)
             {
                 // get the node with the highest degree
-                node = nodeList[0];
+                node = PickNodeForClustering(nodeList);
                 // create supernode and add node with highest degree
                 cluster = this.factory.CreateSuperNode(node);
                 this.nodeCache.Add(node.Id, cluster);
@@ -205,17 +209,62 @@ namespace DMT.Partition
             return b.Degree - a.Degree;
         }
 
-        private void ConnectSupernodes(ISuperNode baseNode, IId nodeid, EdgeDirection direction)
+        private void ConnectSupernodes(IEdge edge)
         {
-            ISuperNode node;
-            if (this.nodeCache.TryGetValue(nodeid, out node))
+            INode sourceSuperNode = this.nodeCache[edge.Source.Id];
+            INode targetSuperNode = this.nodeCache[edge.Target.Id];
+
+            // do not add edge between nodes in the same cluster
+            if (sourceSuperNode == targetSuperNode)
             {
-                if (node != baseNode)
-                {
-                    baseNode.ConnectTo(node, direction);
-                }
-                this.nodeCache.Remove(nodeid);
+                return;
             }
+
+            // TODO: make node lookup faster
+            var superEdge = sourceSuperNode.OutboundEdges.FirstOrDefault(e => e.Target == targetSuperNode);
+            // if we already have an edge between the two supernodes, increase the weight
+            // do not introduce new edge
+            if (superEdge != null)
+            {
+                superEdge.Weight += 1.0;
+            }
+            else
+            {
+                // we dont have an edge, create one
+                var newedge = this.entityFactory.CreateEdge(sourceSuperNode, targetSuperNode);
+                // set the weight to 1
+                newedge.Weight = 1.0;
+            }
+        }
+
+        /// <summary>
+        /// Pick the node with the highest degree, but prefer those which has not participate in the
+        /// previous pass of coarsening (ISuperNode.Nodes.Count == 1).
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        private INode PickNodeForClustering(IEnumerable<INode> nodes)
+        {
+            ISuperNode sn;
+            foreach (var node in nodes)
+            {
+                sn = node as ISuperNode;
+                // found node that is not a supernode, return it
+                // we can do this, because the nodelist is sorted by degree so the first applicable will do
+                if (sn == null)
+                {
+                    return node;
+                }
+
+                if (sn.Nodes.Count == 1)
+                {
+                    return sn;
+                }
+            }
+
+            // this should not happen
+            logger.Warn("There was no applicable node for clustering, fallback to first.");
+            return nodes.First();
         }
     }
 }
