@@ -23,6 +23,8 @@ namespace DMT.Core.Entities
         private INode source = null;
         private INode target = null;
 
+        public double Weight { get; set; }
+
         /// <summary>
         /// FOR TESTS ONLY!
         /// </summary>
@@ -141,7 +143,7 @@ namespace DMT.Core.Entities
 
             this.target = end;
             this.target.InboundEdges.Add(this);
-            logger.Debug("Connected nodes (start: {0}, end: {1}) with edge {2}", start, end, this);
+            logger.Trace("Connected nodes (start: {0}, end: {1}) with edge {2}", start, end, this);
         }
 
         /// <summary>
@@ -161,18 +163,12 @@ namespace DMT.Core.Entities
             this.source.OutboundEdges.Remove(this);
             this.target.InboundEdges.Remove(this);
 
-            logger.Debug("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.source, this.target);
+            logger.Trace("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.source, this.target);
 
             this.source = null;
             this.target = null;
 
             return true;
-        }
-
-        public double GetWeight()
-        {
-            // basic implementation for the moment
-            return 1.0;
         }
     }
 }

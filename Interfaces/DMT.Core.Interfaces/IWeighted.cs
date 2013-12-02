@@ -12,9 +12,9 @@ namespace DMT.Core.Interfaces
     public interface IWeighted
     {
         /// <summary>
-        /// Gets the weight of the object.
+        /// Gets or sets the weight of the object.
         /// </summary>
         /// <returns></returns>
-        double GetWeight();
+        double Weight { get; set; }
     }
 }
