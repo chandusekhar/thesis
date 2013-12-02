@@ -16,6 +16,12 @@ namespace DMT.Core
             get { return nodesList; }
         }
 
+        public Model()
+            : this(new List<INode>())
+        {
+
+        }
+
         /// <summary>
         /// Instantiates a new Model object.
         /// </summary>

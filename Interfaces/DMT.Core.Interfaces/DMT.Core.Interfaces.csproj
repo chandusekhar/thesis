@@ -45,6 +45,7 @@
     <Compile Include="Graph\ITraverser.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="IModel.cs" />
+    <Compile Include="IModelFactory.cs" />
     <Compile Include="IWeighted.cs" />
     <Compile Include="Serialization\IDataSource.cs" />
     <Compile Include="IEdge.cs" />
