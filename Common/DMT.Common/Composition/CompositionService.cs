@@ -47,6 +47,10 @@ namespace DMT.Common.Composition
         /// Path of the third party impelementations. If present this is the prefered one.
         /// </summary>
         private string thirdPartyPath;
+        /// <summary>
+        /// Flag for initialized.
+        /// </summary>
+        private bool initialized = false;
 
         private CompositionService() { }
 
@@ -90,6 +94,7 @@ namespace DMT.Common.Composition
         /// <param name="target">the object in which the imports should be satisfied.</param>
         public void InjectOnce(object target)
         {
+            CheckInitialized();
             this.container.SatisfyImportsOnce(target);
         }
 
@@ -100,7 +105,8 @@ namespace DMT.Common.Composition
         /// <param name="target">the object in which the imports should be satisfied.</param>
         public void Inject(object target)
         {
-                this.container.ComposeParts(target);
+            CheckInitialized();
+            this.container.ComposeParts(target);
         }
 
         /// <summary>
@@ -110,6 +116,7 @@ namespace DMT.Common.Composition
         /// <returns></returns>
         public T GetExport<T>()
         {
+            CheckInitialized();
             return this.container.GetExportedValue<T>();
         }
 
@@ -147,6 +154,8 @@ namespace DMT.Common.Composition
             this.container = new CompositionContainer(thirdPartyCatalog, extensionCatalogEP, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
             extensionCatalogEP.SourceProvider = this.container;
+
+            this.initialized = true;
         }
 
         private void CreateDirectoryIfNeeded(string dir)
@@ -154,6 +163,14 @@ namespace DMT.Common.Composition
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
+            }
+        }
+
+        private void CheckInitialized()
+        {
+            if (!this.initialized)
+            {
+                throw new InvalidOperationException("CompositionService has not been initialized yet!");
             }
         }
     }
