@@ -18,8 +18,7 @@ namespace DMT.Common.Composition
     public sealed class CompositionService : IDisposable
     {
         public const string DefaultCatalogPathKey = "default";
-        public const string ExtensionCatalogPathKey = "extension";
-        public const string ThirdPartyCatalogPathKey = "third-party";
+        public const string PluginCatalogPathKey = "plugin";
 
         private static CompositionService instance;
         public static CompositionService Instance
@@ -40,13 +39,9 @@ namespace DMT.Common.Composition
         /// </summary>
         private string defaultsPath;
         /// <summary>
-        /// Path of the extension DLLs such as DMT.Core.Partition.
-        /// </summary>
-        private string extensionsPath;
-        /// <summary>
         /// Path of the third party impelementations. If present this is the prefered one.
         /// </summary>
-        private string thirdPartyPath;
+        private string pluginPath;
         /// <summary>
         /// Flag for initialized.
         /// </summary>
@@ -61,15 +56,14 @@ namespace DMT.Common.Composition
         /// path used as a fallback for import satisfaction. All extension dll should be placed
         /// in the extension directory.
         /// 
-        /// <para>This method uses the value of 'default-catalog' and 'ext-catalog' key in appsettings.</para>
+        /// <para>This method uses the value of 'default-catalog' and 'plugin-catalog' key in appsettings.</para>
         /// </summary>
         public void Initialize()
         {
             var def = ConfigurationManager.AppSettings[CompositionService.DefaultCatalogPathKey];
-            var ext = ConfigurationManager.AppSettings[CompositionService.ExtensionCatalogPathKey];
-            var tp = ConfigurationManager.AppSettings[CompositionService.ThirdPartyCatalogPathKey];
+            var plugin = ConfigurationManager.AppSettings[CompositionService.PluginCatalogPathKey];
 
-            this.Initialize(def, ext, tp);
+            this.Initialize(def, plugin);
         }
 
         /// <summary>
@@ -79,12 +73,11 @@ namespace DMT.Common.Composition
         /// </summary>
         /// <param name="defaultsPath">path of the assemblies containing the default implementation</param>
         /// <param name="extensionsPath">path of the assemblies containing the extension implementation</param>
-        /// <param name="thirdPartyPath">path of the assemblies containing the third party implementation</param>
-        public void Initialize(string defaultsPath, string extensionsPath, string thirdPartyPath)
+        /// <param name="pluginPath">path of the assemblies containing the third party implementation</param>
+        public void Initialize(string defaultsPath, string pluginPath)
         {
             this.defaultsPath = defaultsPath;
-            this.extensionsPath = extensionsPath;
-            this.thirdPartyPath = thirdPartyPath;
+            this.pluginPath = pluginPath;
             InitializeContainer();
         }
 
@@ -138,32 +131,21 @@ namespace DMT.Common.Composition
                 return;
             }
 
-            if (string.IsNullOrEmpty(this.defaultsPath) || string.IsNullOrEmpty(this.extensionsPath) || string.IsNullOrEmpty(this.thirdPartyPath))
+            if (string.IsNullOrEmpty(this.defaultsPath) || string.IsNullOrEmpty(this.pluginPath))
             {
                 throw new InvalidOperationException(
                     "Some DLL paths has not been set up. " +
-                    "Put the appropriate values in your App.config or use the Initialize(String, String, String) method to initialize the composotion service.");
+                    "Put the appropriate values in your App.config or use the Initialize(String, String) method to initialize the composotion service.");
             }
 
-
-            CreateDirectoryIfNeeded(this.thirdPartyPath);
-            var thirdPartyCatalog = new DirectoryCatalog(this.thirdPartyPath);
+            Directory.CreateDirectory(this.pluginPath);
+            var pluginCatalog = new DirectoryCatalog(this.pluginPath);
             var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
-            var extensionCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.extensionsPath));
 
-            this.container = new CompositionContainer(thirdPartyCatalog, extensionCatalogEP, defaultCatalogEP);
+            this.container = new CompositionContainer(pluginCatalog, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
-            extensionCatalogEP.SourceProvider = this.container;
 
             this.initialized = true;
-        }
-
-        private void CreateDirectoryIfNeeded(string dir)
-        {
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
         }
 
         private void CheckInitialized()

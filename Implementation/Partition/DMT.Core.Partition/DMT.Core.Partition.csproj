@@ -73,7 +73,7 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Master.App/bin/$(Configuration)/Ext" />
-      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Implementation/Partition/DMT.Partition.TestApp/bin/$(Configuration)/Ext" />
+      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Master.App/bin/$(Configuration)/Defaults" />
+      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Implementation/Partition/DMT.Partition.TestApp/bin/$(Configuration)/Defaults" />
   </Target>
 </Project>
