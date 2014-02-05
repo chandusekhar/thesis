@@ -24,34 +24,32 @@ namespace DMT.Core.Test.Graph
         {
             List<INode> visitedNodes = new List<INode>();
 
-            Edge e = new Edge(new Node(), new Node());
+            Edge e = EntityHelper.CreateEdgeConnectingNodes();
 
             t.VisitingNode += (s, ee) => visitedNodes.Add(ee.Node);
-            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e.Source, e.Target });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e.EndA, e.EndB });
 
-            Assert.Equal(new INode[] { e.Source, e.Target }, visitedNodes);
+            Assert.Equal(new INode[] { e.EndA, e.EndB }, visitedNodes);
         }
 
         [Fact]
         public void TraverseMultipleComponentGraph()
         {
             List<INode> visitedNodes = new List<INode>();
-            Edge e1 = new Edge(new Node(), new Node());
-            Edge e2 = new Edge(new Node(), new Node());
+            Edge e1 = EntityHelper.CreateEdgeConnectingNodes();
+            Edge e2 = EntityHelper.CreateEdgeConnectingNodes();
             t.VisitingNode += (s, e) => visitedNodes.Add(e.Node);
 
-            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e1.Source, e1.Target, e2.Source, e2.Target });
+            t.Traverse(ComponentTraversalStrategy.BFS, new INode[] { e1.EndA, e1.EndB, e2.EndA, e2.EndB });
 
-            Assert.Equal(new INode[] { e1.Source, e1.Target, e2.Source, e2.Target }, visitedNodes);
+            Assert.Equal(new INode[] { e1.EndA, e1.EndB, e2.EndA, e2.EndB }, visitedNodes);
         }
 
         [Fact]
         public void TraverseAndSearchForNode()
         {
             VisitedNodeCollection visited = new VisitedNodeCollection();
-            Node n1 = new Node();
-            Edge e1 = new Edge(n1, new Node());
-            Edge e2 = new Edge(n1, new Node());
+            Node n1 = EntityHelper.CreateNodeWithNeighbours(2);
 
             t.VisitingNode += (s, ee) =>
             {
@@ -69,12 +67,12 @@ namespace DMT.Core.Test.Graph
         {
             var componentRoots = new List<INode>();
 
-            Node n1, n2;
-            Edge e1 = new Edge(n1 = new Node(), new Node());
-            Edge e2 = new Edge(n2 = new Node(), new Node());
+            Node n1 = EntityHelper.CreateNode(), n2 = EntityHelper.CreateNode();
+            IEdge e1 = EntityHelper.ConnectNewNodeTo(n1);
+            IEdge e2 = EntityHelper.ConnectNewNodeTo(n2);
             t.VisitedComponent += (s, e) => componentRoots.Add(e.RootNode);
-
-            t.Traverse(ComponentTraversalStrategy.BFS, e1.Source, e1.Target, e2.Source, e2.Target);
+            
+            t.Traverse(ComponentTraversalStrategy.BFS, e1.EndA, e1.EndB, e2.EndA, e2.EndB);
 
             Assert.Equal(new INode[] { n1, n2 }, componentRoots);
         }

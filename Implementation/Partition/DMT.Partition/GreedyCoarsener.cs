@@ -139,7 +139,7 @@ namespace DMT.Partition
             {
                 foreach (var node in supernode.Nodes)
                 {
-                    foreach (var edge in node.GetAllEdges())
+                    foreach (var edge in node.Edges)
                     {
                         ConnectSupernodes(edge);
                     }
@@ -211,17 +211,17 @@ namespace DMT.Partition
 
         private void ConnectSupernodes(IEdge edge)
         {
-            INode sourceSuperNode = this.nodeCache[edge.Source.Id];
-            INode targetSuperNode = this.nodeCache[edge.Target.Id];
+            INode endASuperNode = this.nodeCache[edge.EndA.Id];
+            INode endBSuperNode = this.nodeCache[edge.EndB.Id];
 
             // do not add edge between nodes in the same cluster
-            if (sourceSuperNode == targetSuperNode)
+            if (endASuperNode == endBSuperNode)
             {
                 return;
             }
 
             // TODO: make node lookup faster
-            var superEdge = sourceSuperNode.OutboundEdges.FirstOrDefault(e => e.Target == targetSuperNode);
+            var superEdge = endASuperNode.Edges.FirstOrDefault(e => e.EndB == endBSuperNode);
             // if we already have an edge between the two supernodes, increase the weight
             // do not introduce new edge
             if (superEdge != null)
@@ -231,7 +231,7 @@ namespace DMT.Partition
             else
             {
                 // we dont have an edge, create one
-                var newedge = this.entityFactory.CreateEdge(sourceSuperNode, targetSuperNode);
+                var newedge = endASuperNode.ConnectTo(endBSuperNode, EdgeDirection.Both);
                 // set the weight to 1
                 newedge.Weight = 1.0;
             }

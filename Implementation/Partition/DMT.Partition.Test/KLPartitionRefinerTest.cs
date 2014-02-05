@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
+using DMT.Core.Test.Utils;
 using DMT.Partition;
 using DMT.Partition.Interfaces;
 using Xunit;
@@ -40,13 +41,13 @@ namespace DMT.Partition.Test
         [Fact]
         public void InterPartitionCostForNotEmptyPartitions()
         {
-            var n1 = new Node();
-            var n2 = new Node();
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
 
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
+            n1.ConnectTo(n2, EdgeDirection.Both);
             p1.Nodes.Add(n1);
 
-            n2.ConnectTo(n1, EdgeDirection.Outbound);
+            n2.ConnectTo(n1, EdgeDirection.Both);
             p2.Nodes.Add(n2);
 
             Assert.Equal(2, refiner.ComputeInitialInterPartitionCost(p1, p2));
@@ -55,7 +56,7 @@ namespace DMT.Partition.Test
         [Fact]
         public void ComputeExternalCostThrowsExceptionIfNodeIsInThePartition()
         {
-            var n1 = new Node();
+            var n1 = EntityHelper.CreateNode();
             p1.Nodes.Add(n1);
             Assert.Throws(typeof(ArgumentException), () => refiner.ComputeExternalCost(n1, p1));
         }
@@ -63,15 +64,15 @@ namespace DMT.Partition.Test
         [Fact]
         public void ComputeInternalCostThrowsExceptionIfNodeIsNotInThePartition()
         {
-            Assert.Throws(typeof(ArgumentException), () => refiner.ComputeInternalCost(new Node(), p1));
+            Assert.Throws(typeof(ArgumentException), () => refiner.ComputeInternalCost(EntityHelper.CreateNode(), p1));
         }
 
         [Fact]
         public void ComputeExternalCostForNode()
         {
-            var n1 = new Node();
-            var n2 = new Node();
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            n1.ConnectTo(n2, EdgeDirection.Both);
             p1.Nodes.Add(n2);
 
             Assert.Equal(1, refiner.ComputeExternalCost(n1, p1));
@@ -80,9 +81,9 @@ namespace DMT.Partition.Test
         [Fact]
         public void ComputeInternalCostForNodeWhenOnlyHasInternalEdges()
         {
-            var n1 = new Node();
-            var n2 = new Node();
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            n1.ConnectTo(n2, EdgeDirection.Both);
             p1.Nodes.Add(n1);
             p1.Nodes.Add(n2);
 
@@ -92,12 +93,12 @@ namespace DMT.Partition.Test
         [Fact]
         public void ComputeInternalCostForNodeWhenItHasInternalAndExternalEdges()
         {
-            var n1 = new Node();
-            var n2 = new Node();
-            var n3 = new Node();
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            var n3 = EntityHelper.CreateNode();
 
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
-            n1.ConnectTo(n3, EdgeDirection.Outbound);
+            n1.ConnectTo(n2, EdgeDirection.Both);
+            n1.ConnectTo(n3, EdgeDirection.Both);
 
             // n3 an e node
             p1.Nodes.Add(n1);

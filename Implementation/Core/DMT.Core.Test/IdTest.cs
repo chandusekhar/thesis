@@ -52,7 +52,7 @@ namespace DMT.Core.Test
         public void DeserializeId()
         {
             var id = DMTId.NewId();
-            var id2 = SerializerHelper.DeserializeObject<DMTId>(SerializerHelper.SerializeObject(id));
+            var id2 = SerializerHelper.DeserializeInto<DMTId>(new DMTId(), SerializerHelper.SerializeObject(id));
 
             Assert.Equal(id, id2);
         }

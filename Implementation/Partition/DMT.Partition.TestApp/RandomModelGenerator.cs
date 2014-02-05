@@ -60,7 +60,7 @@ namespace DMT.Partition.TestApp
                     int next = rnd.Next(nodes.Count);
                     if (nodes[next] != node)
                     {
-                        node.ConnectTo(nodes[next], EdgeDirection.Outbound);
+                        node.ConnectTo(nodes[next], EdgeDirection.Both);
                         i--;
                     }
                 }

@@ -14,7 +14,7 @@ namespace DMT.Core.Interfaces
         /// <summary>
         /// Remove an entity from its context.
         /// 
-        /// Eg for an <c>IEdge</c> cuts the connection between the <c>start</c> and <c>end</c> nodes.
+        /// Eg for an <c>IEdge</c> cuts the connection between the <c>nodeA</c> and <c>nodeB</c> nodes.
         /// </summary>
         /// <returns>true only if the remove was successful, false otherwise</returns>
         bool Remove();

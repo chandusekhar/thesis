@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Core.Test
@@ -12,54 +13,78 @@ namespace DMT.Core.Test
     public class NodeTest
     {
         [Fact]
-        public void ConnectNodesAsOutbound()
+        public void ConnectNodes()
         {
-            var n1 = new Node(new CoreEntityFactory());
-            var edge = n1.ConnectTo(new Node(), EdgeDirection.Outbound);
+            var n1 = EntityHelper.CreateNode();
+            var edge = EntityHelper.ConnectNewNodeTo(n1);
 
-            Assert.Equal(1, n1.OutboundEdges.Count);
-            Assert.Same(edge.Source, n1);
+            Assert.Equal(1, n1.Edges.Count());
+            Assert.Same(edge.EndA, n1);
         }
-
-        [Fact]
-        public void ConnectNodesAsInbound()
-        {
-            var n = new Node(new CoreEntityFactory());
-            var edge = n.ConnectTo(new Node(), EdgeDirection.Inbound);
-
-            Assert.Same(edge.Target, n);
-        }
-
 
         [Fact]
         public void ConnectToNullNodeThrowsException()
         {
-            var n1 = new Node();
-            Assert.Throws(typeof(ArgumentNullException), () => n1.ConnectTo(null, EdgeDirection.Outbound));
+            var n1 = EntityHelper.CreateNode();
+            Assert.Throws(typeof(ArgumentNullException), () => n1.ConnectTo(null, EdgeDirection.Both));
+        }
+
+        [Fact]
+        public void ConnectNodesWithGivenEdge()
+        {
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+
+            IEdge e = new Edge(n1, n2, EdgeDirection.Both, new CoreEntityFactory());
+            IEdge e2 = n1.ConnectTo(n2, e);
+
+            Assert.Same(e2, e);
+            Assert.Contains(e, n1.Edges);
+            Assert.Contains(e, n2.Edges);
         }
 
         [Fact]
         public void GetAdjacentNodes()
         {
-            Node n1 = new Node();
-            Edge e1 = new Edge(n1, new Node());
-            Edge e2 = new Edge(n1, new Node());
+            Node n1 = EntityHelper.CreateNode();
+            IEdge e1 = EntityHelper.ConnectNewNodeTo(n1);
+            IEdge e2 = EntityHelper.ConnectNewNodeTo(n1);
 
             var neighbours = n1.GetAdjacentNodes();
 
-            Assert.Contains(e1.Target, neighbours);
-            Assert.Contains(e1.Target, neighbours);
+            Assert.Contains(e1.EndB, neighbours);
+            Assert.Contains(e2.EndB, neighbours);
         }
 
         [Fact]
-        public void DegreeOfNode()
+        public void DegreeOfNodeEqualsNodesEdgeCount()
         {
             // degree of node is the number of in and out edges
-            var n1 = new Node(new CoreEntityFactory());
-            n1.ConnectTo(new Node(), EdgeDirection.Outbound);
-            n1.ConnectTo(new Node(), EdgeDirection.Outbound);
+            Node n1 = EntityHelper.CreateNode();
+            EntityHelper.ConnectNewNodeTo(n1);
+            EntityHelper.ConnectNewNodeTo(n1);
 
             Assert.Equal(2, n1.Degree);
+        }
+
+        [Fact]
+        public void IsNeighbourShouldReturnTrueForNeighbouringNodes()
+        {
+            var n = EntityHelper.CreateNode();
+            var neighbour = EntityHelper.CreateNode();
+            n.ConnectTo(neighbour, EdgeDirection.Both);
+
+            Assert.True(n.IsNeighbour(neighbour));
+        }
+
+        [Fact]
+        public void IsNeighbourShouldReturnFalseForNotNeighbouringNodes()
+        {
+            var n = EntityHelper.CreateNode();
+            EntityHelper.ConnectNewNodeTo(n);
+            var n2 = EntityHelper.CreateNode();
+
+            Assert.False(n.IsNeighbour(n2));
         }
 
     }

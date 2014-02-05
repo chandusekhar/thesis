@@ -82,11 +82,9 @@ namespace DMT.Core.Partition
 
             foreach (var node in this.nodes)
             {
-                // checking only the outbound edges
-                // inbound edges does not count into external edges
-                foreach (var edge in node.OutboundEdges)
+                foreach (var edge in node.Edges)
                 {
-                    if (!this.HasNode(edge.Target))
+                    if (!this.HasNode(edge.EndB))
                     {
                         external.Add(edge);
                     }
@@ -122,7 +120,7 @@ namespace DMT.Core.Partition
             List<IEdge> edges = new List<IEdge>();
             foreach (IEdge edge in this.GetExternalEdges())
             {
-                if (other.HasNode(edge.Target))
+                if (other.HasNode(edge.EndB))
                 {
                     edges.Add(edge);
                 }

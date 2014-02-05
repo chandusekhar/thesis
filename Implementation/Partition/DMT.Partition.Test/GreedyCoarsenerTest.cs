@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Partition;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Partition.Test
@@ -43,7 +44,7 @@ namespace DMT.Partition.Test
             var n1 = new Node(new CoreEntityFactory());
             for (int i = 0; i < 5; i++)
             {
-                n1.ConnectTo(new Node(), EdgeDirection.Outbound);
+                n1.ConnectTo(EntityHelper.CreateNode(), EdgeDirection.Both);
             }
             List<INode> nodes = new List<INode>(n1.GetAdjacentNodes());
             nodes.Add(n1);
@@ -92,7 +93,7 @@ namespace DMT.Partition.Test
             coarsener.BuildEdgesBetweenClusters(clusters);
 
             var cl = clusters.Single(c => c.Nodes.Count > 1);
-            Assert.Single(cl.InboundEdges);
+            Assert.Single(cl.Edges);
         }
 
         [Fact]
@@ -101,8 +102,7 @@ namespace DMT.Partition.Test
             var clusters = coarsener.CoarsenOnce(Circle5());
 
             var cl = clusters.Single(c => c.Nodes.Count > 1);
-            Assert.Single(cl.InboundEdges);
-            Assert.Single(cl.OutboundEdges);
+            Assert.Equal(2, cl.Edges.Count());
         }
 
         [Fact]
@@ -110,9 +110,9 @@ namespace DMT.Partition.Test
         {
             foreach (var nodes in new[] { StarLike(), Circle5() })
             {
-                int edgeCount = nodes.SelectMany(n => n.GetAllEdges()).Count() / 2;
+                int edgeCount = nodes.SelectMany(n => n.Edges).Count() / 2;
                 var clusters = coarsener.CoarsenOnce(nodes);
-                int newEdgeCount = clusters.SelectMany(n => n.GetAllEdges()).Count() / 2;
+                int newEdgeCount = clusters.SelectMany(n => n.Edges).Count() / 2;
 
                 Assert.True(edgeCount >= newEdgeCount);
             }
@@ -125,17 +125,17 @@ namespace DMT.Partition.Test
             var n2 = new Node(new CoreEntityFactory());
             for (int i = 0; i < 5; i++)
             {
-                n1.ConnectTo(new Node(), EdgeDirection.Outbound);
-                n2.ConnectTo(new Node(), EdgeDirection.Outbound);
+                n1.ConnectTo(EntityHelper.CreateNode(), EdgeDirection.Both);
+                n2.ConnectTo(EntityHelper.CreateNode(), EdgeDirection.Both);
             }
 
             List<INode> nodes = new List<INode> { n1, n2 };
             nodes.AddRange(n1.GetAdjacentNodes());
             nodes.AddRange(n2.GetAdjacentNodes());
 
-            var conn = new Node();
-            n1.ConnectTo(conn, EdgeDirection.Outbound);
-            n2.ConnectTo(conn, EdgeDirection.Outbound);
+            var conn = EntityHelper.CreateNode();
+            n1.ConnectTo(conn, EdgeDirection.Both);
+            n2.ConnectTo(conn, EdgeDirection.Both);
 
             nodes.Add(conn);
 
@@ -150,11 +150,11 @@ namespace DMT.Partition.Test
             INode n4 = new Node(new CoreEntityFactory());
             INode n5 = new Node(new CoreEntityFactory());
 
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
-            n2.ConnectTo(n3, EdgeDirection.Outbound);
-            n3.ConnectTo(n4, EdgeDirection.Outbound);
-            n4.ConnectTo(n5, EdgeDirection.Outbound);
-            n5.ConnectTo(n1, EdgeDirection.Outbound);
+            n1.ConnectTo(n2, EdgeDirection.Both);
+            n2.ConnectTo(n3, EdgeDirection.Both);
+            n3.ConnectTo(n4, EdgeDirection.Both);
+            n4.ConnectTo(n5, EdgeDirection.Both);
+            n5.ConnectTo(n1, EdgeDirection.Both);
 
             return new List<INode> { n1, n2, n3, n4, n5 };
         }

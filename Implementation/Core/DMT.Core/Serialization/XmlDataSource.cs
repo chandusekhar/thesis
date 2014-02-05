@@ -146,7 +146,7 @@ namespace DMT.Core.Serialization
 
             foreach (var node in model.Nodes)
             {
-                foreach (var edge in node.GetAllEdges())
+                foreach (var edge in node.Edges)
                 {
                     if (!edgeDict.ContainsKey(edge.Id))
                     {

@@ -17,134 +17,122 @@ namespace DMT.Core.Entities
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public const string StartNodeTag = "StartNode";
-        public const string EndNodeTag = "EndNode";
+        public const string EndATag = "EndA";
+        public const string EndBTag = "EndB";
+        public const string DirectionTag = "Direction";
 
-        private INode source = null;
-        private INode target = null;
+        private INode endA = null;
+        private INode endB = null;
+        private EdgeDirection direction = EdgeDirection.Both;
 
         public double Weight { get; set; }
 
-        /// <summary>
-        /// FOR TESTS ONLY!
-        /// </summary>
-        public Edge()
-            : this(new CoreEntityFactory())
-        { }
+        public INode EndA
+        {
+            get { return endA; }
+        }
+
+        public INode EndB
+        {
+            get { return endB; }
+        }
+
+        public EdgeDirection Direction
+        {
+            get { return direction; }
+        }
 
         public Edge(IEntityFactory factory)
             : base(factory)
-        { }
+        {
 
-        /// <summary>
-        /// FOR TESTS ONLY!
-        /// </summary>
-        public Edge(INode start, INode end)
-            : this(start, end, new CoreEntityFactory())
-        { }
+        }
 
-        /// <summary>
-        /// Instantiates a new <c>Edge</c> object and connects its endpoints
-        /// which means that source and target will be set, also <c>this</c> edge will be
-        /// added to the <c>source</c> node's outbound edges collection and the
-        /// the <c>target</c> node's inbound edges collections.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        public Edge(INode start, INode end, IEntityFactory factory)
+        public Edge(INode nodeA, INode nodeB, EdgeDirection direction, IEntityFactory factory)
             : base(factory)
         {
-            this.ConnectNodes(start, end);
-        }
-
-        public INode Source
-        {
-            get { return source; }
-        }
-
-        public INode Target
-        {
-            get { return target; }
+            this.endA = nodeA;
+            this.endB = nodeB;
+            this.direction = direction;
         }
 
         #region ISerializable
 
         public override void Serialize(XmlWriter writer)
         {
+            logger.Trace("Started serialization of edge {0}", Id);
+
             // id
             base.Serialize(writer);
 
-            // startnode
-            writer.WriteStartElement(Edge.StartNodeTag);
-            source.Id.Serialize(writer);
+            // endpoint a
+            writer.WriteStartElement(Edge.EndATag);
+            endA.Id.Serialize(writer);
             writer.WriteEndElement();
 
-            // endnode
-            writer.WriteStartElement(Edge.EndNodeTag);
-            target.Id.Serialize(writer);
+            // endpoint b
+            writer.WriteStartElement(Edge.EndBTag);
+            endB.Id.Serialize(writer);
             writer.WriteEndElement();
+
+            // direction
+            writer.WriteElementString(Edge.DirectionTag, this.direction.ToString());
+
+            logger.Trace("Finished serialization of edge {0}", Id);
         }
 
         public override void Deserialize(XmlReader reader, IContext context)
         {
-            logger.Trace("Starting Core.Edge deserialization.");
+            logger.Trace("Starting edge deserialization.");
 
             // id
             base.Deserialize(reader, context);
 
-            // source node
-            IId startNodeId = context.EntityFactory.CreateId();
-            if (reader.Name != Edge.StartNodeTag)
+            // the order of these is important, DO NOT change them
+            IId endAId = DeserializeEndPoint(Edge.EndATag, reader, context);
+            IId endBId = DeserializeEndPoint(Edge.EndBTag, reader, context);
+            this.direction = DeserializeDirection(reader, context);
+
+            this.endA = context.GetNode(endAId);
+            this.endB = context.GetNode(endBId);
+
+            // register edge at the node
+            endA.ConnectTo(endB, this);
+
+            logger.Trace("Finishing edge deserialization.");
+        }
+
+        private IId DeserializeEndPoint(string tag, XmlReader reader, IContext context)
+        {
+            // endpoint B node
+            IId nodeId = context.EntityFactory.CreateId();
+            if (reader.Name != tag)
             {
-                reader.ReadToFollowing(Edge.StartNodeTag);
+                reader.ReadToFollowing(tag);
             }
-            startNodeId.Deserialize(reader, context);
-            logger.Trace("Deserialized edge start node: {0}", startNodeId);
+            nodeId.Deserialize(reader, context);
+            logger.Trace("Deserialized edge end node: {0}", nodeId);
+            return nodeId;
+        }
 
-            // target node
-            IId endNodeId = context.EntityFactory.CreateId();
-            if (reader.Name != Edge.EndNodeTag)
+        private EdgeDirection DeserializeDirection(XmlReader reader, IContext context)
+        {
+            EdgeDirection direction;
+            // direction
+            if (reader.Name != Edge.DirectionTag)
             {
-                reader.ReadToFollowing(Edge.EndNodeTag);
+                reader.ReadToFollowing(Edge.DirectionTag);
             }
-            endNodeId.Deserialize(reader, context);
-            logger.Trace("Deserialized edge end node: {0}", endNodeId);
+            if (!Enum.TryParse<EdgeDirection>(reader.ReadElementContentAsString(), out direction))
+            {
+                logger.Warn("Could not parse direction of edge (id: {0}), falling back to bidirectional.", this.Id);
+                direction = EdgeDirection.Both;
+            }
 
-            INode start = context.GetNode(startNodeId);
-            INode end = context.GetNode(endNodeId);
-
-            this.ConnectNodes(start, end);
-            logger.Trace("Finishing Core.Edge deserialization.");
+            return direction;
         }
 
         #endregion
-
-        /// <summary>
-        /// Sets the <c>source</c> and <c>target</c> nodes of this edge and sets up connections
-        /// which means that <c>this</c> edge will be added to the <c>source</c> node's
-        /// outbound edges collection and the the <c>target</c> node's inbound edges collections.
-        /// </summary>
-        /// <param name="source">source node of the relationship</param>
-        /// <param name="target">target node of the relationship</param>
-        /// <exception cref="EdgeAlreadyConnectedException">When an edge has been already added to a graph.</exception>
-        public void ConnectNodes(INode start, INode end)
-        {
-            Objects.RequireNonNull(start);
-            Objects.RequireNonNull(end);
-
-            if (this.source != null || this.target != null)
-            {
-                logger.Error("Connecting already connected edge to node (start: {0}, end: {1})", start, end);
-                throw new EdgeAlreadyConnectedException("Remove edge from graph before re-adding.");
-            }
-
-            this.source = start;
-            this.source.OutboundEdges.Add(this);
-
-            this.target = end;
-            this.target.InboundEdges.Add(this);
-            logger.Trace("Connected nodes (start: {0}, end: {1}) with edge {2}", start, end, this);
-        }
 
         /// <summary>
         /// Cuts the connection between the <c>source</c> and <c>target</c> nodes.
@@ -154,21 +142,35 @@ namespace DMT.Core.Entities
         /// </summary>
         public override bool Remove()
         {
-            if (this.source == null || this.target == null)
+            if (this.endA == null || this.endB == null)
             {
                 logger.Warn("Edge has not been added to the graph before removing.");
                 return false;
             }
 
-            this.source.OutboundEdges.Remove(this);
-            this.target.InboundEdges.Remove(this);
+            this.endA.Disconnect(this);
 
-            logger.Trace("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.source, this.target);
+            this.endA = null;
+            this.endB = null;
 
-            this.source = null;
-            this.target = null;
-
+            logger.Trace("Removed edge ({0}) between start: {1}, end: {2} nodes.", this, this.endA, this.endB);
             return true;
+        }
+
+        public INode GetOtherNode(INode node)
+        {
+            // NOTE: a reference check might suffice, but using proper Equals here for the moment
+            if (this.endA.Equals(node))
+            {
+                return this.endB;
+            }
+
+            if (this.endB.Equals(node))
+            {
+                return this.endA;
+            }
+
+            throw new InvalidNodeException("{0} node is not connected by edge {1}", node, this);
         }
     }
 }

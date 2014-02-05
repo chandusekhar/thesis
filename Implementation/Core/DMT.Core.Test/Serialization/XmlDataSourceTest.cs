@@ -68,9 +68,8 @@ namespace DMT.Core.Test.Serialization
 
         private static XDocument SaveModel()
         {
-            Node n1, n2;
-            n1 = new Node();
-            new Edge(n1, n2 = new Node());
+            Node n1 = EntityHelper.CreateNode(), n2 = EntityHelper.CreateNode();
+            n1.ConnectTo(n2, Interfaces.EdgeDirection.Both);
             Model m = new Model(new Node[] { n1, n2 });
             MemoryStream target = new MemoryStream();
             var ds = new XmlDataSource(new CoreEntityFactory());

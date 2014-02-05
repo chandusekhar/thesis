@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using DMT.Core.Entities;
 using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.Core.Test.Utils
@@ -27,15 +28,20 @@ namespace DMT.Core.Test.Utils
             return DeserializeObject<T>(SerializeObject(obj), context);
         }
 
-        public static T DeserializeObject<T>(XDocument doc, IContext context = null) where T : ISerializable
+        public static T DeserializeInto<T>(T obj, XDocument doc, IContext context = null) where T : ISerializable
         {
-            T obj = Activator.CreateInstance<T>();
             using (XmlReader reader = doc.CreateReader())
             {
                 reader.ReadToFollowing(SerializerHelper.RootWrapperTag);
                 obj.Deserialize(reader, context);
             }
-            return (T)obj;
+            return obj;
+        }
+
+        public static T DeserializeObject<T>(XDocument doc, IContext context = null) where T : ISerializable
+        {
+            T obj = (T)Activator.CreateInstance(typeof(T), new CoreEntityFactory());
+            return DeserializeInto<T>(obj, doc, context);
         }
 
         private static Stream SerializeObjectIntoStream(Stream stream, ISerializable obj)

@@ -17,6 +17,7 @@ namespace DMT.Core.Entities
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private IId _id;
+        protected IEntityFactory factory;
 
         public IId Id
         {
@@ -25,6 +26,7 @@ namespace DMT.Core.Entities
 
         public Entity(IEntityFactory factory)
         {
+            this.factory = factory;
             _id = factory.CreateId();
         }
 

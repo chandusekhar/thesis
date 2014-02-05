@@ -5,92 +5,109 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Common;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Exceptions;
 
 namespace DMT.Core.Entities
 {
     public class Node : Entity, INode
     {
-        protected List<IEdge> _outboundEdges;
-        protected List<IEdge> _inboundEdges;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        protected IEntityFactory factory;
+        protected List<IEdge> edges;
 
-        public ICollection<IEdge> OutboundEdges
+        public IEnumerable<IEdge> Edges
         {
-            get { return _outboundEdges; }
-        }
-
-        public ICollection<IEdge> InboundEdges
-        {
-            get { return _inboundEdges; }
+            get { return edges; }
         }
 
         public int Degree
         {
-            get { return this._outboundEdges.Count + this._inboundEdges.Count; }
-        }
-
-        public Node()
-            : this(new CoreEntityFactory())
-        {
-
+            get { return this.edges.Count; }
         }
 
         public Node(IEntityFactory factory)
             : base(factory)
         {
-            this.factory = factory;
-            _outboundEdges = new List<IEdge>();
-            _inboundEdges = new List<IEdge>();
+            this.edges = new List<IEdge>();
         }
 
         public override bool Remove()
         {
-            throw new NotImplementedException();
+            if (!this.edges.Any())
+            {
+                // return false if there are no edges
+                return false;
+            }
+
+            foreach (var edge in this.edges)
+            {
+                this.Disconnect(edge);
+            }
+            this.edges.Clear();
+
+            return true;
         }
 
-        public IEdge ConnectTo(INode node, EdgeDirection direction)
+        public IEdge ConnectTo(INode otherNode, EdgeDirection direction)
         {
-            Objects.RequireNonNull(node);
+            Objects.RequireNonNull(otherNode);
+            var edge = factory.CreateEdge(this, otherNode, direction);
+            return this.ConnectTo(otherNode, edge);
+        }
 
-            var edge = factory.CreateEdge();
-
-            switch (direction)
+        public IEdge ConnectTo(INode otherNode, IEdge edge)
+        {
+            if (edge.GetOtherNode(this) != otherNode)
             {
-                case EdgeDirection.Inbound:
-                    edge.ConnectNodes(node, this);
-                    break;
-                case EdgeDirection.Outbound:
-                    edge.ConnectNodes(this, node);
-                    break;
-                default:
-                    throw new ArgumentException("direction", "Not recognized direction.");
+                logger.Error("Other node is not valid when connecting to it.");
+                throw new InvalidNodeException(otherNode);
             }
+
+            // add edge to nodes
+            this.AddEdge(edge);
+            otherNode.AddEdge(edge);
 
             return edge;
         }
 
-
-        public IEnumerable<IEdge> GetAllEdges()
-        {
-            return this._inboundEdges.Union(this._outboundEdges);
-        }
-
         public IEnumerable<INode> GetAdjacentNodes()
         {
-            List<INode> neighbours = new List<INode>(this._outboundEdges.Count + this._inboundEdges.Count);
-
-            foreach (var edge in this._inboundEdges)
+            List<INode> neighbours = new List<INode>();
+            foreach (var edge in this.edges)
             {
-                neighbours.Add(edge.Source);
+                neighbours.Add(edge.GetOtherNode(this));
             }
-
-            foreach (var edge in this._outboundEdges)
-            {
-                neighbours.Add(edge.Target);
-            }
-
             return neighbours;
+        }
+
+        public bool Disconnect(IEdge edge)
+        {
+            bool success = this.RemoveEdge(edge);
+            success = success && edge.GetOtherNode(this).RemoveEdge(edge);
+
+            return success;
+        }
+
+        public void AddEdge(IEdge edge)
+        {
+            this.edges.Add(edge);
+        }
+
+        public bool RemoveEdge(IEdge edge)
+        {
+            return this.edges.Remove(edge);
+        }
+
+        public bool IsNeighbour(INode node)
+        {
+            foreach (var edge in this.edges)
+            {
+                if (edge.GetOtherNode(this).Equals(node))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

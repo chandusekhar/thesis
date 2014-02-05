@@ -165,53 +165,44 @@ namespace DMT.Partition
             return pairs;
         }
 
-        internal void UpdateDValues(IEnumerable<PartitioningNode> remainingNodes, PartitioningNodePair selected)
+        internal void UpdateDValues(IEnumerable<PartitioningNode> unmarkedNodes, PartitioningNodePair selected)
         {
-            /**
-             * csak bejövő éleket nézni
-             * ha azonos partícióban van, akkor csere után D+1 lenne
-             * ha különböző partícióban van, akkor csere után D-1 lenne
-             */
-
             var pNA = selected.NodeA.Partition;
             var pNB = selected.NodeB.Partition;
 
-            foreach (var edge in selected.NodeA.Node.InboundEdges)
-            {
-                var node = remainingNodes.FirstOrDefault(n => n.Node.Equals(edge.Source));
+            UpdateDValueForNode(selected.NodeA, unmarkedNodes, pNA, pNB);
+            UpdateDValueForNode(selected.NodeB, unmarkedNodes, pNB, pNA);
+        }
 
-                // in the same partition => D += 1
-                if (pNA.Nodes.Any(n => n.Equals(edge.Source)))
+        private void UpdateDValueForNode(PartitioningNode selectedNode, IEnumerable<PartitioningNode> unmarkedNodes, IPartition thisPartition, IPartition otherPartition)
+        {
+            foreach (var edge in selectedNode.Node.Edges)
+            {
+                var otherNode = edge.GetOtherNode(selectedNode.Node);
+                // get the partitioning node for the otherNode
+                var pNode = unmarkedNodes.FirstOrDefault(n => n.Node.Equals(otherNode));
+                if (pNode == null)
                 {
-                    node.D += 1;
+                    continue;
                 }
-                else if (pNB.Nodes.Any(n => n.Equals(edge.Source)))
+
+                // otherNode is in the same partition -> this increases (worsens) the D value of the node
+                if (thisPartition.Nodes.Any(n => n.Equals(pNode.Node)))
                 {
-                    node.D -= 1;
+                    // 2 * w(a', a)
+                    pNode.D += 2 * 1;
+                }
+                else if (otherPartition.Nodes.Any(n => n.Equals(pNode.Node)))
+                {
+                    pNode.D -= 2 * 1;
                 }
             }
-
-            foreach (var edge in selected.NodeB.Node.InboundEdges)
-            {
-                var node = remainingNodes.FirstOrDefault(n => n.Node.Equals(edge.Source));
-
-                // in the same partition => D += 1
-                if (pNB.Nodes.Any(n => n.Equals(edge.Source)))
-                {
-                    node.D += 1;
-                }
-                else if (pNA.Nodes.Any(n => n.Equals(edge.Source)))
-                {
-                    node.D -= 1;
-                }
-            }
-
         }
 
         internal int ComputeCost(INode node, IPartition partition)
         {
             // self-loops dont count toward the cost.
-            return node.OutboundEdges.Count(e => !e.Target.Equals(node) && partition.HasNode(e.Target));
+            return node.Edges.Count(e => !e.GetOtherNode(node).Equals(node) && partition.HasNode(e.GetOtherNode(node)));
         }
 
         internal PartitioningNodePair SelectMaxGain(IEnumerable<PartitioningNode> nodes)

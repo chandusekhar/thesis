@@ -36,7 +36,7 @@ namespace DMT.Partition
         /// <returns></returns>
         private int Weight(INode n1, INode n2)
         {
-            if (n1.GetAdjacentNodes().Contains(n2))
+            if (n1.IsNeighbour(n2))
             {
                 return 1;
             }

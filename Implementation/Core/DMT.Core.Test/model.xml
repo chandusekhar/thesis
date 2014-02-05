@@ -17,13 +17,15 @@
     <Edges>
         <Edge>
             <Id>fcbf2cac-074a-4ff3-b8ab-1c976289f81f</Id>
-            <StartNode>5537b137-1a57-4107-bd64-9bf855aea1be</StartNode>
-            <EndNode>3118c8c9-e83d-4363-a849-b0e13431fbaa</EndNode>
+            <EndA>5537b137-1a57-4107-bd64-9bf855aea1be</EndA>
+            <EndB>3118c8c9-e83d-4363-a849-b0e13431fbaa</EndB>
+            <Direction>Both</Direction>
         </Edge>
         <Edge>
             <Id>631c3c92-8a58-43cc-be96-72f3714c9a21</Id>
-            <StartNode>5537b137-1a57-4107-bd64-9bf855aea1be</StartNode>
-            <EndNode>644dce7a-4525-40fb-be6e-4c4d277d37e6</EndNode>
+            <EndA>5537b137-1a57-4107-bd64-9bf855aea1be</EndA>
+            <EndB>644dce7a-4525-40fb-be6e-4c4d277d37e6</EndB>
+            <Direction>Both</Direction>
         </Edge>
     </Edges>
     <!-- 

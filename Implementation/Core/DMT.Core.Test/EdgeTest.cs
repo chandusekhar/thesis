@@ -14,32 +14,24 @@ namespace DMT.Core.Test
 {
     public class EdgeTest
     {
-        private Edge e;
-        private Node n1, n2;
-
-        public EdgeTest()
-        {
-            e = new Edge((n1 = new Node()), (n2 = new Node()));
-        }
-
         [Fact]
         public void AfterSerializationEdgeHasStartNode()
         {
-            Edge e = new Edge(new Node(), new Node());
+            Edge e = EntityHelper.CreateEdgeConnectingNodes();
 
             var doc = SerializerHelper.SerializeObject(e);
 
-            Assert.NotEmpty(doc.Descendants(Edge.StartNodeTag));
+            Assert.NotEmpty(doc.Descendants(Edge.EndATag));
         }
 
         [Fact]
         public void AfterSerializationEdgeHasEndNode()
         {
-            Edge e = new Edge(new Node(), new Node());
+            Edge e = EntityHelper.CreateEdgeConnectingNodes();
 
             var doc = SerializerHelper.SerializeObject(e);
 
-            Assert.NotEmpty(doc.Descendants(Edge.EndNodeTag));
+            Assert.NotEmpty(doc.Descendants(Edge.EndBTag));
         }
 
         [Fact]
@@ -48,7 +40,7 @@ namespace DMT.Core.Test
             Edge e, e2;
             SerializeAndDeserializeEdgeWithContext(out e, out e2);
 
-            Assert.Equal(e.Source.Id, e2.Source.Id);
+            Assert.Equal(e.EndA.Id, e2.EndA.Id);
         }
 
         [Fact]
@@ -57,50 +49,13 @@ namespace DMT.Core.Test
             Edge e, e2;
             SerializeAndDeserializeEdgeWithContext(out e, out e2);
 
-            Assert.Equal(e.Target.Id, e2.Target.Id);
-        }
-
-        [Fact]
-        public void ConnectingNodesAddsEdgeToNodes()
-        {
-            Node n1 = new Node(), n2 = new Node();
-            Edge e = new Edge();
-
-            e.ConnectNodes(n1, n2);
-
-            Assert.Contains(e, n1.OutboundEdges);
-            Assert.Contains(e, n2.InboundEdges);
-        }
-
-        [Fact]
-        public void ConnectingNodesSetsNodesOnEdge()
-        {
-            Node n1 = new Node(), n2 = new Node();
-            Edge e = new Edge();
-
-            e.ConnectNodes(n1, n2);
-
-            Assert.Equal(n1, e.Source);
-            Assert.Equal(n2, e.Target);
-        }
-
-        [Fact]
-        public void ConnectingNodesThrowsExceptionForNullNode()
-        {
-            Edge e = new Edge();
-            Assert.Throws(typeof(ArgumentNullException), () => e.ConnectNodes(null, null));
-        }
-
-        [Fact]
-        public void ReconnectingAnAlreadyConnectedEdgeIsNotAllowed()
-        {
-            Assert.Throws(typeof(EdgeAlreadyConnectedException), () => e.ConnectNodes(new Node(), new Node()));
+            Assert.Equal(e.EndB.Id, e2.EndB.Id);
         }
 
         [Fact]
         public void ToStringContainsClassNameAndId()
         {
-            Edge e = new Edge();
+            Edge e = new Edge(null, null, Interfaces.EdgeDirection.Both, new CoreEntityFactory());
             var toString = string.Format("DMT.Core.Entities.Edge [{0}]", e.Id);
             Assert.Equal(toString, e.ToString());
         }
@@ -108,25 +63,30 @@ namespace DMT.Core.Test
         [Fact]
         public void RemovingEdgeRemovesItFromNodesEdgeCollection()
         {
+            Edge e = EntityHelper.CreateEdgeConnectingNodes();
+            var n1 = e.EndA;
+            var n2 = e.EndB;
+
             e.Remove();
 
-            Assert.DoesNotContain(e, n1.OutboundEdges);
-            Assert.DoesNotContain(e, n2.InboundEdges);
+            Assert.DoesNotContain(e, n1.Edges);
+            Assert.DoesNotContain(e, n2.Edges);
         }
 
         [Fact]
         public void RemovingEdgeSetsNullToStartAndEnd()
         {
+            Edge e = EntityHelper.CreateEdgeConnectingNodes();
             e.Remove();
 
-            Assert.Null(e.Source);
-            Assert.Null(e.Target);
+            Assert.Null(e.EndA);
+            Assert.Null(e.EndB);
         }
 
         [Fact]
         public void RemovingNotConnectedEdgeReturnsFalse()
         {
-            Edge e = new Edge();
+            Edge e = new Edge(null, null, Interfaces.EdgeDirection.Both, new CoreEntityFactory());
             Assert.Equal(false, e.Remove());
         }
 
@@ -136,8 +96,8 @@ namespace DMT.Core.Test
         {
             DeserializationContext ctx = new DeserializationContext(new CoreEntityFactory());
 
-            e = new Edge(new Node(), new Node());
-            ctx.AddNodes(e.Source, e.Target);
+            e = EntityHelper.CreateEdgeConnectingNodes();
+            ctx.AddNodes(e.EndA, e.EndB);
 
             e2 = SerializerHelper.SerializeAndDeserialize(e, ctx);
         }

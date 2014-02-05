@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Partition;
+using DMT.Core.Test.Utils;
 using DMT.Partition.Interfaces;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace DMT.Partition.Test
         [Fact]
         public void InflatingPartitionWithOnlySimpleNodes()
         {
-            var p = CreatePartitionWithChildren(count, _ => new Node());
+            var p = CreatePartitionWithChildren(count, _ => EntityHelper.CreateNode());
             var n = p.Nodes;
             p.Inflate();
             Assert.NotSame(n, p.Nodes);
@@ -28,7 +29,7 @@ namespace DMT.Partition.Test
         [Fact]
         public void InflatePartitionWithSuperNodes()
         {
-            var p = CreatePartitionWithChildren(count, _ => SuperNodeTestFactory.CreateWithChildren(count, f => new Node()));
+            var p = CreatePartitionWithChildren(count, _ => SuperNodeTestFactory.CreateWithChildren(count, f => EntityHelper.CreateNode()));
             var n = p.Nodes;
             p.Inflate();
 
@@ -39,10 +40,10 @@ namespace DMT.Partition.Test
         [Fact]
         public void InflatePartitionWithMixedNodes()
         {
-            var p = CreatePartitionWithChildren(count, _ => SuperNodeTestFactory.CreateWithChildren(count, f => new Node()));
+            var p = CreatePartitionWithChildren(count, _ => SuperNodeTestFactory.CreateWithChildren(count, f => EntityHelper.CreateNode()));
             for (int i = 0; i < count; i++)
             {
-                p.Nodes.Add(new Node());
+                p.Nodes.Add(EntityHelper.CreateNode());
             }
             var n = p.Nodes;
 
@@ -62,12 +63,12 @@ namespace DMT.Partition.Test
         [Fact]
         public void GetExternalEdgesForNonEmptyPartition()
         {
-            var n1 = new Node();
-            var n2 = new Node();
-            var n3 = new Node();
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            var n3 = EntityHelper.CreateNode();
 
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
-            n1.ConnectTo(n3, EdgeDirection.Outbound);
+            n1.ConnectTo(n2, EdgeDirection.Both);
+            n1.ConnectTo(n3, EdgeDirection.Both);
 
             var p1 = P();
             p1.Nodes.Add(n1);
@@ -75,14 +76,14 @@ namespace DMT.Partition.Test
 
             var edges = p1.GetExternalEdges();
             Assert.Single(edges);
-            Assert.Contains(edges.Single(), n1.OutboundEdges);
+            Assert.Contains(edges.Single(), n1.Edges);
         }
 
         [Fact]
         public void GetExternalEdgesShouldBeEmptyWhenNoExternalEdges()
         {
-            Node n1 = new Node(), n2 = new Node();
-            n1.ConnectTo(n2, EdgeDirection.Outbound);
+            Node n1 = EntityHelper.CreateNode(), n2 = EntityHelper.CreateNode();
+            n1.ConnectTo(n2, EdgeDirection.Both);
 
             var p = P();
             p.Nodes.Add(n1);
@@ -95,7 +96,7 @@ namespace DMT.Partition.Test
         public void HasNodeForNullReturnsFalse()
         {
             var p = P();
-            p.Nodes.Add(new Node());
+            p.Nodes.Add(EntityHelper.CreateNode());
             Assert.False(p.HasNode(null));
         }
 
@@ -103,14 +104,14 @@ namespace DMT.Partition.Test
         public void EmptyPartitionReturnsFalseForHasNode()
         {
             Assert.False(P().HasNode(null));
-            Assert.False(P().HasNode(new Node()));
+            Assert.False(P().HasNode(EntityHelper.CreateNode()));
         }
 
         [Fact]
         public void HasNodeForActualNodeInPartitionReturnsTrue()
         {
             var p = P();
-            var n1 = new Node();
+            var n1 = EntityHelper.CreateNode();
             p.Nodes.Add(n1);
             Assert.True(p.HasNode(n1));
         }
@@ -142,9 +143,9 @@ namespace DMT.Partition.Test
         {
             var p1 = P();
             var p2 = P();
-            var n1 = new Node();
-            var n2 = new Node();
-            var edge = n1.ConnectTo(n2, EdgeDirection.Outbound);
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            var edge = n1.ConnectTo(n2, EdgeDirection.Both);
             p1.Nodes.Add(n1);
             p2.Nodes.Add(n2);
 

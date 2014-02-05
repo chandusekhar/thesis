@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Partition;
+using DMT.Core.Test.Utils;
 using Xunit;
 
 namespace DMT.Partition.Test
@@ -29,7 +30,7 @@ namespace DMT.Partition.Test
             List<INode> nodes = new List<INode>();
             for (int i = 0; i < count; i++)
             {
-                nodes.Add(new Node());
+                nodes.Add(EntityHelper.CreateNode());
             }
 
             var partitions = partitioner.Partition(nodes);
@@ -50,7 +51,7 @@ namespace DMT.Partition.Test
 
             for (int i = 0; i < nodeCount; i++)
             {
-                nodes.Add(SuperNodeTestFactory.CreateWithChildren(innerNodeCount, f => new Node()));
+                nodes.Add(SuperNodeTestFactory.CreateWithChildren(innerNodeCount, f => EntityHelper.CreateNode()));
             }
 
             var ps = partitioner.Partition(nodes);
@@ -68,10 +69,10 @@ namespace DMT.Partition.Test
 
             for (int i = 0; i < nodeCount - 1; i++)
             {
-                nodes.Add(SuperNodeTestFactory.CreateWithChildren(innerNodeCount, f => new Node()));
+                nodes.Add(SuperNodeTestFactory.CreateWithChildren(innerNodeCount, f => EntityHelper.CreateNode()));
             }
 
-            nodes.Insert(0, SuperNodeTestFactory.CreateWithChildren(150, _ => new Node()));
+            nodes.Insert(0, SuperNodeTestFactory.CreateWithChildren(150, _ => EntityHelper.CreateNode()));
 
             var ps = partitioner.Partition(nodes);
             Assert.NotEmpty(ps.First().Nodes);

@@ -68,6 +68,10 @@
       <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
       <Name>DMT.Partition.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\DMT.Core.Test\DMT.Core.Test.csproj">
+      <Project>{f9e8b121-a7d2-4d33-82fc-99826b3bd9ae}</Project>
+      <Name>DMT.Core.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\DMT.Core\DMT.Core.csproj">
       <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
       <Name>DMT.Core</Name>
