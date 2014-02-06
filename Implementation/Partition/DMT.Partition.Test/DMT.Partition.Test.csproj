@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BucketPartitionerTest.cs" />
+    <Compile Include="GraphHelper.cs" />
     <Compile Include="GreedyCoarsenerTest.cs" />
     <Compile Include="KLPartitionRefinerTest.cs" />
     <Compile Include="MaximalMatchingTest.cs" />

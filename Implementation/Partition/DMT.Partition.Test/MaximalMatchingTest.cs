@@ -28,7 +28,7 @@ namespace DMT.Partition.Test
         [Fact]
         public void MatchingIsTheSameAsWhatFindReturns()
         {
-            var mm = new MaximalMatching(Circle4());
+            var mm = new MaximalMatching(GraphHelper.Circle4());
             var matching = mm.Find();
 
             Assert.Equal(matching, mm.Matching);
@@ -44,27 +44,11 @@ namespace DMT.Partition.Test
         [Fact]
         public void Circle4HasTwoEdgesInMatching()
         {
-            var mm = new MaximalMatching(Circle4());
+            var mm = new MaximalMatching(GraphHelper.Circle4());
             var matching = mm.Find();
 
             Assert.Equal(2, matching.Count());
             
-        }
-
-        private static List<INode> Circle4()
-        {
-            INode n1 = EntityHelper.CreateNode();
-            INode n2 = EntityHelper.CreateNode();
-            INode n3 = EntityHelper.CreateNode();
-            INode n4 = EntityHelper.CreateNode();
-
-            n1.ConnectTo(n2, EdgeDirection.Both);
-            n2.ConnectTo(n3, EdgeDirection.Both);
-            n3.ConnectTo(n4, EdgeDirection.Both);
-            n4.ConnectTo(n1, EdgeDirection.Both);
-
-            List<INode> nodes = new List<INode> { n1, n2, n3, n4 };
-            return nodes;
         }
     }
 }
