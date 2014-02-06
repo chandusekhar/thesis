@@ -50,6 +50,7 @@
     <Compile Include="BucketPartitioner.cs" />
     <Compile Include="GreedyCoarsener.cs" />
     <Compile Include="KLPartitionRefiner.cs" />
+    <Compile Include="MaximalMatching.cs" />
     <Compile Include="PartitioningNode.cs" />
     <Compile Include="PartitionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
