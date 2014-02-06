@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces.Results;
 
 namespace DMT.Core.Interfaces
 {
@@ -73,6 +74,6 @@ namespace DMT.Core.Interfaces
         /// </summary>
         /// <param name="node">The node to check</param>
         /// <returns>true only if the given node is a neighbour</returns>
-        bool IsNeighbour(INode node);
+        NeighbourResult IsNeighbour(INode node);
     }
 }

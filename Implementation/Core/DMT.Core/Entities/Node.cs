@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Exceptions;
+using DMT.Core.Interfaces.Results;
 
 namespace DMT.Core.Entities
 {
@@ -98,16 +99,16 @@ namespace DMT.Core.Entities
             return this.edges.Remove(edge);
         }
 
-        public bool IsNeighbour(INode node)
+        public NeighbourResult IsNeighbour(INode node)
         {
             foreach (var edge in this.edges)
             {
                 if (edge.GetOtherNode(this).Equals(node))
                 {
-                    return true;
+                    return new NeighbourResult(true, edge);
                 }
             }
-            return false;
+            return new NeighbourResult(false, null);
         }
     }
 }

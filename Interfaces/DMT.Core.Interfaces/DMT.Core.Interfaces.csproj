@@ -47,6 +47,7 @@
     <Compile Include="IModel.cs" />
     <Compile Include="IModelFactory.cs" />
     <Compile Include="IWeighted.cs" />
+    <Compile Include="Results\NeighbourResult.cs" />
     <Compile Include="Serialization\IDataSource.cs" />
     <Compile Include="IEdge.cs" />
     <Compile Include="IId.cs" />
