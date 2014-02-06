@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgeDirection.cs" />
+    <Compile Include="Exceptions\InvalidEdgeException.cs" />
     <Compile Include="Exceptions\InvalidNodeException.cs" />
     <Compile Include="Graph\ComponentTraversalStrategy.cs" />
     <Compile Include="Graph\ITraverser.cs" />
