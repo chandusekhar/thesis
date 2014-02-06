@@ -21,7 +21,7 @@ namespace DMT.Partition.Interfaces
         /// Gets or sets the factor of coarsening.
         ///
         /// The factor shows how big the coearsend graph should be compared to
-        /// the original graph. So ideally the number_of_node * factor = coarsening_steps.
+        /// the original graph. So ideally number of nodes * factor = number of nodes after coarsening.
         /// </summary>
         double Factor { get; set; }
 
