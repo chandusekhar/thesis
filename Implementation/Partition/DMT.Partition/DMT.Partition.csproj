@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="BucketPartitioner.cs" />
     <Compile Include="GraphContractor.cs" />
-    <Compile Include="GreedyCoarsener.cs" />
     <Compile Include="KLPartitionRefiner.cs" />
     <Compile Include="MaximalMatching.cs" />
     <Compile Include="MaximalMatchingCoarsener.cs" />

@@ -47,7 +47,6 @@
     <Compile Include="BucketPartitionerTest.cs" />
     <Compile Include="GraphContractorTest.cs" />
     <Compile Include="GraphHelper.cs" />
-    <Compile Include="GreedyCoarsenerTest.cs" />
     <Compile Include="KLPartitionRefinerTest.cs" />
     <Compile Include="MaximalMatchingTest.cs" />
     <Compile Include="PartitionTest.cs" />
