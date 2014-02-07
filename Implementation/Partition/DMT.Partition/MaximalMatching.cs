@@ -81,6 +81,7 @@ namespace DMT.Partition
                 this.markedNodes.Add(edge.EndA);
                 this.markedNodes.Add(edge.EndB);
                 invalidEdges.Add(edge);
+                // TODO: add EndA and EndB other edges to invalid edges, issue #6
                 selected = edge;
                 break;
             }
