@@ -52,6 +52,7 @@
     <Compile Include="GreedyCoarsener.cs" />
     <Compile Include="KLPartitionRefiner.cs" />
     <Compile Include="MaximalMatching.cs" />
+    <Compile Include="MaximalMatchingCoarsener.cs" />
     <Compile Include="PartitioningNode.cs" />
     <Compile Include="PartitionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +75,7 @@
       <Name>DMT.Partition.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
