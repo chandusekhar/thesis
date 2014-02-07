@@ -10,6 +10,7 @@ using DMT.Partition.Interfaces;
 namespace DMT.Partition
 {
     [Export(typeof(IPartitionManager))]
+    [Export(typeof(IThreeStepPartitionManager))]
     internal class PartitionManager : IThreeStepPartitionManager
     {
         private ICoarsener coarsener;
@@ -32,6 +33,8 @@ namespace DMT.Partition
             get { return partitioner; }
         }
 
+        public event Interfaces.Events.AfterCoarseningEventHandler AfterCoarsening;
+
         [ImportingConstructor]
         public PartitionManager(ICoarsener coarsener, IPartitioner partitioner, IPartitionRefiner refiner)
         {
@@ -43,6 +46,8 @@ namespace DMT.Partition
         public IEnumerable<IPartition> PartitionModel(IModel model)
         {
             IEnumerable<ISuperNode> coarsenedGraph =  this.coarsener.Coarsen(model.Nodes);
+            OnAfterCoarsening(coarsenedGraph);
+
             IEnumerable<IPartition> partitions = partitioner.Partition(coarsenedGraph);
 
             // uncoarsen and refine partitions in place
@@ -51,6 +56,13 @@ namespace DMT.Partition
             return partitions;
         }
 
-
+        private void OnAfterCoarsening(IEnumerable<ISuperNode> nodes)
+        {
+            var handler = this.AfterCoarsening;
+            if (handler != null)
+            {
+                handler(this, new Interfaces.Events.AfterCoarseningEventArgs(nodes));
+            }
+        }
     }
 }

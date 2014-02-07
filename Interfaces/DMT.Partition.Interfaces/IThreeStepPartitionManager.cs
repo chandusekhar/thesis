@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Partition.Interfaces.Events;
 
 namespace DMT.Partition.Interfaces
 {
@@ -29,5 +30,7 @@ namespace DMT.Partition.Interfaces
         /// Gets the partitioner object.
         /// </summary>
         IPartitioner Partitioner { get; }
+
+        event AfterCoarseningEventHandler AfterCoarsening;
     }
 }
