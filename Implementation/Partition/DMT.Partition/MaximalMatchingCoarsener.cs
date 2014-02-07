@@ -37,13 +37,12 @@ namespace DMT.Partition
             logger.Debug("Coarsening starts. Node count: {0}. Goal: {1}", source.Count(), this.goalNodeCount);
             
             int passes = 1;
-            while (goalNodeCount > source.Count())
+            while (goalNodeCount < source.Count())
             {
                 result = CoarsenOnce(source);
                 int countBefore = source.Count();
-                int decrease = countBefore - result.Count();
 
-                logger.Debug("Nr of nodes after {0}. coarsening pass: {1}", passes, decrease);
+                logger.Debug("Number of nodes after {0}. coarsening pass. Before {1}, after: {2}", passes, countBefore, result.Count());
 
                 passes += 1;
                 source = result;
