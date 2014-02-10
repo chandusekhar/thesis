@@ -13,17 +13,16 @@ namespace DMT.Core.Graph
     /// </summary>
     public class VisitedNodeCollection
     {
-        // TODO: implement a better collection with O(1) check for containing an element
-        Dictionary<IId, object> nodes = new Dictionary<IId, object>();
+        private HashSet<IId> nodes = new HashSet<IId>();
 
         public void Add(INode node)
         {
-            nodes.Add(node.Id, null);
+            nodes.Add(node.Id);
         }
 
         public bool Contains(INode node)
         {
-            return nodes.ContainsKey(node.Id);
+            return nodes.Contains(node.Id);
         }
 
         public bool NotContains(INode node)

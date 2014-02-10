@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
+using DMT.Partition.Interfaces.Events;
 
 namespace DMT.Partition
 {
     [Export(typeof(IPartitionManager))]
+    [Export(typeof(IThreeStepPartitionManager))]
     internal class PartitionManager : IThreeStepPartitionManager
     {
         private ICoarsener coarsener;
@@ -32,6 +34,10 @@ namespace DMT.Partition
             get { return partitioner; }
         }
 
+        public event AfterCoarseningEventHandler AfterCoarsening;
+
+        public event AfterPartitioningEventHandler AfterPartitioning;
+
         [ImportingConstructor]
         public PartitionManager(ICoarsener coarsener, IPartitioner partitioner, IPartitionRefiner refiner)
         {
@@ -43,7 +49,10 @@ namespace DMT.Partition
         public IEnumerable<IPartition> PartitionModel(IModel model)
         {
             IEnumerable<ISuperNode> coarsenedGraph =  this.coarsener.Coarsen(model.Nodes);
+            OnAfterCoarsening(coarsenedGraph);
+
             IEnumerable<IPartition> partitions = partitioner.Partition(coarsenedGraph);
+            OnAfterPartitioning(partitions);
 
             // uncoarsen and refine partitions in place
             this.coarsener.Uncoarsen(partitions, this.refiner);
@@ -51,6 +60,22 @@ namespace DMT.Partition
             return partitions;
         }
 
+        private void OnAfterCoarsening(IEnumerable<ISuperNode> nodes)
+        {
+            var handler = this.AfterCoarsening;
+            if (handler != null)
+            {
+                handler(this, new AfterCoarseningEventArgs(nodes));
+            }
+        }
 
+        private void OnAfterPartitioning(IEnumerable<IPartition> paritions)
+        {
+            var handler = this.AfterPartitioning;
+            if (handler != null)
+            {
+                handler(this, new AfterPartitioningEventArgs(paritions));
+            }
+        }
     }
 }

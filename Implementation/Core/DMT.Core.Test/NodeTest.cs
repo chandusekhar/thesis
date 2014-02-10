@@ -74,7 +74,7 @@ namespace DMT.Core.Test
             var neighbour = EntityHelper.CreateNode();
             n.ConnectTo(neighbour, EdgeDirection.Both);
 
-            Assert.True(n.IsNeighbour(neighbour));
+            Assert.True(n.IsNeighbour(neighbour).Success);
         }
 
         [Fact]
@@ -84,7 +84,20 @@ namespace DMT.Core.Test
             EntityHelper.ConnectNewNodeTo(n);
             var n2 = EntityHelper.CreateNode();
 
-            Assert.False(n.IsNeighbour(n2));
+            Assert.False(n.IsNeighbour(n2).Success);
+        }
+
+        [Fact]
+        public void IsNieghbourFindTheFirstEdge()
+        {
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+
+            var e1 = n1.ConnectTo(n2, EdgeDirection.Both);
+            var e2 = n1.ConnectTo(n2, EdgeDirection.Both);
+
+            var res = n1.IsNeighbour(n2);
+            Assert.Equal(e1, res.Edge);
         }
 
     }

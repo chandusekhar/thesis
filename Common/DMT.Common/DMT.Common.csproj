@@ -45,6 +45,7 @@
     <Compile Include="Composition\InjectableBase.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
