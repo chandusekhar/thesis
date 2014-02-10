@@ -47,15 +47,7 @@ namespace DMT.Partition
             foreach (var node in nodes)
             {
                 sn = node as ISuperNode;
-                if (sn != null)
-                {
-                    size = sn.Size;
-                    logger.Debug("Current node is a SuperNode and has {0} simple nodes.", size);
-                }
-                else
-                {
-                    size = 1;
-                }
+                size = sn != null ? sn.Size : 1;
                 
                 if (count + size <= this.NumberOfNodesInPartition)
                 {
@@ -75,12 +67,6 @@ namespace DMT.Partition
             }
 
             logger.Info("Partition done. Produced {0} partitions.", partitions.Count);
-
-            foreach (var p in partitions)
-            {
-                logger.Debug("Partition ({0}) has {1} nodes.", p.Id, p.Nodes.Count);
-            }
-
             return partitions;
         }
     }

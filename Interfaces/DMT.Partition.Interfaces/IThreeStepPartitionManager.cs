@@ -32,5 +32,7 @@ namespace DMT.Partition.Interfaces
         IPartitioner Partitioner { get; }
 
         event AfterCoarseningEventHandler AfterCoarsening;
+
+        event AfterPartitioningEventHandler AfterPartitioning;
     }
 }

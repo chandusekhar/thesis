@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
+using DMT.Partition.Interfaces.Events;
 
 namespace DMT.Partition
 {
@@ -33,7 +34,9 @@ namespace DMT.Partition
             get { return partitioner; }
         }
 
-        public event Interfaces.Events.AfterCoarseningEventHandler AfterCoarsening;
+        public event AfterCoarseningEventHandler AfterCoarsening;
+
+        public event AfterPartitioningEventHandler AfterPartitioning;
 
         [ImportingConstructor]
         public PartitionManager(ICoarsener coarsener, IPartitioner partitioner, IPartitionRefiner refiner)
@@ -49,6 +52,7 @@ namespace DMT.Partition
             OnAfterCoarsening(coarsenedGraph);
 
             IEnumerable<IPartition> partitions = partitioner.Partition(coarsenedGraph);
+            OnAfterPartitioning(partitions);
 
             // uncoarsen and refine partitions in place
             this.coarsener.Uncoarsen(partitions, this.refiner);
@@ -61,7 +65,16 @@ namespace DMT.Partition
             var handler = this.AfterCoarsening;
             if (handler != null)
             {
-                handler(this, new Interfaces.Events.AfterCoarseningEventArgs(nodes));
+                handler(this, new AfterCoarseningEventArgs(nodes));
+            }
+        }
+
+        private void OnAfterPartitioning(IEnumerable<IPartition> paritions)
+        {
+            var handler = this.AfterPartitioning;
+            if (handler != null)
+            {
+                handler(this, new AfterPartitioningEventArgs(paritions));
             }
         }
     }

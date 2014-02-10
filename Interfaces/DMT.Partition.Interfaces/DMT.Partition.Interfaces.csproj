@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\AfterCoarseningEvent.cs" />
+    <Compile Include="Events\AfterPartitioningEvent.cs" />
     <Compile Include="ICoarsener.cs" />
     <Compile Include="IHost.cs" />
     <Compile Include="IPartitionManager.cs" />
