@@ -11,11 +11,14 @@ using DMT.Partition.Interfaces;
 namespace DMT.Core.Partition
 {
     [Export(typeof(IPartitionEntityFactory))]
-    internal class PartitionEntityFactory : IPartitionEntityFactory
+    [Export(typeof(IEntityFactory))]
+    internal class PartitionEntityFactory : CoreEntityFactory, IPartitionEntityFactory, IEntityFactory
     {
+        [Import]
         private IEntityFactory baseEntityFactory;
 
-        [ImportingConstructor]
+        public PartitionEntityFactory() { }
+
         public PartitionEntityFactory(IEntityFactory entityFactory)
         {
             this.baseEntityFactory = entityFactory;
@@ -36,11 +39,6 @@ namespace DMT.Core.Partition
         public IPartition CreatePartition()
         {
             return new Partition(baseEntityFactory);
-        }
-
-        internal static PartitionEntityFactory New()
-        {
-            return new PartitionEntityFactory(new CoreEntityFactory());
         }
     }
 }

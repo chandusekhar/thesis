@@ -10,7 +10,6 @@ using NLog;
 
 namespace DMT.Core.Entities
 {
-    [Export(typeof(IEntityFactory))]
     public class CoreEntityFactory : IEntityFactory
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
