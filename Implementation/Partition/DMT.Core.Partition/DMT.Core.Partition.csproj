@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Partition.cs" />
+    <Compile Include="PartitionEdge.cs" />
     <Compile Include="PartitionNode.cs" />
     <Compile Include="SuperNode.cs" />
     <Compile Include="PartitionEntityFactory.cs" />

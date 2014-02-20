@@ -49,6 +49,7 @@
     <Compile Include="GraphHelper.cs" />
     <Compile Include="KLPartitionRefinerTest.cs" />
     <Compile Include="MaximalMatchingTest.cs" />
+    <Compile Include="PartitionEdgeTest.cs" />
     <Compile Include="PartitionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuperNodeTest.cs" />
