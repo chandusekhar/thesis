@@ -25,6 +25,7 @@ namespace DMT.Partition.TestApp
 
             var pm = CompositionService.Instance.GetExport<IThreeStepPartitionManager>();
             pm.AfterCoarsening += PrintAfterCoarseningStatistics;
+            pm.Partitioner.NumberOfNodesInPartition = 100;
 
             var partitions = pm.PartitionModel(model);
 

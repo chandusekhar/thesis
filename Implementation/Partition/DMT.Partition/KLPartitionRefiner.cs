@@ -28,6 +28,7 @@ namespace DMT.Partition
 
         public void Refine(IPartition p1, IPartition p2)
         {
+            logger.Info("Refining {0} and {1} partitions.", p1, p2);
             if (p1 == null) { throw new ArgumentNullException("p1"); }
             if (p2 == null) { throw new ArgumentNullException("p2"); }
 
@@ -36,13 +37,19 @@ namespace DMT.Partition
             {
                 List<PartitioningNode> nodes = ComputeDValues(p1, p2);
                 List<PartitioningNodePair> selected = new List<PartitioningNodePair>();
-
                 PartitioningNodePair pair;
 
                 while (nodes.Any())
                 {
                     // selected unmarked max gain
                     pair = SelectMaxGain(nodes);
+
+                    if (pair == null)
+                    {
+                        // local minimum reached early
+                        break;
+                    }
+
                     // mark pair
                     nodes.Remove(pair.NodeA);
                     nodes.Remove(pair.NodeB);
@@ -65,11 +72,13 @@ namespace DMT.Partition
         // refine only some percentage of all the pairs
         public void Refine(IEnumerable<IPartition> partitions)
         {
+            logger.Info("Partition started.");
             var pairs = MakePairsOfPartitions(partitions);
             foreach (var pair in pairs)
             {
                 this.Refine(pair.Item1, pair.Item2);
             }
+            logger.Info("Partitioning ended.");
         }
 
         /// <summary>
@@ -211,7 +220,7 @@ namespace DMT.Partition
             var maxPair = pairs.FirstOrDefault();
             if (maxPair == null)
             {
-                logger.Warn("No pairs left, this should not happen!");
+                logger.Trace("No pairs found: every node is in the same partition. No more refinement required.");
                 return null;
             }
 
@@ -228,20 +237,18 @@ namespace DMT.Partition
 
         internal IEnumerable<PartitioningNodePair> PickPairsToSwap(IEnumerable<PartitioningNodePair> pairs, out int sumGain)
         {
-            List<PartitioningNodePair> selected = new List<PartitioningNodePair>();
-            sumGain = 0;
-            foreach (var item in pairs)
+            Dictionary<int, int> sums = new Dictionary<int, int>();
+            int i = 0;
+            int sum = 0;
+            foreach (var pair in pairs)
             {
-                if (item.Gain < 0)
-                {
-                    break;
-                }
-
-                selected.Add(item);
-                sumGain += item.Gain;
+                sum += pair.Gain;
+                sums[i] = sum;
             }
 
-            return selected;
+            int maxIndex = sums.Keys.Max();
+            sumGain = sums[maxIndex];
+            return pairs.Take(maxIndex + 1);
         }
 
         internal void SwapPairs(IEnumerable<PartitioningNodePair> pairs)
@@ -265,13 +272,15 @@ namespace DMT.Partition
                 // re-add nodes to the other partitions.
                 p1.Add(pair.NodeB.Node);
                 p2.Nodes.Add(pair.NodeA.Node);
+
+                logger.Trace("Swapped {0} and {1} nodes between {2} and {3} partitions.", pair.NodeA.Node, pair.NodeB.Node, p1, p2);
             }
         }
 
         internal IEnumerable<Tuple<IPartition, IPartition>> MakePairsOfPartitions(IEnumerable<IPartition> partitions)
         {
             List<Tuple<IPartition, IPartition>> pairs = new List<Tuple<IPartition, IPartition>>();
-            
+
             foreach (var p1 in partitions)
             {
                 foreach (var p2 in partitions)

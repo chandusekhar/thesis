@@ -48,7 +48,7 @@ namespace DMT.Partition
                 source = result;
             }
 
-            logger.Debug("Coarsening finished. Final number of nodes: {0}", result.Count());
+            logger.Debug("Coarsening finished. Final number of nodes: {0}. Passes: {1}", result.Count(), passes);
 
             return result;
         }
