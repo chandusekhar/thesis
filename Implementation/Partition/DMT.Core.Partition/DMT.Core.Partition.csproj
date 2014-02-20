@@ -11,6 +11,8 @@
     <AssemblyName>DMT.Core.Partition</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -41,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Partition.cs" />
+    <Compile Include="PartitionNode.cs" />
     <Compile Include="SuperNode.cs" />
     <Compile Include="PartitionEntityFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +71,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -73,7 +81,14 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Master.App/bin/$(Configuration)/Defaults" />
-      <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Implementation/Partition/DMT.Partition.TestApp/bin/$(Configuration)/Defaults" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Master.App/bin/$(Configuration)/Defaults" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Implementation/Partition/DMT.Partition.TestApp/bin/$(Configuration)/Defaults" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
 </Project>

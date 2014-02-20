@@ -14,6 +14,8 @@ namespace DMT.Core.Partition
     [Export(typeof(IEntityFactory))]
     internal class PartitionEntityFactory : CoreEntityFactory, IPartitionEntityFactory, IEntityFactory
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         [Import]
         private IEntityFactory baseEntityFactory;
 
@@ -39,6 +41,13 @@ namespace DMT.Core.Partition
         public IPartition CreatePartition()
         {
             return new Partition(baseEntityFactory);
+        }
+
+        public override INode CreateNode()
+        {
+            var node = new PartitionNode(this.baseEntityFactory);
+            logger.Trace("Created new node: {0}", node);
+            return node;
         }
     }
 }
