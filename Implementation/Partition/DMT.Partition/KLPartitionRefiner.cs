@@ -28,7 +28,7 @@ namespace DMT.Partition
 
         public void Refine(IPartition p1, IPartition p2)
         {
-            logger.Info("Refining {0} and {1} partitions.", p1, p2);
+            logger.Trace("Refining {0} and {1} partitions.", p1, p2);
             if (p1 == null) { throw new ArgumentNullException("p1"); }
             if (p2 == null) { throw new ArgumentNullException("p2"); }
 
@@ -72,13 +72,13 @@ namespace DMT.Partition
         // refine only some percentage of all the pairs
         public void Refine(IEnumerable<IPartition> partitions)
         {
-            logger.Info("Partition started.");
-            var pairs = MakePairsOfPartitions(partitions);
+            logger.Info("Refinement started.");
+            var pairs = MakePairsOfPartitions(partitions.ToList());
             foreach (var pair in pairs)
             {
                 this.Refine(pair.Item1, pair.Item2);
             }
-            logger.Info("Partitioning ended.");
+            logger.Info("Refinement finished.");
         }
 
         /// <summary>
@@ -277,18 +277,15 @@ namespace DMT.Partition
             }
         }
 
-        internal IEnumerable<Tuple<IPartition, IPartition>> MakePairsOfPartitions(IEnumerable<IPartition> partitions)
+        internal IEnumerable<Tuple<IPartition, IPartition>> MakePairsOfPartitions(List<IPartition> partitions)
         {
             List<Tuple<IPartition, IPartition>> pairs = new List<Tuple<IPartition, IPartition>>();
 
-            foreach (var p1 in partitions)
+            for (int i = 0; i < partitions.Count; i++)
             {
-                foreach (var p2 in partitions)
+                for (int j = i + 1; j < partitions.Count; j++)
                 {
-                    if (p1 != p2)
-                    {
-                        pairs.Add(Tuple.Create(p1, p2));
-                    }
+                    pairs.Add(Tuple.Create(partitions[i], partitions[j]));
                 }
             }
 
@@ -305,7 +302,7 @@ namespace DMT.Partition
                 int i = rnd.Next(pairs.Count);
                 selected.Add(pairs[i]);
                 pairs.RemoveAt(i);
-                n--;
+                --n;
             }
 
             return selected;

@@ -55,7 +55,7 @@ namespace DMT.Partition
 
         public void Uncoarsen(IEnumerable<IPartition> partitions, IPartitionRefiner refiner)
         {
-            logger.Debug("Uncoarsening starts");
+            logger.Info("Uncoarsening starts");
             // TODO make check faster
             while (partitions.SelectMany(p => p.Nodes).OfType<ISuperNode>().Any())
             {
@@ -67,7 +67,7 @@ namespace DMT.Partition
                 }
             }
 
-            logger.Debug("Uncoarsening finished.");
+            logger.Info("Uncoarsening finished.");
         }
 
         private IEnumerable<ISuperNode> CoarsenOnce(IEnumerable<INode> nodes)
