@@ -39,11 +39,6 @@ namespace DMT.Core.Partition
             this.nodes = new HashSet<INode>();
         }
 
-        public Task<ISendPartitionResponse> SendToHost()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Serialize(XmlWriter writer)
         {
             throw new NotImplementedException();

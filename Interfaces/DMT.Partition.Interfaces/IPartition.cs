@@ -28,13 +28,6 @@ namespace DMT.Partition.Interfaces
         IHost Host { get; set; }
 
         /// <summary>
-        /// Sends the partition and its corresponding nodes (with all the available data)
-        /// to the host specfied by the <c>Host property</c>.
-        /// </summary>
-        /// <returns>The result of the send process.</returns>
-        Task<ISendPartitionResponse> SendToHost();
-
-        /// <summary>
         /// Inflate partition by swapping SuperNodes with their children.
         /// </summary>
         void Inflate();
