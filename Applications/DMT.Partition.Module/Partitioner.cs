@@ -8,7 +8,7 @@ using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
 
-namespace DMT.Master.Module
+namespace DMT.Partition.Module
 {
     /// <summary>
     /// A light wrapper around the IPartitionManager interface.

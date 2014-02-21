@@ -7,8 +7,8 @@
     <ProjectGuid>{612B515B-FE20-4236-A012-24E2AF16CA52}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Master.App</RootNamespace>
-    <AssemblyName>DMT.Master.App</AssemblyName>
+    <RootNamespace>DMT.Partition.App</RootNamespace>
+    <AssemblyName>DMT.Partition.App</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,9 +51,9 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DMT.Master.Module\DMT.Master.Module.csproj">
+    <ProjectReference Include="..\DMT.Partition.Module\DMT.Partition.Module.csproj">
       <Project>{60cc2c4f-5350-4d20-95bb-db2e303f4788}</Project>
-      <Name>DMT.Master.Module</Name>
+      <Name>DMT.Partition.Module</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

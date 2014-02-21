@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMT.Master.Module.Remote;
+using DMT.Partition.Module.Remote;
 using NLog;
 
-namespace DMT.Master.Module
+namespace DMT.Partition.Module
 {
-    public sealed class MasterModule
+    public sealed class PartitionModule
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

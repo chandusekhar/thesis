@@ -1,4 +1,4 @@
-DMT.Module.Master
+DMT.Partition.Module
 =================
 
 This is the master module. It is responsible for the following things:

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DMT.Master.Module.Remote
+namespace DMT.Partition.Module.Remote
 {
     interface IInstantiationStrategy
     {

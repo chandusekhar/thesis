@@ -42,9 +42,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Core.Partition", "Imple
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{117E5A36-5539-4F05-A7D7-80503215D0B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Master.App", "Applications\DMT.Master.App\DMT.Master.App.csproj", "{612B515B-FE20-4236-A012-24E2AF16CA52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Partition.App", "Applications\DMT.Partition.App\DMT.Partition.App.csproj", "{612B515B-FE20-4236-A012-24E2AF16CA52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Master.Module", "Applications\DMT.Master.Module\DMT.Master.Module.csproj", "{60CC2C4F-5350-4D20-95BB-DB2E303F4788}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Partition.Module", "Applications\DMT.Partition.Module\DMT.Partition.Module.csproj", "{60CC2C4F-5350-4D20-95BB-DB2E303F4788}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Partition.Test", "Implementation\Partition\DMT.Partition.Test\DMT.Partition.Test.csproj", "{053692E7-64DA-4BA5-9217-0215E0719A77}"
 EndProject

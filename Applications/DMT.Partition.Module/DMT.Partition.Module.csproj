@@ -7,8 +7,8 @@
     <ProjectGuid>{60CC2C4F-5350-4D20-95BB-DB2E303F4788}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Master.Module</RootNamespace>
-    <AssemblyName>DMT.Master.Module</AssemblyName>
+    <RootNamespace>DMT.Partition.Module</RootNamespace>
+    <AssemblyName>DMT.Partition.Module</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MasterModule.cs" />
+    <Compile Include="PartitionModule.cs" />
     <Compile Include="Remote\Arguments.cs" />
     <Compile Include="Remote\IInstantiationStrategy.cs" />
     <Compile Include="Remote\LocalPorcessInstantiationStrategy.cs" />

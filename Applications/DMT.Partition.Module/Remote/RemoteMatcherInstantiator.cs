@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DMT.Master.Module.Remote
+namespace DMT.Partition.Module.Remote
 {
     /// <summary>
     /// Instantiates new remote matcher instances.

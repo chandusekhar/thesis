@@ -9,7 +9,7 @@ using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 
-namespace DMT.Master.Module
+namespace DMT.Partition.Module
 {
     class ModelLoader : InjectableBase
     {

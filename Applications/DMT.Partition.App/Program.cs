@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMT.Master.Module;
+using DMT.Partition.Module;
 
-namespace DMT.Master.App
+namespace DMT.Partition.App
 {
     class Program
     {
         static void Main(string[] args)
         {
-            new MasterModule().Start(args);
+            new PartitionModule().Start(args);
         }
     }
 }
