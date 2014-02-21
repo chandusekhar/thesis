@@ -11,7 +11,7 @@ namespace DMT.Master.App
     {
         static void Main(string[] args)
         {
-            new MasterModule().Start();
+            new MasterModule().Start(args);
         }
     }
 }
