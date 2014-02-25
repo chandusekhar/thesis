@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
+using DMT.Common.Extensions;
 
 namespace DMT.Partition.Module
 {
@@ -40,7 +41,7 @@ namespace DMT.Partition.Module
             this.ConfigurePartitioner();
             this.partitions = this.partitionManager.PartitionModel(this.model);
 
-            this.PartitionPostProcessing();
+            this.PartitionPostProcessing(this.partitions);
 
             logger.Info("Partitioning is done, ready to send partitions to matcher modules.");
             return this.partitions;
@@ -55,8 +56,29 @@ namespace DMT.Partition.Module
         /// <summary>
         /// Sets up the nodes and edges to know about the partitions they are in.
         /// </summary>
-        private void PartitionPostProcessing()
+        private void PartitionPostProcessing(IEnumerable<IPartition> partitions)
         {
+            foreach (var partition in partitions)
+            {
+                foreach (var n in partition.Nodes)
+                {
+                    SetPartitionOnNode(n, partition);
+                }
+            }
+        }
+
+        private void SetPartitionOnNode(INode node, IPartition partition)
+        {
+            var pNode = node as IPartitionNode;
+
+            if (pNode == null)
+            {
+                logger.Error("Could not cast node to IPartitionNode. During partitioning, IPartitionNodes should be used.");
+                // TODO: introduce new exception type?
+                throw new Exception("Wrong node type for partitioning");
+            }
+
+            pNode.Partition = partition;
         }
 
     }
