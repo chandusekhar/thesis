@@ -11,6 +11,7 @@ namespace DMT.Partition.Module.Remote.Service
     class PartitionBrokerServiceHost : IDisposable
     {
         private const string EndpointPath = "partition";
+        private const string MexEndpointPath = "mex";
         private const string ContextPath = "service";
 
         private readonly string host;
@@ -36,7 +37,7 @@ namespace DMT.Partition.Module.Remote.Service
             }
 
             this.serviceHost = new ServiceHost(typeof(PartitionBrokerService), GetBaseAddress());
-            SetMetadata();
+            SetServiceBehaviors();
             SetEndpoint();
 
             this.serviceHost.Open();
@@ -45,21 +46,21 @@ namespace DMT.Partition.Module.Remote.Service
 
         private void SetEndpoint()
         {
-            // TODO: setup tcp binding
+            // for the service
             NetTcpBinding binding = new NetTcpBinding();
-
             binding.HostNameComparisonMode = HostNameComparisonMode.StrongWildcard;
             binding.Security.Mode = SecurityMode.None;
             binding.TransferMode = TransferMode.StreamedResponse;
-
             this.serviceHost.AddServiceEndpoint(typeof(IPartitionBrokerService), binding, GetServiceAddress());
+
+            // for metadata exchange -- discoverability
+            var mexBinding = MetadataExchangeBindings.CreateMexTcpBinding();
+            this.serviceHost.AddServiceEndpoint(typeof(IMetadataExchange), mexBinding, GetMexAddress());
         }
 
-        private void SetMetadata()
+        private void SetServiceBehaviors()
         {
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-            smb.HttpGetEnabled = false;
-            smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
             this.serviceHost.Description.Behaviors.Add(smb);
         }
 
@@ -78,6 +79,13 @@ namespace DMT.Partition.Module.Remote.Service
         {
             var builder = new UriBuilder(GetBaseAddress());
             builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.EndpointPath);
+            return builder.Uri;
+        }
+
+        private Uri GetMexAddress()
+        {
+            var builder = new UriBuilder(GetBaseAddress());
+            builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.MexEndpointPath);
             return builder.Uri;
         }
         

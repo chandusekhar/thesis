@@ -10,7 +10,7 @@ namespace DMT.Matcher.Module
     {
         public void Start(string[] argv)
         {
-            
+            new Partition.PartitionBrokerServiceClient().RegisterMatcher(new Partition.MatcherInfo() { Id = Guid.NewGuid() });
         }
     }
 }
