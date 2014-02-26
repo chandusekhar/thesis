@@ -25,7 +25,7 @@ namespace DMT.Partition.Module.Remote.Service
         public string Host { get { return this.host; } }
         public int Port { get { return this.port; } }
 
-        public PartitionBrokerServiceHost(string host = "localhost", int port = 8080)
+        public PartitionBrokerServiceHost(string host = "localhost", int port = 8088)
         {
             this.host = host;
             this.port = port;
