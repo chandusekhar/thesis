@@ -13,8 +13,9 @@ namespace DMT.Partition.Module
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static PartitionModule instance;
 
+        private MatcherRegistry matcherRegistry = new MatcherRegistry();
 
-        public static PartitionModule Instance
+        internal static PartitionModule Instance
         {
             get
             {
@@ -25,6 +26,8 @@ namespace DMT.Partition.Module
                 return instance;
             }
         }
+
+        internal MatcherRegistry MatcherRegistry { get { return matcherRegistry; } }
 
         /// <summary>
         /// Initializes the module and starts the services.
