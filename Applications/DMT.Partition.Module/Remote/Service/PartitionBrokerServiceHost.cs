@@ -10,6 +10,8 @@ namespace DMT.Partition.Module.Remote.Service
 {
     class PartitionBrokerServiceHost : IDisposable
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private const string EndpointPath = "partition";
         private const string MexEndpointPath = "mex";
         private const string ContextPath = "service";
@@ -42,6 +44,8 @@ namespace DMT.Partition.Module.Remote.Service
 
             this.serviceHost.Open();
             this.opened = true;
+
+            logger.Info("Service started successfully.");
         }
 
         private void SetEndpoint()
@@ -93,6 +97,7 @@ namespace DMT.Partition.Module.Remote.Service
         {
             this.serviceHost.Close();
             ((IDisposable)this.serviceHost).Dispose();
+            logger.Info("Service closed and disposed.");
         }
     }
 }
