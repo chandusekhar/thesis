@@ -11,7 +11,7 @@ namespace DMT.Matcher.App
     {
         static void Main(string[] args)
         {
-            new MatcherModule().Start(args);
+            MatcherModule.StartModule(args);
         }
     }
 }
