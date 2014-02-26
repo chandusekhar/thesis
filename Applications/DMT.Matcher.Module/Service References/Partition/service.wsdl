@@ -66,9 +66,9 @@
   </wsdl:binding>
   <wsdl:service name="PartitionBrokerService">
     <wsdl:port name="NetTcpBinding_IPartitionBrokerService" binding="tns:NetTcpBinding_IPartitionBrokerService">
-      <soap12:address location="net.tcp://localhost:8080/service/partition" />
+      <soap12:address location="net.tcp://localhost:8088/service/partition" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://localhost:8080/service/partition</wsa10:Address>
+        <wsa10:Address>net.tcp://localhost:8088/service/partition</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

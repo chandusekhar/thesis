@@ -25,6 +25,6 @@ namespace DMT.Partition.Module.Remote.Service
         /// <param name="id">the id of the partition</param>
         /// <returns>the partition response containing all the information that the matcher needs</returns>
         [OperationContract]
-        PartitionResponse GetPartition(IId id);
+        PartitionResponse GetPartition();
     }
 }

@@ -18,7 +18,7 @@ namespace DMT.Partition.Module.Remote.Service
             return true;
         }
 
-        public PartitionResponse GetPartition(Core.Interfaces.IId id)
+        public PartitionResponse GetPartition()
         {
             throw new NotImplementedException();
         }

@@ -19,13 +19,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="net.tcp://localhost:8080/service/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="net.tcp://localhost:8088/service/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="0717b75c-de49-416d-ad61-2cac6abff806" SourceId="1" SourceUrl="net.tcp://localhost:8080/service/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="46d7049b-4394-46b3-a164-921fc9a212d5" SourceId="1" SourceUrl="net.tcp://localhost:8080/service/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b9e68fa9-b219-4465-99d9-3140b9b33dba" SourceId="1" SourceUrl="net.tcp://localhost:8080/service/mex" />
-    <MetadataFile FileName="DMT.Partition.Module.Remote.Service.xsd" MetadataType="Schema" ID="85404857-7e17-441e-9632-50b9f9c6726b" SourceId="1" SourceUrl="net.tcp://localhost:8080/service/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="0717b75c-de49-416d-ad61-2cac6abff806" SourceId="1" SourceUrl="net.tcp://localhost:8088/service/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="46d7049b-4394-46b3-a164-921fc9a212d5" SourceId="1" SourceUrl="net.tcp://localhost:8088/service/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b9e68fa9-b219-4465-99d9-3140b9b33dba" SourceId="1" SourceUrl="net.tcp://localhost:8088/service/mex" />
+    <MetadataFile FileName="DMT.Partition.Module.Remote.Service.xsd" MetadataType="Schema" ID="85404857-7e17-441e-9632-50b9f9c6726b" SourceId="1" SourceUrl="net.tcp://localhost:8088/service/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

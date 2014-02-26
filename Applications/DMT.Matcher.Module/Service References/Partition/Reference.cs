@@ -154,13 +154,10 @@ namespace DMT.Matcher.Module.Partition {
         System.Threading.Tasks.Task<bool> RegisterMatcherAsync(DMT.Matcher.Module.Partition.MatcherInfo matcherInfo);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPartitionBrokerService/GetPartition", ReplyAction="http://tempuri.org/IPartitionBrokerService/GetPartitionResponse")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DMT.Matcher.Module.Partition.MatcherInfo))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DMT.Matcher.Module.Partition.PartitionResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DMT.Matcher.Module.Partition.ResponseBase))]
-        DMT.Matcher.Module.Partition.PartitionResponse GetPartition(object id);
+        DMT.Matcher.Module.Partition.PartitionResponse GetPartition();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPartitionBrokerService/GetPartition", ReplyAction="http://tempuri.org/IPartitionBrokerService/GetPartitionResponse")]
-        System.Threading.Tasks.Task<DMT.Matcher.Module.Partition.PartitionResponse> GetPartitionAsync(object id);
+        System.Threading.Tasks.Task<DMT.Matcher.Module.Partition.PartitionResponse> GetPartitionAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -198,12 +195,12 @@ namespace DMT.Matcher.Module.Partition {
             return base.Channel.RegisterMatcherAsync(matcherInfo);
         }
         
-        public DMT.Matcher.Module.Partition.PartitionResponse GetPartition(object id) {
-            return base.Channel.GetPartition(id);
+        public DMT.Matcher.Module.Partition.PartitionResponse GetPartition() {
+            return base.Channel.GetPartition();
         }
         
-        public System.Threading.Tasks.Task<DMT.Matcher.Module.Partition.PartitionResponse> GetPartitionAsync(object id) {
-            return base.Channel.GetPartitionAsync(id);
+        public System.Threading.Tasks.Task<DMT.Matcher.Module.Partition.PartitionResponse> GetPartitionAsync() {
+            return base.Channel.GetPartitionAsync();
         }
     }
 }
