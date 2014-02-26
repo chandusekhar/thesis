@@ -11,9 +11,35 @@ namespace DMT.Partition.Module
     public sealed class PartitionModule
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static PartitionModule instance;
 
 
-        public async void Start(string[] argv)
+        public static PartitionModule Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    throw new InvalidOperationException("Module has not been started yet");
+                }
+                return instance;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the module and starts the services.
+        /// </summary>
+        /// <param name="argv"></param>
+        /// <returns></returns>
+        public static PartitionModule StartModule(string[] argv)
+        {
+            instance = new PartitionModule();
+            instance.Start(argv);
+
+            return instance;
+        }
+
+        private async void Start(string[] argv)
         {
             logger.Info("Master module started.");
 

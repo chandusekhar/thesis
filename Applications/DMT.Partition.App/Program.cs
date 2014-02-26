@@ -11,7 +11,7 @@ namespace DMT.Partition.App
     {
         static void Main(string[] args)
         {
-            new PartitionModule().Start(args);
+            PartitionModule.StartModule(args);
         }
     }
 }
