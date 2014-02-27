@@ -60,5 +60,11 @@ namespace DMT.Partition.Interfaces
         /// </summary>
         /// <param name="node"></param>
         void Add(INode node);
+
+        /// <summary>
+        /// Collects all edges from all nodes in the partition.
+        /// </summary>
+        /// <returns>a set of edges</returns>
+        IEnumerable<IEdge> CollectEdges();
     }
 }

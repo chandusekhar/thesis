@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common.Extensions;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Partition;
@@ -150,6 +151,25 @@ namespace DMT.Partition.Test
             p2.Nodes.Add(n2);
 
             Assert.Contains(edge, p1.GetEdgesBetween(p2));
+        }
+
+        [Fact]
+        public void CollectEdgesReturnsEveryEdgeOnce()
+        {
+            var p = P();
+
+            var n1 = EntityHelper.CreateNode();
+            var n2 = EntityHelper.CreateNode();
+            var n3 = EntityHelper.CreateNode();
+            n1.ConnectTo(n2, EdgeDirection.Both);
+            n1.ConnectTo(n3, EdgeDirection.Both);
+
+            new[] { n1, n2, n3 }.ForEach(n => p.Add(n));
+
+            var edges = p.CollectEdges();
+
+            Assert.Equal(2, edges.Count());
+            Assert.Equal(edges.Distinct(), edges);
         }
 
         /// <summary>

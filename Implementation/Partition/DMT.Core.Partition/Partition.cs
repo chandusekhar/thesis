@@ -73,13 +73,13 @@ namespace DMT.Core.Partition
 
         public IEnumerable<IEdge> GetExternalEdges()
         {
-            List<IEdge> external = new List<IEdge>(); ;
+            HashSet<IEdge> external = new HashSet<IEdge>(); ;
 
             foreach (var node in this.nodes)
             {
                 foreach (var edge in node.Edges)
                 {
-                    if (!this.HasNode(edge.EndB))
+                    if (!this.HasNode(edge.GetOtherNode(node)))
                     {
                         external.Add(edge);
                     }
@@ -132,6 +132,21 @@ namespace DMT.Core.Partition
         public override string ToString()
         {
             return string.Format("{0} [{1}]", this.GetType().Name, this.id);
+        }
+
+        public IEnumerable<IEdge> CollectEdges()
+        {
+            HashSet<IEdge> edges = new HashSet<IEdge>();
+
+            foreach (var node in this.nodes)
+            {
+                foreach (var edge in node.Edges)
+                {
+                    edges.Add(edge);
+                }
+            }
+
+            return edges;
         }
     }
 }
