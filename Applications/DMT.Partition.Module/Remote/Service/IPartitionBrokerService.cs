@@ -27,5 +27,12 @@ namespace DMT.Partition.Module.Remote.Service
         /// <returns>the partition in xml which has to be processed in the matcher</returns>
         [OperationContract]
         Stream GetPartition(Guid matcherId);
+
+        /// <summary>
+        /// Signals the partition module that the matcher with the given id is ready to start the actually matching.
+        /// </summary>
+        /// <param name="matcherId">the id of the matcher</param>
+        [OperationContract]
+        void MatcherReady(Guid matcherId);
     }
 }

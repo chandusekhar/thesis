@@ -39,6 +39,7 @@ namespace DMT.Partition.Module.Remote.Service
             try
             {
                 IPartition partition = selector.Select(matcherId);
+                logger.Info("Sending {0} partition to {1} matcher.", partition, matcherId);
                 using (var input = new FileStream(pm.ModelFileName, FileMode.Open))
                 {
                     return this.partitionSerializer.Serialize(partition, input);
@@ -46,9 +47,17 @@ namespace DMT.Partition.Module.Remote.Service
             }
             catch (Exception ex)
             {
+                logger.Error("Error during partition selection/serialization.", ex);
                 // rethrow exception
                 throw new FaultException<Exception>(ex);
             }
+        }
+
+
+        public void MatcherReady(Guid matcherId)
+        {
+            logger.Info("Matcher ready. Id: {0}", matcherId);
+            PartitionModule.Instance.MatcherRegistry.MarkReady(matcherId);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace DMT.Partition.Module.Remote
     {
         private List<MatcherInfo> matchers;
 
+        public event EventHandler MatchersReady;
+
         public MatcherRegistry()
         {
             this.matchers = new List<MatcherInfo>();
@@ -31,6 +33,25 @@ namespace DMT.Partition.Module.Remote
             }
 
             return matcher;
+        }
+
+        public void MarkReady(Guid id)
+        {
+            this.GetById(id).MarkReady();
+
+            if (matchers.All(m => m.Ready))
+            {
+                OnMatchersReady();
+            }
+        }
+
+        private void OnMatchersReady()
+        {
+            var handler = this.MatchersReady;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }
