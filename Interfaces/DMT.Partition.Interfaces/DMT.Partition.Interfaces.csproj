@@ -46,6 +46,7 @@
     <Compile Include="IPartitionEdge.cs" />
     <Compile Include="IPartitionManager.cs" />
     <Compile Include="IPartitionNode.cs" />
+    <Compile Include="IPartitionSerializer.cs" />
     <Compile Include="ISuperNode.cs" />
     <Compile Include="IPartition.cs" />
     <Compile Include="IPartitionedModel.cs" />

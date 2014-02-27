@@ -54,6 +54,7 @@
     <Compile Include="MaximalMatchingCoarsener.cs" />
     <Compile Include="PartitioningNode.cs" />
     <Compile Include="PartitionManager.cs" />
+    <Compile Include="PartitionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
