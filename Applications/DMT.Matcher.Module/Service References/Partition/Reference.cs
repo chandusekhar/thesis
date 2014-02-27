@@ -17,7 +17,7 @@ namespace DMT.Matcher.Module.Partition {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="MatcherInfo", Namespace="http://schemas.datacontract.org/2004/07/DMT.Partition.Module.Remote.Service")]
     [System.SerializableAttribute()]
-    public partial class MatcherInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    internal partial class MatcherInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
@@ -42,7 +42,7 @@ namespace DMT.Matcher.Module.Partition {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Host {
+        internal string Host {
             get {
                 return this.HostField;
             }
@@ -55,7 +55,7 @@ namespace DMT.Matcher.Module.Partition {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Guid Id {
+        internal System.Guid Id {
             get {
                 return this.IdField;
             }
@@ -68,7 +68,7 @@ namespace DMT.Matcher.Module.Partition {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Port {
+        internal int Port {
             get {
                 return this.PortField;
             }
@@ -95,7 +95,7 @@ namespace DMT.Matcher.Module.Partition {
     [System.Runtime.Serialization.DataContractAttribute(Name="ResponseBase", Namespace="http://schemas.datacontract.org/2004/07/DMT.Partition.Module.Remote.Service")]
     [System.SerializableAttribute()]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(DMT.Matcher.Module.Partition.PartitionResponse))]
-    public partial class ResponseBase : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    internal partial class ResponseBase : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
@@ -114,7 +114,7 @@ namespace DMT.Matcher.Module.Partition {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool Success {
+        internal bool Success {
             get {
                 return this.SuccessField;
             }
@@ -140,12 +140,12 @@ namespace DMT.Matcher.Module.Partition {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="PartitionResponse", Namespace="http://schemas.datacontract.org/2004/07/DMT.Partition.Module.Remote.Service")]
     [System.SerializableAttribute()]
-    public partial class PartitionResponse : DMT.Matcher.Module.Partition.ResponseBase {
+    internal partial class PartitionResponse : DMT.Matcher.Module.Partition.ResponseBase {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="Partition.IPartitionBrokerService")]
-    public interface IPartitionBrokerService {
+    internal interface IPartitionBrokerService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPartitionBrokerService/RegisterMatcher", ReplyAction="http://tempuri.org/IPartitionBrokerService/RegisterMatcherResponse")]
         bool RegisterMatcher(DMT.Matcher.Module.Partition.MatcherInfo matcherInfo);
@@ -161,12 +161,12 @@ namespace DMT.Matcher.Module.Partition {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IPartitionBrokerServiceChannel : DMT.Matcher.Module.Partition.IPartitionBrokerService, System.ServiceModel.IClientChannel {
+    internal interface IPartitionBrokerServiceChannel : DMT.Matcher.Module.Partition.IPartitionBrokerService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class PartitionBrokerServiceClient : System.ServiceModel.ClientBase<DMT.Matcher.Module.Partition.IPartitionBrokerService>, DMT.Matcher.Module.Partition.IPartitionBrokerService {
+    internal partial class PartitionBrokerServiceClient : System.ServiceModel.ClientBase<DMT.Matcher.Module.Partition.IPartitionBrokerService>, DMT.Matcher.Module.Partition.IPartitionBrokerService {
         
         public PartitionBrokerServiceClient() {
         }
