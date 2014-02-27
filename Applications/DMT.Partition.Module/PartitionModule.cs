@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common.Composition;
 using DMT.Partition.Module.Remote;
+using DMT.Partition.Module.Remote.Service;
 using NLog;
 
 namespace DMT.Partition.Module
@@ -14,6 +16,8 @@ namespace DMT.Partition.Module
         private static PartitionModule instance;
 
         private MatcherRegistry matcherRegistry = new MatcherRegistry();
+        private PartitionRegistry partitionRegistry;
+        private string modelFileName;
 
         internal static PartitionModule Instance
         {
@@ -28,6 +32,8 @@ namespace DMT.Partition.Module
         }
 
         internal MatcherRegistry MatcherRegistry { get { return matcherRegistry; } }
+        internal PartitionRegistry PartitionRegistry { get { return this.partitionRegistry; } }
+        internal string ModelFileName { get { return this.modelFileName; } }
 
         /// <summary>
         /// Initializes the module and starts the services.
@@ -46,20 +52,31 @@ namespace DMT.Partition.Module
         {
             logger.Info("Master module started.");
 
+            CompositionService.Instance.Initialize();
+            logger.Info("CompositionService initalized successfully.");
+
             if (argv.Length < 2)
             {
                 Console.WriteLine("Usage {0} /path/to/model.xml", AppDomain.CurrentDomain.FriendlyName);
                 Environment.Exit(0);
             }
 
-            ModelLoader loader = new ModelLoader(argv[1]);
+            this.modelFileName = argv[1];
+            ModelLoader loader = new ModelLoader(this.modelFileName);
             var model = await loader.LoadModel();
 
             Partitioner partitioner = new Partitioner(model);
             var partitions = partitioner.Partition();
+            this.partitionRegistry = new PartitionRegistry(partitions);
 
-            RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator();
-            rmi.Start(partitions.Count());
+            using (var service = new PartitionBrokerServiceHost())
+            {
+                service.Open();
+                RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator();
+                //rmi.Start(partitions.Count());
+                rmi.Start(1);
+                Console.ReadKey();
+            }
         }
     }
 }

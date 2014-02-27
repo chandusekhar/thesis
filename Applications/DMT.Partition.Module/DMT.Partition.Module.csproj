@@ -48,7 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\MatcherNotFoundException.cs" />
+    <Compile Include="Exceptions\NoMorePartitionException.cs" />
     <Compile Include="PartitionModule.cs" />
+    <Compile Include="PartitionRegistry.cs" />
+    <Compile Include="PartitionSelector.cs" />
     <Compile Include="Remote\Arguments.cs" />
     <Compile Include="Remote\IInstantiationStrategy.cs" />
     <Compile Include="Remote\MatcherRegistry.cs" />

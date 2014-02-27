@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -20,11 +21,11 @@ namespace DMT.Partition.Module.Remote.Service
         bool RegisterMatcher(MatcherInfo matcherInfo);
 
         /// <summary>
-        /// Gets the partition with the given id.
+        /// Gets a partition.
         /// </summary>
-        /// <param name="id">the id of the partition</param>
-        /// <returns>the partition response containing all the information that the matcher needs</returns>
+        /// <param name="matcherId">The id of the matcher instance that asks for a partition</param>
+        /// <returns>the partition in xml which has to be processed in the matcher</returns>
         [OperationContract]
-        PartitionResponse GetPartition();
+        Stream GetPartition(Guid matcherId);
     }
 }
