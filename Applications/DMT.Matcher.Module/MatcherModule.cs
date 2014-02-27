@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Matcher.Module.Partition;
 
 namespace DMT.Matcher.Module
 {
@@ -49,7 +50,12 @@ namespace DMT.Matcher.Module
 
         private void Start(string[] argv)
         {
-            new Partition.PartitionBrokerServiceClient().RegisterMatcher(new Partition.MatcherInfo() { Id = this.Id });
+            // TODO: srart matcher service
+            using (var client = new PartitionBrokerServiceClient())
+            {
+                client.RegisterMatcher(new MatcherInfo() { Id = this.Id });
+                // TODO: get partition, parse it
+            }
         }
     }
 }
