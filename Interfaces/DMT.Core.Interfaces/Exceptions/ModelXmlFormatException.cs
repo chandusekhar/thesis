@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DMT.Core.Exceptions
+namespace DMT.Core.Interfaces.Exceptions
 {
     [Serializable]
     public class ModelXmlFormatException : Exception

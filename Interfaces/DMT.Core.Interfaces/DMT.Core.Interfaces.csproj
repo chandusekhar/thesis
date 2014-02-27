@@ -42,6 +42,7 @@
     <Compile Include="EdgeDirection.cs" />
     <Compile Include="Exceptions\InvalidEdgeException.cs" />
     <Compile Include="Exceptions\InvalidNodeException.cs" />
+    <Compile Include="Exceptions\ModelXmlFormatException.cs" />
     <Compile Include="Graph\ComponentTraversalStrategy.cs" />
     <Compile Include="Graph\ITraverser.cs" />
     <Compile Include="IEntity.cs" />

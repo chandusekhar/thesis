@@ -3,8 +3,8 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using DMT.Core.Exceptions;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
