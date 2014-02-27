@@ -48,6 +48,31 @@ namespace DMT.Partition.Module.Remote.Service
             logger.Info("Service started successfully.");
         }
 
+        public Uri GetBaseAddress()
+        {
+            var builder = new UriBuilder();
+            builder.Host = this.host;
+            builder.Path = PartitionBrokerServiceHost.ContextPath;
+            builder.Port = this.port;
+            builder.Scheme = "net.tcp";
+
+            return builder.Uri;
+        }
+
+        public Uri GetServiceAddress()
+        {
+            var builder = new UriBuilder(GetBaseAddress());
+            builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.EndpointPath);
+            return builder.Uri;
+        }
+
+        public Uri GetMexAddress()
+        {
+            var builder = new UriBuilder(GetBaseAddress());
+            builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.MexEndpointPath);
+            return builder.Uri;
+        }
+
         private void SetEndpoint()
         {
             // for the service
@@ -66,31 +91,6 @@ namespace DMT.Partition.Module.Remote.Service
         {
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             this.serviceHost.Description.Behaviors.Add(smb);
-        }
-
-        private Uri GetBaseAddress()
-        {
-            var builder = new UriBuilder();
-            builder.Host = this.host;
-            builder.Path = PartitionBrokerServiceHost.ContextPath;
-            builder.Port = this.port;
-            builder.Scheme = "net.tcp";
-
-            return builder.Uri;
-        }
-
-        private Uri GetServiceAddress()
-        {
-            var builder = new UriBuilder(GetBaseAddress());
-            builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.EndpointPath);
-            return builder.Uri;
-        }
-
-        private Uri GetMexAddress()
-        {
-            var builder = new UriBuilder(GetBaseAddress());
-            builder.Path = string.Format("{0}/{1}", builder.Path, PartitionBrokerServiceHost.MexEndpointPath);
-            return builder.Uri;
         }
         
         void IDisposable.Dispose()

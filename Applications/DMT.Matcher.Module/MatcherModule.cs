@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Matcher.Module.Helper;
 using DMT.Matcher.Module.Partition;
 
 namespace DMT.Matcher.Module
@@ -50,8 +51,10 @@ namespace DMT.Matcher.Module
 
         private void Start(string[] argv)
         {
+            MatcherStartArguments startArgs = new MatcherStartArguments(argv);
+
             // TODO: srart matcher service
-            using (var client = new PartitionBrokerServiceClient())
+            using (var client = PartitionServiceHelper.CreateClient(startArgs.PartitionServiceUri))
             {
                 client.RegisterMatcher(new MatcherInfo() { Id = this.Id });
                 // TODO: get partition, parse it

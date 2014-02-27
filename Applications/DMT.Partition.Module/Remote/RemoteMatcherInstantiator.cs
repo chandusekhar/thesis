@@ -16,10 +16,12 @@ namespace DMT.Partition.Module.Remote
         private const string PortKey = "port";
 
         private IInstantiationStrategy instantiationStrategy;
+        private readonly Uri serviceUri;
 
-        public RemoteMatcherInstantiator()
+        public RemoteMatcherInstantiator(Uri serviceUri)
         {
             this.instantiationStrategy = new LocalPorcessInstantiationStrategy();
+            this.serviceUri = serviceUri;
         }
 
         /// <summary>
@@ -28,32 +30,12 @@ namespace DMT.Partition.Module.Remote
         /// <param name="numberOfInstances">the number of instances to start</param>
         public void Start(int numberOfInstances)
         {
-            Arguments args = new Arguments(GetBindAddress(), GetPort());
+            Arguments args = new Arguments(this.serviceUri);
 
             for (int i = 0; i < numberOfInstances; i++)
             {
                 this.instantiationStrategy.StartRemote(args);
             }
-        }
-
-        /// <summary>
-        /// Gets the address that the server process binds to. Defaults to 'localhost'.
-        /// </summary>
-        /// <returns></returns>
-        private string GetBindAddress()
-        {
-            return ConfigurationManager.AppSettings[BindAddressKey] ?? "localhost";
-        }
-
-        /// <summary>
-        /// Gets the port that the server uses. Defaults to 7878.
-        /// </summary>
-        /// <returns></returns>
-        private ushort GetPort()
-        {
-            string portString = ConfigurationManager.AppSettings[PortKey] ?? "7878";
-
-            return ushort.Parse(portString);
         }
     }
 }

@@ -8,18 +8,16 @@ namespace DMT.Partition.Module.Remote
 {
     struct Arguments
     {
-        public readonly string Host;
-        public readonly ushort Port;
+        public readonly Uri ServiceUri;
 
-        public Arguments(string host, ushort port)
+        public Arguments(Uri serviceUri)
         {
-            this.Host = host;
-            this.Port = port;
+            this.ServiceUri = serviceUri;
         }
 
         public string ToCommandLineArgs()
         {
-            return string.Join(" ", Host, Port);
+            return this.ServiceUri.AbsoluteUri;
         }
     }
 }
