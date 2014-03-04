@@ -10,6 +10,8 @@ namespace DMT.Matcher.Module
 {
     public class MatcherModule
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         #region static instance
 
         private static MatcherModule instance;
@@ -56,7 +58,11 @@ namespace DMT.Matcher.Module
             // TODO: srart matcher service
             using (var client = PartitionServiceHelper.CreateClient(startArgs.PartitionServiceUri))
             {
-                client.RegisterMatcher(new MatcherInfo() { Id = this.Id });
+                if (!client.RegisterMatcher(new MatcherInfo() { Id = this.Id }))
+                {
+                    logger.Fatal("Could not register with partitioning module. Shutting down.");
+                    return;
+                }
                 // TODO: get partition, parse it
             }
         }
