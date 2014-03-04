@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="ConfigurationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rest\DefaultRouterTest.cs" />
+    <Compile Include="Rest\UrlSanitizerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".env">
