@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1E908159-8480-4C0C-88D9-1D3CDFF6541C}</ProjectGuid>
+    <ProjectGuid>{3EED8BE1-F2B3-4F5B-8890-D8B32560DEA7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Common</RootNamespace>
-    <AssemblyName>DMT.Common</AssemblyName>
+    <RootNamespace>DMT.ServiceParams</RootNamespace>
+    <AssemblyName>DMT.ServiceParams</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,12 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,32 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Composition\CompositionService.cs" />
-    <Compile Include="Composition\InjectableBase.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Objects.cs" />
+    <Compile Include="BoolResponse.cs" />
+    <Compile Include="MatcherInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rest\DefaultRouter.cs" />
-    <Compile Include="Rest\HttpMethod.cs" />
-    <Compile Include="Rest\IRouteHandler.cs" />
-    <Compile Include="Rest\IRouter.cs" />
-    <Compile Include="Rest\RestServiceHost.cs" />
-    <Compile Include="Rest\UrlSanitizer.cs" />
-    <Compile Include="Rest\XmlRouteHandlerBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\..\Interfaces\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
+      <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
+      <Name>DMT.Core.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
+      <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
+      <Name>DMT.Partition.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

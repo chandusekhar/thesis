@@ -61,7 +61,8 @@
     <Compile Include="ModelLoader.cs" />
     <Compile Include="Partitioner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remote\Service\MatcherInfo.cs" />
+    <Compile Include="Remote\Service\PartitionBrokerService.cs" />
+    <Compile Include="Remote\Service\RegisterMatcherHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NLog.config">
@@ -82,6 +83,10 @@
     <ProjectReference Include="..\..\Interfaces\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
       <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
       <Name>DMT.Partition.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DMT.ServiceParams\DMT.ServiceParams.csproj">
+      <Project>{3eed8be1-f2b3-4f5b-8890-d8b32560dea7}</Project>
+      <Name>DMT.ServiceParams</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

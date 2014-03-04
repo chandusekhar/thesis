@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="MatcherModule.cs" />
     <Compile Include="MatcherStartArguments.cs" />
+    <Compile Include="Partitioner\PartitionBrokerServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,10 @@
     <ProjectReference Include="..\..\Interfaces\DMT.Matcher.Interfaces\DMT.Matcher.Interfaces.csproj">
       <Project>{5d9631fe-84bc-4876-a430-e59b92ddb76b}</Project>
       <Name>DMT.Matcher.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DMT.ServiceParams\DMT.ServiceParams.csproj">
+      <Project>{3eed8be1-f2b3-4f5b-8890-d8b32560dea7}</Project>
+      <Name>DMT.ServiceParams</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

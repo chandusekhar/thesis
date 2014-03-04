@@ -53,25 +53,29 @@ namespace DMT.Partition.Module
             logger.Info("Master module started.");
 
             CompositionService.Instance.Initialize();
-            logger.Info("CompositionService initalized successfully.");
+            //logger.Info("CompositionService initalized successfully.");
 
-            if (argv.Length < 2)
-            {
-                Console.WriteLine("Usage {0} /path/to/model.xml", AppDomain.CurrentDomain.FriendlyName);
-                Environment.Exit(0);
-            }
+            //if (argv.Length < 2)
+            //{
+            //    Console.WriteLine("Usage {0} /path/to/model.xml", AppDomain.CurrentDomain.FriendlyName);
+            //    Environment.Exit(0);
+            //}
 
-            this.modelFileName = argv[1];
-            ModelLoader loader = new ModelLoader(this.modelFileName);
-            var model = await loader.LoadModel();
+            //this.modelFileName = argv[1];
+            //ModelLoader loader = new ModelLoader(this.modelFileName);
+            //var model = await loader.LoadModel();
 
-            Partitioner partitioner = new Partitioner(model);
-            var partitions = partitioner.Partition();
-            this.partitionRegistry = new PartitionRegistry(partitions);
+            //Partitioner partitioner = new Partitioner(model);
+            //var partitions = partitioner.Partition();
+            //this.partitionRegistry = new PartitionRegistry(partitions);
 
-            //RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.GetServiceAddress());
+            var service = new PartitionBrokerService();
+            service.Start();
+            RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(new Uri(service.BaseAddress));
             //rmi.Start(partitions.Count());
-            //rmi.Start(1);
+            rmi.Start(1);
+
+            Console.ReadKey();
         }
     }
 }

@@ -48,6 +48,7 @@ namespace DMT.Common.Rest
             this.started = true;
             this.listener = new HttpListener();
             this.listener.Prefixes.Add(GetPrefix());
+            this.listener.Start();
 
             while (this.listener.IsListening)
             {
@@ -75,7 +76,7 @@ namespace DMT.Common.Rest
             var req = context.Request;
             var res = context.Response;
 
-            var method = new HttpMethodConverter().FromString(req.HttpMethod);
+            HttpMethod method = req.HttpMethod;
             var handler = this.router.Get(method, req.RawUrl);
 
             if (handler != null)

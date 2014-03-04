@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMT.Matcher.Module.Helper;
-using DMT.Matcher.Module.Partition;
+using DMT.Matcher.Module.Partitioner;
+using DMT.ServiceParams;
 
 namespace DMT.Matcher.Module
 {
@@ -56,15 +56,13 @@ namespace DMT.Matcher.Module
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
 
             // TODO: srart matcher service
-            using (var client = PartitionServiceHelper.CreateClient(startArgs.PartitionServiceUri))
+            var client = new PartitionBrokerServiceClient(startArgs.PartitionServiceUri);
+            if (!client.RegisterMatcher(new MatcherInfo { Id = this.Id }))
             {
-                if (!client.RegisterMatcher(new MatcherInfo() { Id = this.Id }))
-                {
-                    logger.Fatal("Could not register with partitioning module. Shutting down.");
-                    return;
-                }
-                // TODO: get partition, parse it
+                logger.Fatal("Could not register with partitioning module. Shutting down.");
+                return;
             }
+            // TODO: get partition, parse it
         }
     }
 }

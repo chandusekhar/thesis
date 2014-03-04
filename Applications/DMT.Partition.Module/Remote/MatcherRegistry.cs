@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Partition.Module.Exceptions;
-using DMT.Partition.Module.Remote.Service;
+using DMT.ServiceParams;
 
 namespace DMT.Partition.Module.Remote
 {
