@@ -69,14 +69,9 @@ namespace DMT.Partition.Module
             var partitions = partitioner.Partition();
             this.partitionRegistry = new PartitionRegistry(partitions);
 
-            using (var service = new PartitionBrokerServiceHost())
-            {
-                service.Open();
-                RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.GetServiceAddress());
-                //rmi.Start(partitions.Count());
-                rmi.Start(1);
-                Console.ReadKey();
-            }
+            //RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.GetServiceAddress());
+            //rmi.Start(partitions.Count());
+            //rmi.Start(1);
         }
     }
 }
