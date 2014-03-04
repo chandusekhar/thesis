@@ -58,7 +58,7 @@ namespace DMT.Common.Rest
                     Task.Run(() => HandleRequest(context));
                 }
                 catch (HttpListenerException ex) {
-                    logger.Warn("http service ended", ex);
+                    logger.WarnException("http service ended", ex);
                 }
             }
         }
