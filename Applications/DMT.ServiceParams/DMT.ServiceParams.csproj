@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\DMT.Common\DMT.Common.csproj">
+      <Project>{1e908159-8480-4c0c-88d9-1d3cdff6541c}</Project>
+      <Name>DMT.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Interfaces\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
       <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
       <Name>DMT.Core.Interfaces</Name>

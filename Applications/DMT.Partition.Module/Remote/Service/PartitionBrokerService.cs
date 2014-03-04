@@ -44,6 +44,7 @@ namespace DMT.Partition.Module.Remote.Service
         private void Initialize()
         {
             this.service.Router.Register(HttpMethod.Post, "/register", new RegisterMatcherHandler());
+            this.service.Router.Register(HttpMethod.Delete, "/matchers", new DeleteMatcherHandler());
         }
     }
 }

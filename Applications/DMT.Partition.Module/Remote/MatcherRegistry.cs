@@ -24,6 +24,11 @@ namespace DMT.Partition.Module.Remote
             this.matchers.Add(matcherinfo);
         }
 
+        public bool RemoveMatcher(Guid id)
+        {
+            return this.matchers.RemoveAll(m => m.Id == id) > 0;
+        }
+
         public MatcherInfo GetById(Guid id)
         {
             var matcher = this.matchers.FirstOrDefault(m => m.Id == id);

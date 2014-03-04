@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common.Rest;
 
 namespace DMT.ServiceParams
 {
-    public class BoolResponse
+    public class BoolResponse : XmlRouteResponseBase<bool>
     {
-        public bool Value { get; set; }
+        public override bool Result { get; set; }
 
         public BoolResponse()
         {
-
+            this.Result = false;
         }
 
         public BoolResponse(bool value)
         {
-            this.Value = value;
+            this.Success = true;
+            this.Result = value;
         }
     }
 }

@@ -57,9 +57,11 @@
     <Compile Include="Rest\HttpMethod.cs" />
     <Compile Include="Rest\IRouteHandler.cs" />
     <Compile Include="Rest\IRouter.cs" />
+    <Compile Include="Rest\IXmlRouteResponse.cs" />
     <Compile Include="Rest\RestServiceHost.cs" />
     <Compile Include="Rest\UrlSanitizer.cs" />
     <Compile Include="Rest\XmlRouteHandlerBase.cs" />
+    <Compile Include="Rest\XmlRouteResponseBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

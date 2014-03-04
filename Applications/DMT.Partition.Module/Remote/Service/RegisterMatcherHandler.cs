@@ -12,11 +12,6 @@ namespace DMT.Partition.Module.Remote.Service
     class RegisterMatcherHandler : XmlRouteHandlerBase<MatcherInfo, BoolResponse>
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        
-        protected override BoolResponse Handle(NameValueCollection urlParams)
-        {
-            throw new NotSupportedException();
-        }
 
         protected override BoolResponse Handle(MatcherInfo request, NameValueCollection urlParams)
         {
