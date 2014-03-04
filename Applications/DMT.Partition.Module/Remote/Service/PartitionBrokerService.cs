@@ -14,11 +14,16 @@ namespace DMT.Partition.Module.Remote.Service
 
         private RestServiceHost service;
 
-        public string BaseAddress
+        public Uri BaseAddress
         {
             get
             {
-                return string.Format("http://localhost:8080/");
+                UriBuilder ub = new UriBuilder();
+                ub.Host = "localhost";
+                ub.Scheme = "http";
+                ub.Port = PartitionBrokerService.Port;
+
+                return ub.Uri;
             }
         }
 

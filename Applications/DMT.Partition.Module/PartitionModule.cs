@@ -71,7 +71,7 @@ namespace DMT.Partition.Module
 
             var service = new PartitionBrokerService();
             service.Start();
-            RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(new Uri(service.BaseAddress));
+            RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.BaseAddress);
             //rmi.Start(partitions.Count());
             rmi.Start(1);
 
