@@ -7,31 +7,31 @@ using System.Threading.Tasks;
 
 namespace DMT.Common.Rest.Router
 {
-    class RouteCollection
+    class PatternCollection
     {
-        private RouteSegment root;
+        private PatternSegment root;
 
-        public RouteCollection()
+        public PatternCollection()
         {
-            this.root = RouteSegment.Create(string.Empty);
+            this.root = PatternSegment.Create(string.Empty);
         }
 
-        public RouteSegment Add(string urlPattern)
+        public PatternSegment Add(string urlPattern)
         {
             var segments = SplitUrl(urlPattern);
             // root does not need to be created
             return this.root.Add(segments.Skip(1));
         }
 
-        public RouteSegment GetRoute(string route, NameValueCollection urlParams)
+        public PatternSegment GetRoute(string route, NameValueCollection urlParams)
         {
             var segments = SplitUrl(route);
             return this.root.Get(segments, urlParams);
         }
 
-        private IEnumerable<string> SplitUrl(string url)
+        private IEnumerable<RouteSegment> SplitUrl(string url)
         {
-            return new UrlSanitizer().Sanitize(url).Split('/');
+            return new UrlSanitizer().Sanitize(url).Split('/').Select(s => new RouteSegment(s)).ToList();
         }
     }
 }

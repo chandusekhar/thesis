@@ -27,5 +27,10 @@ namespace DMT.Common.Rest
         {
             this.innerResponse = response;
         }
+
+        internal void EnsureClosed()
+        {
+            this.innerResponse.OutputStream.Close();
+        }
     }
 }

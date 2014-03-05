@@ -87,10 +87,11 @@ namespace DMT.Common.Rest
                     Request ireq = new Request(req, result.RouteParams);
                     Response ires = new Response(res);
                     result.Handler.Handle(ireq, ires);
+                    ires.EnsureClosed();
                 }
                 catch (Exception ex)
                 {
-                    logger.ErrorException(string.Format("Unhandled exception on {0} route", req.RawUrl), ex);
+                    logger.ErrorException(string.Format("Unhandled exception on [{1}] {0} route", req.RawUrl, method), ex);
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("Exception occured!");
                     sb.AppendFormat("Message: {0}\n", ex.Message);

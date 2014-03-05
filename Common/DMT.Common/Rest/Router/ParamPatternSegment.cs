@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DMT.Common.Rest.Router
 {
-    class ParamRouteSegment : RouteSegment
+    class ParamPatternSegment : PatternSegment
     {
         protected override bool IsParam { get { return true; } }
 
-        public ParamRouteSegment(string value) : base(value) { }
+        public ParamPatternSegment(string value) : base(value) { }
 
         protected override bool IsMatch(string value)
         {

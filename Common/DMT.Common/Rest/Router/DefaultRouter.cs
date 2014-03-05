@@ -9,11 +9,11 @@ namespace DMT.Common.Rest.Router
 {
     class DefaultRouter : IRouter
     {
-        private RouteCollection routes;
+        private PatternCollection routes;
 
         public DefaultRouter()
         {
-            this.routes = new RouteCollection();
+            this.routes = new PatternCollection();
         }
 
         public IRouteMatchResult Get(HttpMethod method, string url)

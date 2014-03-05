@@ -62,10 +62,11 @@
     <Compile Include="Rest\Response.cs" />
     <Compile Include="Rest\RestServiceHost.cs" />
     <Compile Include="Rest\Router\DefaultRouter.cs" />
-    <Compile Include="Rest\Router\ParamRouteSegment.cs" />
+    <Compile Include="Rest\Router\ParamPatternSegment.cs" />
     <Compile Include="Rest\Router\HandlerBundle.cs" />
-    <Compile Include="Rest\Router\RouteCollection.cs" />
+    <Compile Include="Rest\Router\PatternCollection.cs" />
     <Compile Include="Rest\Router\RouteResult.cs" />
+    <Compile Include="Rest\Router\PatternSegment.cs" />
     <Compile Include="Rest\Router\RouteSegment.cs" />
     <Compile Include="Rest\UrlSanitizer.cs" />
     <Compile Include="Rest\XmlRouteHandlerBase.cs" />

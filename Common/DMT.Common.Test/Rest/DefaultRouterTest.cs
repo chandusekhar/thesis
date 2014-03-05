@@ -44,6 +44,14 @@ namespace DMT.Common.Test.Rest
             Assert.Equal("bela", route.RouteParams.Get("name"));
         }
 
+        [Fact]
+        public void RouteParamIsOnlyAddedOnce()
+        {
+            router.Register(HttpMethod.Get, "/test/{name}/ready", new NopHandler());
+            var route = router.Get(HttpMethod.Get, "/test/bela/ready");
+            Assert.Equal("bela", route.RouteParams.Get("name"));
+        }
+
         private class NopHandler : IRouteHandler
         {
             public void Handle(Request request, Response response)

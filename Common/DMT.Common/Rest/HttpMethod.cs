@@ -42,6 +42,9 @@ namespace DMT.Common.Rest
             return method.Method;
         }
 
-        
+        public override string ToString()
+        {
+            return this.Method;
+        }
     }
 }
