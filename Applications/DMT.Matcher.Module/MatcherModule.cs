@@ -64,6 +64,9 @@ namespace DMT.Matcher.Module
             }
             // TODO: get partition, parse it
 
+            // signal back
+            client.MarkMatcherReady(this.Id);
+
             client.DeleteMatcher(this.Id);
         }
     }

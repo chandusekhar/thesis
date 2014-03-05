@@ -66,5 +66,14 @@ namespace DMT.Matcher.Module.Partitioner
 
             return response.Result;
         }
+
+        public void MarkMatcherReady(Guid id)
+        {
+            string url = string.Format("{0}{1}/{2}/ready", this.BaseAddress.TrimEnd('/'), MatchersPath, id);
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.Method = HttpMethod.Put;
+            req.ContentLength = 0;
+            using (req.GetResponse()) ;
+        }
     }
 }
