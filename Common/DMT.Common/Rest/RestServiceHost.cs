@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common.Rest.Router;
 
 namespace DMT.Common.Rest
 {
@@ -77,13 +78,14 @@ namespace DMT.Common.Rest
             var res = context.Response;
 
             HttpMethod method = req.HttpMethod;
-            var handler = this.router.Get(method, req.RawUrl);
+            var result = this.router.Get(method, req.RawUrl);
 
-            if (handler != null)
+            if (result.Success)
             {
                 try
                 {
-                    handler.Handle(req, res);
+                    req.QueryString.Add(result.RouteParams);
+                    result.Handler.Handle(req, res);
                 }
                 catch (Exception ex)
                 {
