@@ -84,8 +84,9 @@ namespace DMT.Common.Rest
             {
                 try
                 {
-                    req.QueryString.Add(result.RouteParams);
-                    result.Handler.Handle(req, res);
+                    Request ireq = new Request(req, result.RouteParams);
+                    Response ires = new Response(res);
+                    result.Handler.Handle(ireq, ires);
                 }
                 catch (Exception ex)
                 {

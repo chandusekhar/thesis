@@ -46,9 +46,9 @@ namespace DMT.Common.Test.Rest
 
         private class NopHandler : IRouteHandler
         {
-            public void Handle(System.Net.HttpListenerRequest request, System.Net.HttpListenerResponse response)
+            public void Handle(Request request, Response response)
             {
-
+                throw new NotImplementedException();
             }
         }
     }
