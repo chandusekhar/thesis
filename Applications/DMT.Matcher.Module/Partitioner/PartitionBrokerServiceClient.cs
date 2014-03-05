@@ -15,7 +15,6 @@ namespace DMT.Matcher.Module.Partitioner
     {
         public readonly string BaseAddress;
 
-        public const string RegisterPath = "/register";
         public const string MatchersPath = "/matchers";
 
         public PartitionBrokerServiceClient(string baseAddress)
@@ -40,7 +39,7 @@ namespace DMT.Matcher.Module.Partitioner
             {
                 s = new XmlSerializer(typeof(MatcherInfo));
                 s.Serialize(stream, matcher);
-                response = wc.UploadData(RegisterPath, HttpMethod.Post, stream.ToArray());
+                response = wc.UploadData(MatchersPath, HttpMethod.Post, stream.ToArray());
             }
 
             s = new XmlSerializer(typeof(BoolResponse));
