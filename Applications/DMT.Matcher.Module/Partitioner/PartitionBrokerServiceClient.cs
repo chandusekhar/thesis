@@ -55,7 +55,7 @@ namespace DMT.Matcher.Module.Partitioner
         public bool DeleteMatcher(Guid id)
         {
             BoolResponse response = null;
-            string url = string.Format("{0}{1}?id={2}", this.BaseAddress.TrimEnd('/'), MatchersPath, id);
+            string url = string.Format("{0}{1}/{2}", this.BaseAddress.TrimEnd('/'), MatchersPath, id);
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = HttpMethod.Delete;
             using (var res = req.GetResponse())
