@@ -61,6 +61,7 @@
     <Compile Include="Partitioner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\Service\DeleteMatcherHandler.cs" />
+    <Compile Include="Remote\Service\GetPartitionHandler.cs" />
     <Compile Include="Remote\Service\MatcherReadyHandler.cs" />
     <Compile Include="Remote\Service\PartitionBrokerService.cs" />
     <Compile Include="Remote\Service\RegisterMatcherHandler.cs" />

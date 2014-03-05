@@ -40,11 +40,10 @@ namespace DMT.Partition
             this.entityFactory = entityFactory;
         }
 
-        public Stream Serialize(IPartition partition, Stream source)
+        public void Serialize(IPartition partition, Stream source, Stream dest)
         {
-            MemoryStream ms = new MemoryStream();
             using (var reader = XmlReader.Create(source))
-            using (var writer = XmlWriter.Create(ms, new XmlWriterSettings { CloseOutput = false }))
+            using (var writer = XmlWriter.Create(dest, new XmlWriterSettings { CloseOutput = false }))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement(PartitionSerializer.PartitionTag);
@@ -64,9 +63,6 @@ namespace DMT.Partition
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
-
-            ms.Seek(0, SeekOrigin.Begin);
-            return ms;
         }
 
         private void WriteCrossingEdges(IPartition partition, XmlWriter writer)

@@ -23,7 +23,7 @@ namespace DMT.Partition.Interfaces
         /// </summary>
         /// <param name="partition">the partition to be serialized</param>
         /// <param name="source">the model source</param>
-        /// <returns></returns>
-        Stream Serialize(IPartition partition, Stream source);
+        /// <param name="destination">stream to writer to</param>
+        void Serialize(IPartition partition, Stream source, Stream destination);
     }
 }

@@ -18,6 +18,12 @@ namespace DMT.Common.Rest
             set { this.innerResponse.StatusCode = (int)value; }
         }
 
+        public bool Chunked
+        {
+            get { return this.innerResponse.SendChunked; }
+            set { this.innerResponse.SendChunked = value; }
+        }
+
         public Stream Body
         {
             get { return this.innerResponse.OutputStream; }
@@ -32,5 +38,6 @@ namespace DMT.Common.Rest
         {
             this.innerResponse.OutputStream.Close();
         }
+
     }
 }
