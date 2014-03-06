@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using DMT.Common.Rest;
-using DMT.ServiceParams;
+using DMT.Module.Common.Service;
 
 namespace DMT.Partition.Module.Remote.Service
 {

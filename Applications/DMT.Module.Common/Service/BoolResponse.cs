@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Common.Rest;
 
-namespace DMT.ServiceParams
+namespace DMT.Module.Common.Service
 {
     public class BoolResponse : XmlRouteResponseBase<bool>
     {

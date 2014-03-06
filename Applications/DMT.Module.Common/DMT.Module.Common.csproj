@@ -7,8 +7,8 @@
     <ProjectGuid>{3EED8BE1-F2B3-4F5B-8890-D8B32560DEA7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.ServiceParams</RootNamespace>
-    <AssemblyName>DMT.ServiceParams</AssemblyName>
+    <RootNamespace>DMT.Module.Common</RootNamespace>
+    <AssemblyName>DMT.Module.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoolResponse.cs" />
-    <Compile Include="MatcherInfo.cs" />
+    <Compile Include="Service\BoolResponse.cs" />
+    <Compile Include="Service\MatcherInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

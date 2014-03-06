@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Matcher.Module", "Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Matcher.App", "Applications\DMT.Matcher.App\DMT.Matcher.App.csproj", "{1BAF0044-220F-4E9E-B97A-503FED685282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.ServiceParams", "Applications\DMT.ServiceParams\DMT.ServiceParams.csproj", "{3EED8BE1-F2B3-4F5B-8890-D8B32560DEA7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Module.Common", "Applications\DMT.Module.Common\DMT.Module.Common.csproj", "{3EED8BE1-F2B3-4F5B-8890-D8B32560DEA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

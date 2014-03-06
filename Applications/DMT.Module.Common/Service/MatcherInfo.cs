@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml.Serialization;
 using DMT.Partition.Interfaces;
 
-namespace DMT.ServiceParams
+namespace DMT.Module.Common.Service
 {
     public class MatcherInfo
     {

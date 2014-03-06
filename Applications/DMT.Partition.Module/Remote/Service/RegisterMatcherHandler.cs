@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Common.Rest;
-using DMT.ServiceParams;
+using DMT.Module.Common.Service;
 
 namespace DMT.Partition.Module.Remote.Service
 {

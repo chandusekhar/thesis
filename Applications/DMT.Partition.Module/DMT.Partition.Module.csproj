@@ -90,9 +90,9 @@
       <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
       <Name>DMT.Partition.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DMT.ServiceParams\DMT.ServiceParams.csproj">
+    <ProjectReference Include="..\DMT.Module.Common\DMT.Module.Common.csproj">
       <Project>{3eed8be1-f2b3-4f5b-8890-d8b32560dea7}</Project>
-      <Name>DMT.ServiceParams</Name>
+      <Name>DMT.Module.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

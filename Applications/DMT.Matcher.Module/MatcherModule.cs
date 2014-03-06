@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Matcher.Module.Partitioner;
-using DMT.ServiceParams;
+using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
 {

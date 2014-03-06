@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DMT.Common.Rest;
-using DMT.ServiceParams;
+using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module.Partitioner
 {
