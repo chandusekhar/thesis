@@ -50,6 +50,12 @@ namespace DMT.Partition.Module.Remote
             }
         }
 
+        public async void ReleaseMatchers()
+        {
+            var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).ReleaseMatcher());
+            await Task.WhenAll(tasks);
+        }
+
         private void OnMatchersReady()
         {
             var handler = this.MatchersReady;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
 using DMT.Partition.Module.CLI;
@@ -19,6 +20,8 @@ namespace DMT.Partition.Module
         private MatcherRegistry matcherRegistry = new MatcherRegistry();
         private PartitionRegistry partitionRegistry;
         private string modelFileName;
+        private ManualResetEvent exit;
+        private bool matchersStarted = false;
 
         internal static PartitionModule Instance
         {
@@ -36,6 +39,11 @@ namespace DMT.Partition.Module
         internal PartitionRegistry PartitionRegistry { get { return this.partitionRegistry; } }
         internal string ModelFileName { get { return this.modelFileName; } }
 
+        private PartitionModule()
+        {
+            this.exit = new ManualResetEvent(false);
+        }
+
         /// <summary>
         /// Initializes the module and starts the services.
         /// </summary>
@@ -45,6 +53,19 @@ namespace DMT.Partition.Module
         {
             instance = new PartitionModule();
             instance.Start(argv);
+        }
+
+        /// <summary>
+        /// Exit the application.
+        /// This method does clean up after the application.
+        /// </summary>
+        internal void Exit()
+        {
+            if (this.matchersStarted)
+            {
+                this.matcherRegistry.ReleaseMatchers();
+            }
+            this.exit.Set();
         }
 
         private void Start(string[] argv)
@@ -58,7 +79,7 @@ namespace DMT.Partition.Module
             if (argv.Length < 1)
             {
                 var cmd = new StringCommand('m', "Enter path of model file", "Path:");
-                new ConsoleHandler(cmd).Execute();
+                new ConsoleHandler(cmd, cmd).Execute();
                 this.modelFileName = cmd.Answer;
             }
             else
@@ -78,8 +99,10 @@ namespace DMT.Partition.Module
             RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.BaseAddress);
             //rmi.Start(partitions.Count());
             rmi.Start(1);
+            this.matchersStarted = true;
 
-            Console.ReadKey();
+            this.exit.WaitOne();
+            service.Close();
         }
     }
 }

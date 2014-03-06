@@ -13,10 +13,7 @@ namespace DMT.Partition.Module.CLI
         public override void Execute()
         {
             Console.WriteLine("Byebye...");
-
-            // TODO: release matchers
-
-            Environment.Exit(0);
+            PartitionModule.Instance.Exit();
         }
     }
 }

@@ -23,7 +23,13 @@ namespace DMT.Partition.Module.CLI
             this.commands.Add(new QuitCommand());
         }
 
-        public ConsoleHandler(params CommandBase[] commands) : this(commands.ToList()) { }
+        public ConsoleHandler(CommandBase @default, params CommandBase[] commands)
+            : this((IEnumerable<CommandBase>)commands)
+        {
+            this.DefaultComamnd = @default;
+        }
+
+        public ConsoleHandler(params CommandBase[] commands) : this((IEnumerable<CommandBase>)commands) { }
 
         public ConsoleHandler(IEnumerable<CommandBase> commands)
             : this()
