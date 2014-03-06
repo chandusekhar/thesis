@@ -41,12 +41,10 @@ namespace DMT.Partition.Module
         /// </summary>
         /// <param name="argv"></param>
         /// <returns></returns>
-        public static PartitionModule StartModule(string[] argv)
+        public static void StartModule(string[] argv)
         {
             instance = new PartitionModule();
             instance.Start(argv);
-
-            return instance;
         }
 
         private void Start(string[] argv)

@@ -38,7 +38,7 @@ namespace DMT.Matcher.Module
             this.Id = Guid.NewGuid();
         }
 
-        public static MatcherModule StartModule(string[] argv)
+        public static void StartModule(string[] argv)
         {
             if (instance != null)
             {
@@ -48,7 +48,6 @@ namespace DMT.Matcher.Module
             instance = new MatcherModule();
             instance.Start(argv);
 
-            return instance;
         }
 
         private void Start(string[] argv)
