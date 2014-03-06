@@ -4,49 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Common.Rest;
+using DMT.Module.Common.Service;
 
 namespace DMT.Partition.Module.Remote.Service
 {
-    class PartitionBrokerService
+    class PartitionBrokerService : ServiceBase
     {
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private const int Port = 8080;
 
-        private RestServiceHost service;
-
-        public Uri BaseAddress
-        {
-            get
-            {
-                UriBuilder ub = new UriBuilder();
-                ub.Host = "localhost";
-                ub.Scheme = "http";
-                ub.Port = PartitionBrokerService.Port;
-
-                return ub.Uri;
-            }
-        }
-
         public PartitionBrokerService()
+            : base(PartitionBrokerService.Port)
         {
-            this.service = new RestServiceHost(8080);
-
-            // register routes and stuff
-            Initialize();
         }
 
-        public void Start()
+        protected override void Initialize()
         {
-            logger.Info("Starting REST service");
-            this.service.StartAsync();
-        }
-
-        private void Initialize()
-        {
-            this.service.Router.Register(HttpMethod.Post, "/matchers", new RegisterMatcherHandler());
-            this.service.Router.Register(HttpMethod.Delete, "/matchers/{id}", new DeleteMatcherHandler());
-            this.service.Router.Register(HttpMethod.Put, "/matchers/{id}/ready", new MatcherReadyHandler());
-            this.service.Router.Register(HttpMethod.Get, "/matchers/{id}/partition", new GetPartitionHandler());
+            RegisterRoute(HttpMethod.Post, "/matchers", new RegisterMatcherHandler());
+            RegisterRoute(HttpMethod.Delete, "/matchers/{id}", new DeleteMatcherHandler());
+            RegisterRoute(HttpMethod.Put, "/matchers/{id}/ready", new MatcherReadyHandler());
+            RegisterRoute(HttpMethod.Get, "/matchers/{id}/partition", new GetPartitionHandler());
         }
     }
 }
