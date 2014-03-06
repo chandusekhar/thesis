@@ -21,7 +21,7 @@ namespace DMT.Common.Composition
         public const string PluginCatalogPathKey = "plugin";
 
         private static CompositionService instance;
-        public static CompositionService Instance
+        public static CompositionService Default
         {
             get
             {

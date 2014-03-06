@@ -52,8 +52,8 @@ namespace DMT.Partition.Module
         {
             logger.Info("Master module started.");
 
-            CompositionService.Instance.Initialize();
-            //logger.Info("CompositionService initalized successfully.");
+            CompositionService.Default.Initialize();
+            logger.Info("CompositionService initalized successfully.");
 
             //if (argv.Length < 2)
             //{

@@ -37,11 +37,11 @@ namespace DMT.Common.Composition
             {
                 if (allowRecomposition)
                 {
-                    CompositionService.Instance.Inject(this);
+                    CompositionService.Default.Inject(this);
                 }
                 else
                 {
-                    CompositionService.Instance.InjectOnce(this);
+                    CompositionService.Default.InjectOnce(this);
                 }
             }
 

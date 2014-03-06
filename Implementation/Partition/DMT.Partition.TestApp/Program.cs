@@ -17,13 +17,13 @@ namespace DMT.Partition.TestApp
 
         static void Main(string[] args)
         {
-            CompositionService.Instance.Initialize();
+            CompositionService.Default.Initialize();
 
             IModelGenerator gen = new RandomModelGenerator(1234);
             //IModel model = gen.Generate(NumberOfNodes, DegreeOfNode);
             IModel model = gen.Generate(1000, 10);
 
-            var pm = CompositionService.Instance.GetExport<IThreeStepPartitionManager>();
+            var pm = CompositionService.Default.GetExport<IThreeStepPartitionManager>();
             pm.AfterCoarsening += PrintAfterCoarseningStatistics;
             pm.Partitioner.NumberOfNodesInPartition = 100;
 
