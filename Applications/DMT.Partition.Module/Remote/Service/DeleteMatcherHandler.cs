@@ -15,7 +15,6 @@ namespace DMT.Partition.Module.Remote.Service
         protected override BoolResponse Handle(NameValueCollection urlParams)
         {
             string idString = urlParams.Get("id");
-            logger.Debug("Deleting matcher with id: {0}", idString);
             Guid id = Guid.Parse(idString);
 
             var result = PartitionModule.Instance.MatcherRegistry.RemoveMatcher(id);
