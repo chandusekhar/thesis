@@ -19,6 +19,14 @@ namespace DMT.Module.Common.Service
         public bool Ready { get; private set;}
         [XmlIgnore]
         public IPartition Partition { get; set; }
+        [XmlIgnore]
+        public string Url
+        {
+            get
+            {
+                return string.Format("http://{0}:{1}", Host, Port);
+            }
+        }
 
         public void MarkReady()
         {
