@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
+using DMT.Partition.Module.CLI;
 using DMT.Partition.Module.Remote;
 using DMT.Partition.Module.Remote.Service;
 using NLog;
@@ -48,20 +49,25 @@ namespace DMT.Partition.Module
             return instance;
         }
 
-        private async void Start(string[] argv)
+        private void Start(string[] argv)
         {
             logger.Info("Master module started.");
 
             CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
 
-            //if (argv.Length < 2)
-            //{
-            //    Console.WriteLine("Usage {0} /path/to/model.xml", AppDomain.CurrentDomain.FriendlyName);
-            //    Environment.Exit(0);
-            //}
+            // get the path of the modell file if not supplied
+            if (argv.Length < 1)
+            {
+                var cmd = new StringCommand('m', "Enter path of model file", "Path:");
+                new ConsoleHandler(cmd).Execute();
+                this.modelFileName = cmd.Answer;
+            }
+            else
+            {
+                this.modelFileName = argv.First();
+            }
 
-            //this.modelFileName = argv[1];
             //ModelLoader loader = new ModelLoader(this.modelFileName);
             //var model = await loader.LoadModel();
 
