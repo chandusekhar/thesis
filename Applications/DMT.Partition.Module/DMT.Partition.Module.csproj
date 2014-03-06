@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CLI\CommandBase.cs" />
+    <Compile Include="CLI\ConsoleHandler.cs" />
+    <Compile Include="CLI\QuiteCommand.cs" />
+    <Compile Include="CLI\StringCommand.cs" />
     <Compile Include="Exceptions\MatcherNotFoundException.cs" />
     <Compile Include="Exceptions\NoMorePartitionException.cs" />
     <Compile Include="PartitionModule.cs" />
@@ -91,6 +95,7 @@
       <Name>DMT.ServiceParams</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
