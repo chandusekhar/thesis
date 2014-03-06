@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Matcher.Module.Partitioner;
+using DMT.Matcher.Module.Service;
 using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
@@ -31,11 +33,13 @@ namespace DMT.Matcher.Module
 
         #endregion
 
-        public readonly Guid Id;
+        private readonly Guid id;
+        private ManualResetEvent done;
 
         public MatcherModule()
         {
-            this.Id = Guid.NewGuid();
+            this.id = Guid.NewGuid();
+            this.done = new ManualResetEvent(false);
         }
 
         public static void StartModule(string[] argv)
@@ -47,16 +51,22 @@ namespace DMT.Matcher.Module
 
             instance = new MatcherModule();
             instance.Start(argv);
+        }
 
+        internal void Done()
+        {
+            this.done.Set();
         }
 
         private void Start(string[] argv)
         {
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
+            // TODO: assign port
+            MatcherService service = new MatcherService(1201);
+            service.Start();
 
-            // TODO: srart matcher service
             var client = new PartitionBrokerServiceClient(startArgs.PartitionServiceUri);
-            if (!client.RegisterMatcher(new MatcherInfo { Id = this.Id }))
+            if (!client.RegisterMatcher(new MatcherInfo { Id = this.id }))
             {
                 logger.Fatal("Could not register with partitioning module. Shutting down.");
                 return;
@@ -64,9 +74,13 @@ namespace DMT.Matcher.Module
             // TODO: get partition, parse it
 
             // signal back
-            client.MarkMatcherReady(this.Id);
+            client.MarkMatcherReady(this.id);
 
-            client.DeleteMatcher(this.Id);
+            // wait for an exis signal
+            this.done.WaitOne();
+            // cleanup
+            client.DeleteMatcher(this.id);
+            service.Close();
         }
     }
 }

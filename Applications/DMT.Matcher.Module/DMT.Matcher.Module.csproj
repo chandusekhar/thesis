@@ -50,6 +50,7 @@
     <Compile Include="Partitioner\PartitionBrokerServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\MatcherService.cs" />
+    <Compile Include="Service\QuitHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NLog.config">

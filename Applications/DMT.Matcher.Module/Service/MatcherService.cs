@@ -14,7 +14,7 @@ namespace DMT.Matcher.Module.Service
 
         protected override void Initialize()
         {
-            throw new NotImplementedException();
+            RegisterRoute(HttpMethod.Post, "/quit", new QuitHandler());
         }
     }
 }
