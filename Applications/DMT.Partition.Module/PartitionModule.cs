@@ -70,7 +70,9 @@ namespace DMT.Partition.Module
 
         private void Start(string[] argv)
         {
-            logger.Info("Master module started.");
+            logger.Info("Partition module started.");
+
+            Console.CancelKeyPress += HandleInterupt;
 
             CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
@@ -103,6 +105,12 @@ namespace DMT.Partition.Module
 
             this.exit.WaitOne();
             service.Close();
+        }
+
+        private void HandleInterupt(object sender, ConsoleCancelEventArgs e)
+        {
+            e.Cancel = true;
+            Exit();
         }
     }
 }
