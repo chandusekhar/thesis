@@ -72,6 +72,11 @@ namespace DMT.Common.Rest
             Task.Run(new Action(Start));
         }
 
+        public void Close()
+        {
+            this.listener.Close();
+        }
+
         private void HandleRequest(HttpListenerContext context)
         {
             var req = context.Request;

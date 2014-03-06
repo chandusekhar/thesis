@@ -36,6 +36,8 @@ namespace DMT.Module.Common.Service
             this.host = host;
             this.port = port;
 
+            this.service = new RestServiceHost(port);
+
             Initialize();
         }
 
@@ -43,6 +45,11 @@ namespace DMT.Module.Common.Service
         {
             this.service.StartAsync();
             logger.Info("Started REST service. Listening on {0}:{1}", this.host, this.port);
+        }
+
+        public void Close()
+        {
+            this.service.Close();
         }
 
         protected void RegisterRoute(HttpMethod method, string urlPatter, IRouteHandler handler)
