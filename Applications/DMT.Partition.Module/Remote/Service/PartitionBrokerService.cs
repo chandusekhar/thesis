@@ -20,7 +20,6 @@ namespace DMT.Partition.Module.Remote.Service
         protected override void Initialize()
         {
             RegisterRoute(HttpMethod.Post, "/matchers", new RegisterMatcherHandler());
-            RegisterRoute(HttpMethod.Delete, "/matchers/{id}", new DeleteMatcherHandler());
             RegisterRoute(HttpMethod.Put, "/matchers/{id}/ready", new MatcherReadyHandler());
             RegisterRoute(HttpMethod.Get, "/matchers/{id}/partition", new GetPartitionHandler());
         }
