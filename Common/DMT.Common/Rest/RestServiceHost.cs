@@ -17,6 +17,7 @@ namespace DMT.Common.Rest
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private const string NotFoundBody = "Requested resource was not found.";
+        private const string MethodNotAllowedBody = "Method is not allowed on the requested resource.";
 
         private readonly int port;
         private HttpListener listener;
@@ -104,9 +105,14 @@ namespace DMT.Common.Rest
                     Send(res, HttpStatusCode.InternalServerError, sb.ToString());
                 }
             }
+            else if (result.RouteFound)
+            {
+                logger.Warn("Could not find {0} method for route ({1}).", req.HttpMethod, req.RawUrl);
+                Send(res, HttpStatusCode.MethodNotAllowed, MethodNotAllowedBody);
+            }
             else
             {
-                logger.Warn("Route handler not found for {0} route.", req.RawUrl);
+                logger.Warn("Route handler not found for [{0}] {1} route.", req.HttpMethod, req.RawUrl);
                 Send(res, HttpStatusCode.NotFound, NotFoundBody);
             }
         }
