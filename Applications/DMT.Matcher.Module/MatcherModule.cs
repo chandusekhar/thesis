@@ -61,12 +61,12 @@ namespace DMT.Matcher.Module
         private void Start(string[] argv)
         {
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
-            // TODO: assign port
-            MatcherService service = new MatcherService(1201);
+
+            MatcherService service = new MatcherService(startArgs.Port);
             service.Start();
 
             var client = new PartitionBrokerServiceClient(startArgs.PartitionServiceUri);
-            if (!client.RegisterMatcher(new MatcherInfo { Id = this.id, Port = 1201, Host = "localhost" }))
+            if (!client.RegisterMatcher(new MatcherInfo { Id = this.id, Port = startArgs.Port, Host = GetHost() }))
             {
                 logger.Fatal("Could not register with partitioning module. Shutting down.");
                 return;
@@ -79,6 +79,12 @@ namespace DMT.Matcher.Module
             // wait for an exis signal
             this.done.WaitOne();
             service.Close();
+        }
+
+        private string GetHost()
+        {
+            // TODO: return actual host, make is configurable
+            return "localhost";
         }
     }
 }
