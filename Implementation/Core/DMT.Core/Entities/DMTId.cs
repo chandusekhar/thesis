@@ -67,6 +67,11 @@ namespace DMT.Core.Entities
             return this.value.Equals(other2.value);
         }
 
+        public string ToUrlSafe()
+        {
+            return this.value.ToString();
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj as IId);
@@ -97,6 +102,5 @@ namespace DMT.Core.Entities
             this.value = Guid.Parse(idString);
         }
         #endregion
-
     }
 }

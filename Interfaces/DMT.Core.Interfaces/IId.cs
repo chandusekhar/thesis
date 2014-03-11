@@ -15,5 +15,6 @@ namespace DMT.Core.Interfaces
     /// </summary>
     public interface IId : ISerializable, IEquatable<IId>
     {
+        string ToUrlSafe();
     }
 }
