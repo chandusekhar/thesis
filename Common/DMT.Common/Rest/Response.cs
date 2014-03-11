@@ -10,6 +10,8 @@ namespace DMT.Common.Rest
 {
     public class Response
     {
+        public const string XmlUtf8ContentType = "text/xml; charset=utf-8";
+
         private HttpListenerResponse innerResponse;
 
         public HttpStatusCode Status
@@ -22,6 +24,12 @@ namespace DMT.Common.Rest
         {
             get { return this.innerResponse.SendChunked; }
             set { this.innerResponse.SendChunked = value; }
+        }
+
+        public string ContentType
+        {
+            get { return this.innerResponse.ContentType; }
+            set { this.innerResponse.ContentType = value; }
         }
 
         public Stream Body

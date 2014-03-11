@@ -45,6 +45,7 @@ namespace DMT.Common.Rest
                 {
                     var responseBodySerializer = new XmlSerializer(typeof(TResponse));
                     responseBodySerializer.Serialize(response.Body, res);
+                    response.ContentType = Response.XmlUtf8ContentType;
                 }
             }
         }
@@ -76,6 +77,7 @@ namespace DMT.Common.Rest
                 {
                     var responseBodySerializer = new XmlSerializer(typeof(TResponse));
                     responseBodySerializer.Serialize(response.Body, res);
+                    response.ContentType = Response.XmlUtf8ContentType;
                 }
             }
         }
