@@ -21,8 +21,6 @@ namespace DMT.Core.Partition
             get { return nodes; }
         }
 
-        public IHost Host { get; set; }
-
         public IId Id
         {
             get { return id; }
