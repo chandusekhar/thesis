@@ -48,7 +48,6 @@
     <Compile Include="IPartitionSerializer.cs" />
     <Compile Include="ISuperNode.cs" />
     <Compile Include="IPartition.cs" />
-    <Compile Include="IPartitionedModel.cs" />
     <Compile Include="IPartitionEntityFactory.cs" />
     <Compile Include="IPartitioner.cs" />
     <Compile Include="IPartitionRefiner.cs" />
