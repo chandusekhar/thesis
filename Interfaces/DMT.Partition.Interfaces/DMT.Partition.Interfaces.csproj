@@ -51,7 +51,6 @@
     <Compile Include="IPartitionEntityFactory.cs" />
     <Compile Include="IPartitioner.cs" />
     <Compile Include="IPartitionRefiner.cs" />
-    <Compile Include="ISendPartitionResponse.cs" />
     <Compile Include="IThreeStepPartitionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
