@@ -20,6 +20,11 @@ namespace DMT.Core.Entities
             return DMTId.NewId();
         }
 
+        public IId ParseId(string idStr)
+        {
+            return DMTId.FromString(idStr);
+        }
+
         public virtual INode CreateNode()
         {
             logger.Trace("Created new node.");

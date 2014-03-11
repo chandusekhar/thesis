@@ -9,8 +9,6 @@ namespace DMT.Module.Common.Service
 {
     public class BoolResponse : XmlRouteResponseBase<bool>
     {
-        public override bool Result { get; set; }
-
         public BoolResponse()
         {
             this.Result = false;

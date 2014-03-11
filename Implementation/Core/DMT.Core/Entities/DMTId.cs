@@ -29,6 +29,11 @@ namespace DMT.Core.Entities
             return new DMTId(guid);
         }
 
+        public static IId FromString(string idStr)
+        {
+            return new DMTId(Guid.Parse(idStr));
+        }
+
         public DMTId()
         {
             this.value = Guid.Empty;
@@ -92,5 +97,6 @@ namespace DMT.Core.Entities
             this.value = Guid.Parse(idString);
         }
         #endregion
+
     }
 }

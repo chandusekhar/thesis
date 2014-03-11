@@ -10,6 +10,6 @@ namespace DMT.Common.Rest
     {
         public bool Success { get; set; }
         public string ErrorMessage { get; set; }
-        public abstract T Result { get; set; }
+        public virtual T Result { get; set; }
     }
 }
