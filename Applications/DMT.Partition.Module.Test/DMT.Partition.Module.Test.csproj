@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1E908159-8480-4C0C-88D9-1D3CDFF6541C}</ProjectGuid>
+    <ProjectGuid>{F2B81955-3B04-4501-9A7F-7898C9B92824}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Common</RootNamespace>
-    <AssemblyName>DMT.Common</AssemblyName>
+    <RootNamespace>DMT.Partition.Module.Test</RootNamespace>
+    <AssemblyName>DMT.Partition.Module.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -32,47 +32,54 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Composition\CompositionService.cs" />
-    <Compile Include="Composition\InjectableBase.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Extensions\ArrayExtensions.cs" />
-    <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Objects.cs" />
+    <Compile Include="MatcherRegistryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rest\HttpMethod.cs" />
-    <Compile Include="Rest\IRouteMatchResult.cs" />
-    <Compile Include="Rest\IRouteHandler.cs" />
-    <Compile Include="Rest\IRouter.cs" />
-    <Compile Include="Rest\IXmlRouteResponse.cs" />
-    <Compile Include="Rest\Request.cs" />
-    <Compile Include="Rest\Response.cs" />
-    <Compile Include="Rest\RestServiceHost.cs" />
-    <Compile Include="Rest\Router\DefaultRouter.cs" />
-    <Compile Include="Rest\Router\ParamPatternSegment.cs" />
-    <Compile Include="Rest\Router\HandlerBundle.cs" />
-    <Compile Include="Rest\Router\PatternCollection.cs" />
-    <Compile Include="Rest\Router\RouteResult.cs" />
-    <Compile Include="Rest\Router\PatternSegment.cs" />
-    <Compile Include="Rest\Router\RouteSegment.cs" />
-    <Compile Include="Rest\UrlSanitizer.cs" />
-    <Compile Include="Rest\XmlRouteHandlerBase.cs" />
-    <Compile Include="Rest\XmlRouteResponseBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\DMT.Common\DMT.Common.csproj">
+      <Project>{1e908159-8480-4c0c-88d9-1d3cdff6541c}</Project>
+      <Name>DMT.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementation\Core\DMT.Core\DMT.Core.csproj">
+      <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
+      <Name>DMT.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementation\Partition\DMT.Core.Partition\DMT.Core.Partition.csproj">
+      <Project>{e34def83-3162-4a9d-9a3b-7998df128969}</Project>
+      <Name>DMT.Core.Partition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementation\Partition\DMT.Partition\DMT.Partition.csproj">
+      <Project>{05451933-9105-4935-9d93-cf9b9831a2ad}</Project>
+      <Name>DMT.Partition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
+      <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
+      <Name>DMT.Core.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
+      <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
+      <Name>DMT.Partition.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DMT.Module.Common\DMT.Module.Common.csproj">
+      <Project>{3eed8be1-f2b3-4f5b-8890-d8b32560dea7}</Project>
+      <Name>DMT.Module.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DMT.Partition.Module\DMT.Partition.Module.csproj">
+      <Project>{60cc2c4f-5350-4d20-95bb-db2e303f4788}</Project>
+      <Name>DMT.Partition.Module</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

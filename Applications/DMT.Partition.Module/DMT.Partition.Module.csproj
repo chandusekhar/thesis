@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="CLI\CommandBase.cs" />
     <Compile Include="CLI\ConsoleHandler.cs" />
-    <Compile Include="CLI\QuiteCommand.cs" />
+    <Compile Include="CLI\QuitCommand.cs" />
     <Compile Include="CLI\StringCommand.cs" />
     <Compile Include="Exceptions\MatcherNotFoundException.cs" />
     <Compile Include="Exceptions\NoMorePartitionException.cs" />
@@ -60,12 +60,13 @@
     <Compile Include="Remote\IInstantiationStrategy.cs" />
     <Compile Include="Remote\MatcherRegistry.cs" />
     <Compile Include="Remote\LocalPorcessInstantiationStrategy.cs" />
+    <Compile Include="Remote\MatcherServiceClient.cs" />
     <Compile Include="Remote\RemoteMatcherInstantiator.cs" />
     <Compile Include="ModelLoader.cs" />
     <Compile Include="Partitioner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remote\Service\DeleteMatcherHandler.cs" />
     <Compile Include="Remote\Service\GetPartitionHandler.cs" />
+    <Compile Include="Remote\Service\MatcherFinderHandler.cs" />
     <Compile Include="Remote\Service\MatcherReadyHandler.cs" />
     <Compile Include="Remote\Service\PartitionBrokerService.cs" />
     <Compile Include="Remote\Service\RegisterMatcherHandler.cs" />

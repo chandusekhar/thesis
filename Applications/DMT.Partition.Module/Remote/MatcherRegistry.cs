@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Partition.Module.Exceptions;
 using DMT.Module.Common.Service;
+using DMT.Core.Interfaces;
 
 namespace DMT.Partition.Module.Remote
 {
@@ -48,6 +49,17 @@ namespace DMT.Partition.Module.Remote
             {
                 OnMatchersReady();
             }
+        }
+
+        public async void ReleaseMatchers()
+        {
+            var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).ReleaseMatcher());
+            await Task.WhenAll(tasks);
+        }
+
+        public MatcherInfo GetByPartitionId(IId id)
+        {
+            return this.matchers.Find(m => m.Partition != null && m.Partition.Id.Equals(id));
         }
 
         private void OnMatchersReady()

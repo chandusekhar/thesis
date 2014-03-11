@@ -14,17 +14,35 @@ namespace DMT.Partition.Module.Remote
     class LocalPorcessInstantiationStrategy : IInstantiationStrategy
     {
         private const string MatcherPathKey = "matcher-path";
+        private const string MatcherBasePortKey = "matcher-base-port";
+
+        /// <summary>
+        /// The number of instantiation. Needed to determine port for matcher.
+        /// </summary>
+        private int instatiation = 1;
+        private int basePort;
+
+        public LocalPorcessInstantiationStrategy()
+        {
+            this.basePort = int.Parse(ConfigurationManager.AppSettings[MatcherBasePortKey]);
+        }
 
         public void StartRemote(Arguments args)
         {
+            var argsLocal = new Arguments(args.ServiceUri, GetMatcherPort());
             var path = GetMatcherModulePath();
 
-            Process.Start(path, args.ToCommandLineArgs());
+            Process.Start(path, argsLocal.ToCommandLineArgs());
         }
 
         private string GetMatcherModulePath()
         {
             return ConfigurationManager.AppSettings[MatcherPathKey];
+        }
+
+        private int GetMatcherPort()
+        {
+            return this.basePort + (instatiation++);
         }
     }
 }

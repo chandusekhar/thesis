@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Matcher.Module.Partitioner;
+using DMT.Matcher.Module.Service;
 using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
@@ -31,14 +33,16 @@ namespace DMT.Matcher.Module
 
         #endregion
 
-        public readonly Guid Id;
+        private readonly Guid id;
+        private ManualResetEvent done;
 
         public MatcherModule()
         {
-            this.Id = Guid.NewGuid();
+            this.id = Guid.NewGuid();
+            this.done = new ManualResetEvent(false);
         }
 
-        public static MatcherModule StartModule(string[] argv)
+        public static void StartModule(string[] argv)
         {
             if (instance != null)
             {
@@ -47,17 +51,22 @@ namespace DMT.Matcher.Module
 
             instance = new MatcherModule();
             instance.Start(argv);
+        }
 
-            return instance;
+        internal void Done()
+        {
+            this.done.Set();
         }
 
         private void Start(string[] argv)
         {
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
 
-            // TODO: srart matcher service
+            MatcherService service = new MatcherService(startArgs.Port);
+            service.Start();
+
             var client = new PartitionBrokerServiceClient(startArgs.PartitionServiceUri);
-            if (!client.RegisterMatcher(new MatcherInfo { Id = this.Id }))
+            if (!client.RegisterMatcher(new MatcherInfo { Id = this.id, Port = startArgs.Port, Host = GetHost() }))
             {
                 logger.Fatal("Could not register with partitioning module. Shutting down.");
                 return;
@@ -65,9 +74,17 @@ namespace DMT.Matcher.Module
             // TODO: get partition, parse it
 
             // signal back
-            client.MarkMatcherReady(this.Id);
+            client.MarkMatcherReady(this.id);
 
-            client.DeleteMatcher(this.Id);
+            // wait for an exis signal
+            this.done.WaitOne();
+            service.Close();
+        }
+
+        private string GetHost()
+        {
+            // TODO: return actual host, make is configurable
+            return "localhost";
         }
     }
 }

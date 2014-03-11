@@ -18,6 +18,13 @@ namespace DMT.Core.Interfaces
         IId CreateId();
 
         /// <summary>
+        /// Parse the given string into an id.
+        /// </summary>
+        /// <param name="idStr">sring representation of the id</param>
+        /// <returns></returns>
+        IId ParseId(string idStr);
+
+        /// <summary>
         /// Creates a new node instance.
         /// </summary>
         /// <returns>The new (and empty) node instance.</returns>

@@ -9,8 +9,14 @@ namespace DMT.Common.Rest.Router
 {
     class RouteResult : IRouteMatchResult
     {
-        public bool Success { get; set; }
+        public bool RouteFound { get; set; }
+        public bool HandlerFound { get; set; }
         public IRouteHandler Handler { get; set; }
         public NameValueCollection RouteParams { get; set; }
+
+        public bool Success
+        {
+            get { return this.HandlerFound && this.RouteFound; }
+        }
     }
 }

@@ -20,11 +20,13 @@ namespace DMT.Common.Rest.Router
         {
             NameValueCollection urlParams = new NameValueCollection();
             var leafSegment = this.routes.GetRoute(url, urlParams);
+            var handler = leafSegment != null ? leafSegment.Handlers.Get(method) : null;
 
             return new RouteResult
             {
-                Success = leafSegment != null,
-                Handler = leafSegment != null ? leafSegment.Handlers.Get(method) : null,
+                RouteFound = leafSegment != null,
+                HandlerFound = handler != null,
+                Handler = handler,
                 RouteParams = urlParams,
             };
         }

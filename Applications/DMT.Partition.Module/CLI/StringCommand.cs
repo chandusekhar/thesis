@@ -19,7 +19,7 @@ namespace DMT.Partition.Module.CLI
 
         public override void Execute()
         {
-            Console.WriteLine(this.Question);
+            Console.Write(this.Question + " ");
             this.Answer = Console.ReadLine();
         }
     }
