@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DMT.Common.Extensions;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
-using DMT.Core.Partition;
+using DMT.Partition.Data;
 using DMT.Core.Test.Utils;
 using DMT.Partition.Interfaces;
 using Xunit;
@@ -176,14 +176,14 @@ namespace DMT.Partition.Test
         /// Shortcut to instatiate a empty otherPartition.
         /// </summary>
         /// <returns></returns>
-        internal static DMT.Core.Partition.Partition P()
+        internal static DMT.Partition.Data.Partition P()
         {
-            return new DMT.Core.Partition.Partition(new CoreEntityFactory());
+            return new DMT.Partition.Data.Partition(new CoreEntityFactory());
         }
 
-        private DMT.Core.Partition.Partition CreatePartitionWithChildren(int count, Func<IEntityFactory, INode> createFunc)
+        private DMT.Partition.Data.Partition CreatePartitionWithChildren(int count, Func<IEntityFactory, INode> createFunc)
         {
-            var p = new DMT.Core.Partition.Partition(new CoreEntityFactory());
+            var p = new DMT.Partition.Data.Partition(new CoreEntityFactory());
             IEntityFactory f = new CoreEntityFactory();
             for (int i = 0; i < count; i++)
             {

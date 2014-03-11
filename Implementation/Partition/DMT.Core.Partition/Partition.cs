@@ -9,7 +9,7 @@ using DMT.Core.Interfaces.Serialization;
 using DMT.Partition.Interfaces;
 using DMT.Common.Extensions;
 
-namespace DMT.Core.Partition
+namespace DMT.Partition.Data
 {
     internal class Partition : IPartition
     {

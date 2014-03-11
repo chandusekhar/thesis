@@ -8,7 +8,7 @@ using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
 
-namespace DMT.Core.Partition
+namespace DMT.Partition.Data
 {
     [Export(typeof(IPartitionEntityFactory))]
     [Export(typeof(IEntityFactory))]

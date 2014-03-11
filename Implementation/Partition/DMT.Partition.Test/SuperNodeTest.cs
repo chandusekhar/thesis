@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
-using DMT.Core.Partition;
+using DMT.Partition.Data;
 using Xunit;
 using DMT.Common.Extensions;
 using DMT.Core.Interfaces;
