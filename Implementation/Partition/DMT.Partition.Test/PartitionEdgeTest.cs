@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
-using DMT.Core.Partition;
+using DMT.Partition.Data;
 using DMT.Partition.Interfaces;
 using Xunit;
 
@@ -16,7 +16,7 @@ namespace DMT.Partition.Test
         public void IsInnerReturnsTrueOnlyForInnerEdges()
         {
             var factory = new PartitionEntityFactory();
-            IPartition partition = new DMT.Core.Partition.Partition(factory);
+            IPartition partition = new DMT.Partition.Data.Partition(factory);
             PartitionNode nodeA = new PartitionNode(factory);
             PartitionNode nodeB = new PartitionNode(factory);
             nodeA.Partition = partition;
@@ -35,8 +35,8 @@ namespace DMT.Partition.Test
             PartitionNode nodeA = new PartitionNode(factory);
             PartitionNode nodeB = new PartitionNode(factory);
             IPartition p1, p2;
-            nodeA.Partition = p1 = new DMT.Core.Partition.Partition(factory);;
-            nodeB.Partition = p2 = new DMT.Core.Partition.Partition(factory);;
+            nodeA.Partition = p1 = new DMT.Partition.Data.Partition(factory);;
+            nodeB.Partition = p2 = new DMT.Partition.Data.Partition(factory);;
 
             PartitionEdge edge = new PartitionEdge(nodeA, nodeB, Core.Interfaces.EdgeDirection.Both, factory);
             nodeA.ConnectTo(nodeB, edge);

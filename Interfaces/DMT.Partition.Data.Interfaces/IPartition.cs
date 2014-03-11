@@ -23,11 +23,6 @@ namespace DMT.Partition.Interfaces
         bool IsEmpty { get; }
 
         /// <summary>
-        /// Gets or sets the host machine descriptor of this partition.
-        /// </summary>
-        IHost Host { get; set; }
-
-        /// <summary>
         /// Inflate partition by swapping SuperNodes with their children.
         /// </summary>
         void Inflate();

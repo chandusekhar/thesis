@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
-using DMT.Core.Partition;
+using DMT.Partition.Data;
 using DMT.Module.Common.Service;
 using DMT.Partition.Module.Remote;
 using Xunit;

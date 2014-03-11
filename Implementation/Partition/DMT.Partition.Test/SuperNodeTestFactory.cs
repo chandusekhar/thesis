@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
-using DMT.Core.Partition;
+using DMT.Partition.Data;
 
 namespace DMT.Partition.Test
 {

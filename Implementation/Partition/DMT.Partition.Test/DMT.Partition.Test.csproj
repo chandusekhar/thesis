@@ -67,6 +67,10 @@
       <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
       <Name>DMT.Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Interfaces\DMT.Partition.Data.Interfaces\DMT.Partition.Data.Interfaces.csproj">
+      <Project>{f5e5ad75-5b93-4d50-9438-c53fa644879f}</Project>
+      <Name>DMT.Partition.Data.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Interfaces\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
       <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
       <Name>DMT.Partition.Interfaces</Name>
@@ -79,9 +83,9 @@
       <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
       <Name>DMT.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DMT.Core.Partition\DMT.Core.Partition.csproj">
+    <ProjectReference Include="..\DMT.Partition.Data\DMT.Partition.Data.csproj">
       <Project>{e34def83-3162-4a9d-9a3b-7998df128969}</Project>
-      <Name>DMT.Core.Partition</Name>
+      <Name>DMT.Partition.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DMT.Partition\DMT.Partition.csproj">
       <Project>{05451933-9105-4935-9d93-cf9b9831a2ad}</Project>
