@@ -38,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Implementation", "Implement
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Common.Test", "Common\DMT.Common.Test\DMT.Common.Test.csproj", "{9BEB47A1-0820-4240-B753-FA8F628E8A7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Partition.Data", "Implementation\Partition\DMT.Core.Partition\DMT.Partition.Data.csproj", "{E34DEF83-3162-4A9D-9A3B-7998DF128969}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMT.Partition.Data", "Implementation\Partition\DMT.Partition.Data\DMT.Partition.Data.csproj", "{E34DEF83-3162-4A9D-9A3B-7998DF128969}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{117E5A36-5539-4F05-A7D7-80503215D0B7}"
 EndProject

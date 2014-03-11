@@ -56,7 +56,7 @@
       <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
       <Name>DMT.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Implementation\Partition\DMT.Core.Partition\DMT.Partition.Data.csproj">
+    <ProjectReference Include="..\..\Implementation\Partition\DMT.Partition.Data\DMT.Partition.Data.csproj">
       <Project>{e34def83-3162-4a9d-9a3b-7998df128969}</Project>
       <Name>DMT.Partition.Data</Name>
     </ProjectReference>
