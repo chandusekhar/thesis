@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLI\CommandBase.cs" />
+    <Compile Include="CLI\CommandLineArgs.cs" />
     <Compile Include="CLI\ConsoleHandler.cs" />
     <Compile Include="CLI\QuitCommand.cs" />
     <Compile Include="CLI\StringCommand.cs" />
@@ -73,9 +74,9 @@
     <Compile Include="Remote\Service\RegisterMatcherHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>

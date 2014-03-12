@@ -8,12 +8,21 @@ namespace DMT.Partition.Module.CLI
 {
     class QuitCommand : CommandBase
     {
+        public bool Immediate { get; set; }
+
         public QuitCommand() : base('q', "Quit") { }
 
         public override void Execute()
         {
             Console.WriteLine("Byebye...");
-            PartitionModule.Instance.Exit();
+            if (this.Immediate)
+            {
+                Environment.Exit(0);
+            }
+            else
+            {
+                PartitionModule.Instance.Exit();
+            }
         }
     }
 }

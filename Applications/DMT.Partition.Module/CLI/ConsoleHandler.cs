@@ -8,6 +8,7 @@ namespace DMT.Partition.Module.CLI
 {
     class ConsoleHandler
     {
+        private QuitCommand quitCommand;
         private List<CommandBase> commands;
 
         public CommandBase DefaultComamnd { get; set; }
@@ -17,10 +18,16 @@ namespace DMT.Partition.Module.CLI
             get { return this.DefaultComamnd != null; }
         }
 
+        public bool ImmediateExit
+        {
+            get { return this.quitCommand.Immediate; }
+            set { this.quitCommand.Immediate = value; }
+        }
+
         public ConsoleHandler()
         {
             this.commands = new List<CommandBase>();
-            this.commands.Add(new QuitCommand());
+            this.commands.Add(this.quitCommand = new QuitCommand());
         }
 
         public ConsoleHandler(CommandBase @default, params CommandBase[] commands)
@@ -79,6 +86,7 @@ namespace DMT.Partition.Module.CLI
 
         private void PrintMenu()
         {
+            Console.WriteLine();
             Console.WriteLine("Choose from the following options:");
             foreach (var c in this.commands)
             {

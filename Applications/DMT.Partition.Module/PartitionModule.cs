@@ -20,8 +20,7 @@ namespace DMT.Partition.Module
 
         private MatcherRegistry matcherRegistry = new MatcherRegistry();
         private PartitionRegistry partitionRegistry;
-        private string modelFileName;
-        private string jobBinaryPath;
+
         private ManualResetEvent exit;
         private bool matchersStarted = false;
 
@@ -47,15 +46,9 @@ namespace DMT.Partition.Module
             get { return this.partitionRegistry; }
         }
 
-        internal string ModelFileName
-        {
-            get { return this.modelFileName; }
-        }
+        internal string ModelFileName { get; private set; }
 
-        internal string JobBinaryPath
-        {
-            get { return this.jobBinaryPath; }
-        }
+        internal string JobBinaryPath { get; private set; }
 
         private PartitionModule()
         {
@@ -95,17 +88,10 @@ namespace DMT.Partition.Module
             CompositionService.Default.Initialize(typeof(IPartitionSerializer).Assembly);
             logger.Info("CompositionService initalized successfully.");
 
-            // get the path of the modell file if not supplied
-            if (argv.Length < 1)
-            {
-                var cmd = new StringCommand('m', "Enter path of model file", "Path:");
-                new ConsoleHandler(cmd, cmd).Execute();
-                this.modelFileName = cmd.Answer;
-            }
-            else
-            {
-                this.modelFileName = argv.First();
-            }
+            var args = new CommandLineArgs(argv);
+            args.Parse();
+            this.JobBinaryPath = args.JobBinaryPath;
+            this.ModelFileName = args.ModelFilePath;
 
             //ModelLoader loader = new ModelLoader(this.modelFileName);
             //var model = await loader.LoadModel();
