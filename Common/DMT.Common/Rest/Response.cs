@@ -42,6 +42,11 @@ namespace DMT.Common.Rest
             this.innerResponse = response;
         }
 
+        public void AddHeader(string name, string value)
+        {
+            this.innerResponse.AddHeader(name, value);
+        }
+
         internal void EnsureClosed()
         {
             this.innerResponse.OutputStream.Close();
