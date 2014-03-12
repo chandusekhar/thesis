@@ -58,12 +58,12 @@ namespace DMT.Common.Composition
         /// 
         /// <para>This method uses the value of 'default-catalog' and 'plugin-catalog' key in appsettings.</para>
         /// </summary>
-        public void Initialize()
+        public void Initialize(params Assembly[] assemblies)
         {
             var def = ConfigurationManager.AppSettings[CompositionService.DefaultCatalogPathKey];
             var plugin = ConfigurationManager.AppSettings[CompositionService.PluginCatalogPathKey];
 
-            this.Initialize(def, plugin);
+            this.Initialize(def, plugin, assemblies);
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace DMT.Common.Composition
         /// <param name="defaultsPath">path of the assemblies containing the default implementation</param>
         /// <param name="extensionsPath">path of the assemblies containing the extension implementation</param>
         /// <param name="pluginPath">path of the assemblies containing the third party implementation</param>
-        public void Initialize(string defaultsPath, string pluginPath)
+        public void Initialize(string defaultsPath, string pluginPath, Assembly[] assemblies)
         {
             this.defaultsPath = defaultsPath;
             this.pluginPath = pluginPath;
-            InitializeContainer();
+            InitializeContainer(assemblies);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace DMT.Common.Composition
 
         #endregion
 
-        private void InitializeContainer()
+        private void InitializeContainer(Assembly[] assemblies)
         {
             if (this.container != null)
             {
@@ -139,10 +139,13 @@ namespace DMT.Common.Composition
             }
 
             Directory.CreateDirectory(this.pluginPath);
-            var pluginCatalog = new DirectoryCatalog(this.pluginPath);
+
+            var catalog = new AggregateCatalog(assemblies.Select(a => new AssemblyCatalog(a)));
+            catalog.Catalogs.Add(new DirectoryCatalog(this.pluginPath));
+
             var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
 
-            this.container = new CompositionContainer(pluginCatalog, defaultCatalogEP);
+            this.container = new CompositionContainer(catalog, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
 
             this.initialized = true;
