@@ -42,6 +42,7 @@
     <Compile Include="FoundPartialMatchEvent.cs" />
     <Compile Include="IMatcherFramework.cs" />
     <Compile Include="IMatcherJob.cs" />
+    <Compile Include="MatcherJobDoneEvent.cs" />
     <Compile Include="MatchMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -15,6 +15,7 @@ namespace DMT.Matcher.Module.Service
         protected override void Initialize()
         {
             RegisterRoute(HttpMethod.Post, "/quit", new QuitHandler());
+            RegisterRoute(HttpMethod.Post, "/start", new StartHandler());
         }
     }
 }

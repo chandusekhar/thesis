@@ -17,6 +17,16 @@ namespace DMT.Matcher.Interfaces
     public interface IMatcherJob
     {
         /// <summary>
+        /// Name of the matcher job.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Fires when the search is over.
+        /// </summary>
+        event MatcherJobDoneEventHandler Done;
+
+        /// <summary>
         /// Initialize the matcher job. This method is called after the construction of the IMatcherJob
         /// implementation.
         /// </summary>
@@ -27,7 +37,7 @@ namespace DMT.Matcher.Interfaces
         /// Start the matcher job.
         /// </summary>
         /// <param name="mode">mode of the search</param>
-        void Start(MatchMode mode);
+        void Start(/* nodes in partition ,*/MatchMode mode);
 
         /// <summary>
         /// Initiate a search for a partial pattern which already has discovered parts

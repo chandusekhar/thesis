@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DMT.Matcher.Interfaces;
+using DMT.Matcher.Module.Exceptions;
 using DMT.Matcher.Module.Partitioner;
 using DMT.Matcher.Module.Service;
 using DMT.Module.Common.Service;
@@ -35,6 +37,7 @@ namespace DMT.Matcher.Module
 
         private readonly Guid id;
         private ManualResetEvent done;
+        private Job job;
 
         public MatcherModule()
         {
@@ -56,6 +59,16 @@ namespace DMT.Matcher.Module
         internal void Done()
         {
             this.done.Set();
+        }
+
+        internal void StartJob(MatchMode mode)
+        {
+            if (this.job == null)
+            {
+                throw new NoMatcherJobException("No matcher job has been received.");
+            }
+
+            this.job.Start(mode);
         }
 
         private void Start(string[] argv)
