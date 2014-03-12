@@ -15,7 +15,7 @@ namespace DMT.Partition.Module.Remote.Service
     /// <summary>
     /// Find a matcher by the id of the partition that it holds.
     /// </summary>
-    class MatcherFinderHandler : XmlResponseOnlyRouteHandlerBase<MatcherInfoResponse>
+    class MatcherFinderHandler : XmlRouteHandlerBase<object, MatcherInfoResponse>
     {
         [Import]
         private IEntityFactory factory;

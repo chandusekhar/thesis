@@ -9,39 +9,40 @@ using System.Xml.Serialization;
 
 namespace DMT.Common.Rest
 {
-    // TODO: would be greate to unify these classes
     public abstract class XmlRouteHandlerBase<TRequest, TResponse> : IRouteHandler where TResponse : IXmlRouteResponse
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        protected virtual bool HasResponseBody { get { return true; } }
+
         void IRouteHandler.Handle(Request request, Response response)
         {
             TResponse res = Activator.CreateInstance<TResponse>();
-            
-            if (request.HasBody)
-            {
-                var requestBodySerializer = new XmlSerializer(typeof(TRequest));
-                var req = (TRequest)requestBodySerializer.Deserialize(request.Body);
 
-                try
+            try
+            {
+                if (request.HasBody)
                 {
+                    var requestBodySerializer = new XmlSerializer(typeof(TRequest));
+                    var req = (TRequest)requestBodySerializer.Deserialize(request.Body);
                     res = Handle(req, request.Params);
                 }
-                catch (Exception ex)
+                else
                 {
-                    response.Status = HttpStatusCode.InternalServerError;
-                    res.ErrorMessage = ex.Message;
-                    res.Success = false;
+                    res = Handle(request.Params);
                 }
+
             }
-            else
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Request should have body.");
+                response.Status = HttpStatusCode.InternalServerError;
+                res.ErrorMessage = ex.Message;
+                res.Success = false;
             }
 
             using (response.Body)
             {
-                if (res != null)
+                if (this.HasResponseBody)
                 {
                     var responseBodySerializer = new XmlSerializer(typeof(TResponse));
                     responseBodySerializer.Serialize(response.Body, res);
@@ -50,36 +51,14 @@ namespace DMT.Common.Rest
             }
         }
 
-        protected abstract TResponse Handle(TRequest request, NameValueCollection urlParams);
-    }
-
-    public abstract class XmlResponseOnlyRouteHandlerBase<TResponse> : IRouteHandler where TResponse : IXmlRouteResponse
-    {
-        protected abstract TResponse Handle(NameValueCollection urlParams);
-
-        void IRouteHandler.Handle(Request request, Response response)
+        protected virtual TResponse Handle(TRequest request, NameValueCollection urlParams)
         {
-            TResponse res = Activator.CreateInstance<TResponse>();
+            return default(TResponse);
+        }
 
-            try {
-                res = Handle(request.Params);
-            }
-            catch (Exception ex)
-            {
-                response.Status = HttpStatusCode.InternalServerError;
-                res.Success = false;
-                res.ErrorMessage = ex.Message;
-            }
-
-            using (response.Body)
-            {
-                if (res != null)
-                {
-                    var responseBodySerializer = new XmlSerializer(typeof(TResponse));
-                    responseBodySerializer.Serialize(response.Body, res);
-                    response.ContentType = Response.XmlUtf8ContentType;
-                }
-            }
+        protected virtual TResponse Handle(NameValueCollection urlParams)
+        {
+            return default(TResponse);
         }
     }
 }
