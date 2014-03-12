@@ -4,8 +4,10 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DMT.Common.Composition;
 using DMT.Common.Extensions;
 using DMT.Common.Rest;
+using DMT.Module.Common;
 using DMT.Partition.Interfaces;
 
 namespace DMT.Partition.Module.Remote.Service
@@ -16,6 +18,11 @@ namespace DMT.Partition.Module.Remote.Service
 
         [Import]
         private IPartitionSerializer partitionSerializer;
+
+        public GetPartitionHandler()
+        {
+            CompositionService.Default.InjectOnce(this);
+        }
 
         public void Handle(Request request, Response response)
         {
