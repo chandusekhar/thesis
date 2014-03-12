@@ -11,7 +11,7 @@ using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Exceptions;
 using DMT.Partition.Interfaces;
 
-namespace DMT.Partition
+namespace DMT.Module.Common
 {
     /// <summary>
     /// This class serializes a partition into XML. It produces a stream.

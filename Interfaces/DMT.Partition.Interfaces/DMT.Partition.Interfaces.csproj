@@ -43,7 +43,6 @@
     <Compile Include="Events\AfterPartitioningEvent.cs" />
     <Compile Include="ICoarsener.cs" />
     <Compile Include="IPartitionManager.cs" />
-    <Compile Include="IPartitionSerializer.cs" />
     <Compile Include="IPartitioner.cs" />
     <Compile Include="IPartitionRefiner.cs" />
     <Compile Include="IThreeStepPartitionManager.cs" />

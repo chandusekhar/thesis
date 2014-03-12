@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
+using DMT.Module.Common;
 using DMT.Partition.Module.CLI;
 using DMT.Partition.Module.Remote;
 using DMT.Partition.Module.Remote.Service;
@@ -74,7 +75,7 @@ namespace DMT.Partition.Module
 
             Console.CancelKeyPress += HandleInterupt;
 
-            CompositionService.Default.Initialize();
+            CompositionService.Default.Initialize(typeof(IPartitionSerializer).Assembly);
             logger.Info("CompositionService initalized successfully.");
 
             // get the path of the modell file if not supplied
