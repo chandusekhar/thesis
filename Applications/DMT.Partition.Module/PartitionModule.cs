@@ -21,6 +21,7 @@ namespace DMT.Partition.Module
         private MatcherRegistry matcherRegistry = new MatcherRegistry();
         private PartitionRegistry partitionRegistry;
         private string modelFileName;
+        private string jobBinaryPath;
         private ManualResetEvent exit;
         private bool matchersStarted = false;
 
@@ -36,9 +37,25 @@ namespace DMT.Partition.Module
             }
         }
 
-        internal MatcherRegistry MatcherRegistry { get { return matcherRegistry; } }
-        internal PartitionRegistry PartitionRegistry { get { return this.partitionRegistry; } }
-        internal string ModelFileName { get { return this.modelFileName; } }
+        internal MatcherRegistry MatcherRegistry
+        {
+            get { return matcherRegistry; }
+        }
+
+        internal PartitionRegistry PartitionRegistry
+        {
+            get { return this.partitionRegistry; }
+        }
+
+        internal string ModelFileName
+        {
+            get { return this.modelFileName; }
+        }
+
+        internal string JobBinaryPath
+        {
+            get { return this.jobBinaryPath; }
+        }
 
         private PartitionModule()
         {
