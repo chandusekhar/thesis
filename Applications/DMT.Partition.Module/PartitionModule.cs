@@ -93,6 +93,8 @@ namespace DMT.Partition.Module
             this.JobBinaryPath = args.JobBinaryPath;
             this.ModelFileName = args.ModelFilePath;
 
+            logger.Info("Selected {0} for model.", this.ModelFileName);
+
             //ModelLoader loader = new ModelLoader(this.modelFileName);
             //var model = await loader.LoadModel();
 
