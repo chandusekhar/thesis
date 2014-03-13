@@ -25,7 +25,7 @@ namespace DMT.Partition.Module.CLI
             var p = new OptionSet()
             {
                 { "m|model=", "Path of the model file.", v => this.ModelFilePath = v },
-                { "j|job=", "Path of the first job's binary.", v => this.ModelFilePath = v },
+                { "j|job=", "Path of the first job's binary.", v => this.JobBinaryPath = v },
                 { "h|?|help", "Show this message.", v => this.showHelp = v != null },
             };
 
