@@ -17,14 +17,15 @@ namespace DMT.Common.Test.Rest
         [Fact]
         public void WhenNoRouteRegisteredReturnsNullForHandlers()
         {
-            Assert.True(router.Get(HttpMethod.Get, url).Success);
+            Assert.False(router.Get(HttpMethod.Get, url).Success);
         }
 
         [Fact]
         public void ReturnsNullHandlerIfMethodDoesNotMatch()
         {
             router.Register(HttpMethod.Get, url, new NopHandler());
-            Assert.True(router.Get(HttpMethod.Post, url).Success);
+            Assert.False(router.Get(HttpMethod.Post, url).Success);
+            Assert.Null(router.Get(HttpMethod.Post, url).Handler);
         }
 
         [Fact]
