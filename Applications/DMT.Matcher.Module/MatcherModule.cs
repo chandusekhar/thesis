@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DMT.Common.Composition;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
 using DMT.Matcher.Module.Partitioner;
@@ -73,6 +74,8 @@ namespace DMT.Matcher.Module
 
         private void Start(string[] argv)
         {
+            CompositionService.Default.Initialize();
+
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
 
             MatcherService service = new MatcherService(startArgs.Port);

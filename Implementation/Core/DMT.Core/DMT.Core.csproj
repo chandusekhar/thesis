@@ -85,6 +85,7 @@
   -->
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Partition.App/bin/$(Configuration)/Defaults" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Matcher.App/bin/$(Configuration)/Defaults" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Implementation/Partition/DMT.Partition.TestApp/bin/$(Configuration)/Defaults" />
   </Target>
 </Project>
