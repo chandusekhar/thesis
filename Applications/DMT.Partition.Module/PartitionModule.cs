@@ -81,6 +81,9 @@ namespace DMT.Partition.Module
 
         private void Start(string[] argv)
         {
+            Console.WriteLine("Partition module started...");
+            Console.WriteLine("Press CTRL+C to exit!");
+
             logger.Info("Partition module started.");
 
             Console.CancelKeyPress += HandleInterupt;
@@ -98,17 +101,18 @@ namespace DMT.Partition.Module
             ModelLoader loader = new ModelLoader(this.ModelFileName);
             var model = loader.LoadModel();
 
-            //Partitioner partitioner = new Partitioner(model);
-            //var partitions = partitioner.Partition();
-            //this.partitionRegistry = new PartitionRegistry(partitions);
+            Partitioner partitioner = new Partitioner(model);
+            var partitions = partitioner.Partition();
+            this.partitionRegistry = new PartitionRegistry(partitions);
 
             var service = new PartitionBrokerService();
             service.Start();
+
             RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.BaseAddress);
-            //rmi.Start(partitions.Count());
-            rmi.Start(1);
+            rmi.Start(partitions.Count());
             this.matchersStarted = true;
 
+            Console.WriteLine("Started {0} matcher(s)...", partitions.Count());
             this.exit.WaitOne();
             service.Close();
         }
