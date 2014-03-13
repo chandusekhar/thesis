@@ -85,7 +85,8 @@ namespace DMT.Matcher.Module
                 return;
             }
             // TODO: get partition, parse it
-            // TODO: get matcher job
+
+            this.job = new Job(client.GetJob());
 
             // signal back
             client.MarkMatcherReady(this.id);

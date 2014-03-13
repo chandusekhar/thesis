@@ -25,11 +25,7 @@ namespace DMT.Matcher.Module
             {
                 throw new JobAlreadyStartedException(string.Format("Job with name {0} has already started.", this.job.Name));
             }
-
-            lock (this)
-            {
-                this.jobStarted = true;
-            }
+            this.jobStarted = true;
 
             // start the task on a background thread
             Task.Run(() => this.job.Start(mode));
@@ -37,6 +33,7 @@ namespace DMT.Matcher.Module
 
         private void HandleJobDone(object sender, MatcherJobDoneEventArgs e)
         {
+            this.jobStarted = false;
             // TODO signal back to partitioner
         }
     }

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DMT.Common.Rest;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Interfaces;
+using DMT.Module.Common;
 using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module.Partitioner
@@ -85,6 +88,33 @@ namespace DMT.Matcher.Module.Partitioner
                 // TODO: throw an exception?
                 return null;
             }
+        }
+
+        public IMatcherJob GetJob()
+        {
+            Assembly jobAssembly = null;
+            using (WebClient wc = new WebClient() { BaseAddress = this.BaseAddress })
+            {
+                byte[] binary = wc.DownloadData(string.Format("{0}/job", MatchersPath));
+                string checksum = wc.ResponseHeaders["X-Matcher-Job-Checksum"];
+                logger.Debug("Downloaded matcher job binary with checksum: {0}", checksum);
+
+                if (!Checksum.Check(checksum, binary))
+                {
+                    throw new InvalidJobException("Checksum is different.");
+                }
+
+                jobAssembly = Assembly.Load(binary);
+                logger.Info("Successfully loaded job assembly into domain.");
+            }
+            // TODO: add assembly to CompositionService
+            var type = jobAssembly.GetTypes().Single(t => typeof(IMatcherJob).IsAssignableFrom(t));
+            IMatcherJob job = (IMatcherJob)Activator.CreateInstance(type);
+            job.Initialize(new MatcherFrameworkLink());
+
+            logger.Info("Matcher job has been initialized successfully.");
+
+            return job;
         }
     }
 }

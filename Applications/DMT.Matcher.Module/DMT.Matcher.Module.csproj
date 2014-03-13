@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\InvalidJobException.cs" />
     <Compile Include="Exceptions\JobAlreadyStartedException.cs" />
     <Compile Include="Exceptions\NoMatcherJobException.cs" />
     <Compile Include="Job.cs" />
+    <Compile Include="MatcherFrameworkLink.cs" />
     <Compile Include="MatcherModule.cs" />
     <Compile Include="MatcherStartArguments.cs" />
     <Compile Include="Partitioner\PartitionBrokerServiceClient.cs" />
