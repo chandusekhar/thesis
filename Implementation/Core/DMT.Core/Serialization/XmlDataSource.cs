@@ -36,23 +36,8 @@ namespace DMT.Core.Serialization
             this.entityFactory = entityFactory;
         }
 
-        #region IDataSource
 
-        public Task<IModel> LoadModelAsync(Stream stream)
-        {
-            return Task.Run(() => LoadModel(stream));
-        }
-
-        public Task SaveModelAsync(Stream stream, IModel model)
-        {
-            return Task.Run(() => SaveModel(stream, model));
-        } 
-
-        #endregion
-
-        #region private methods
-
-        private void SaveModel(Stream stream, IModel model)
+        public void SaveModel(Stream stream, IModel model)
         {
             logger.Debug("Model saving started");
 
@@ -83,7 +68,7 @@ namespace DMT.Core.Serialization
             logger.Debug("Model saving done.");
         }
 
-        private IModel LoadModel(Stream stream)
+        public IModel LoadModel(Stream stream)
         {
             logger.Debug("Started loading model.");
             IContext context = new DeserializationContext(entityFactory);
@@ -139,6 +124,8 @@ namespace DMT.Core.Serialization
 
             return nodes;
         }
+
+        #region private methods
 
         private IEnumerable<IEdge> CollectEdges(IModel model)
         {

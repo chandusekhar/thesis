@@ -27,9 +27,9 @@ namespace DMT.Partition.Module
             this.filePath = filePath;
         }
 
-        public Task<IModel> LoadModel()
+        public IModel LoadModel()
         {
-            return dataSource.LoadModelAsync(new FileStream(this.filePath, FileMode.Open));
+            return dataSource.LoadModel(new FileStream(this.filePath, FileMode.Open));
         }
     }
 }

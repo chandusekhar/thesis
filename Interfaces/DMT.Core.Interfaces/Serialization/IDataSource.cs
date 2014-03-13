@@ -19,13 +19,13 @@ namespace DMT.Core.Interfaces.Serialization
         /// </summary>
         /// <param name="source">The source stream of the data</param>
         /// <returns>The nodes of the graph components as a collection.</returns>
-        Task<IModel> LoadModelAsync(Stream source);
+        IModel LoadModel(Stream source);
 
         /// <summary>
         /// Saves the model to a stream.
         ///
         /// The disposal of the stream is the responsibility of the caller.
         /// </summary>
-        Task SaveModelAsync(Stream stream, IModel model);
+        void SaveModel(Stream stream, IModel model);
     }
 }

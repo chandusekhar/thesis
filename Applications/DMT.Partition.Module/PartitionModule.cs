@@ -95,8 +95,8 @@ namespace DMT.Partition.Module
 
             logger.Info("Selected {0} for model.", this.ModelFileName);
 
-            //ModelLoader loader = new ModelLoader(this.modelFileName);
-            //var model = await loader.LoadModel();
+            ModelLoader loader = new ModelLoader(this.ModelFileName);
+            var model = loader.LoadModel();
 
             //Partitioner partitioner = new Partitioner(model);
             //var partitions = partitioner.Partition();

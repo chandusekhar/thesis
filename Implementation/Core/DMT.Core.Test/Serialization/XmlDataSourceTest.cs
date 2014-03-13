@@ -20,7 +20,7 @@ namespace DMT.Core.Test.Serialization
         public void LoadModelFromXml()
         {
             var ds = new XmlDataSource(new CoreEntityFactory());
-            var model = ds.LoadModelAsync(File.OpenRead("model.xml")).Result;
+            var model = ds.LoadModel(File.OpenRead("model.xml"));
             // model.xml has 3 nodes
             Assert.Equal(3, model.Nodes.Count());
         }
@@ -31,7 +31,7 @@ namespace DMT.Core.Test.Serialization
             Stream stream = new MemoryStream(Encoding.UTF8.GetBytes("<Model></Model>"));
             var ds = new XmlDataSource(new CoreEntityFactory());
 
-            AssertEx.ThrowsAsync(typeof(ModelXmlFormatException), () => ds.LoadModelAsync(stream));
+            Assert.Throws(typeof(ModelXmlFormatException), () => ds.LoadModel(stream));
         }
 
 
@@ -74,7 +74,7 @@ namespace DMT.Core.Test.Serialization
             MemoryStream target = new MemoryStream();
             var ds = new XmlDataSource(new CoreEntityFactory());
 
-            ds.SaveModelAsync(target, m).Wait();
+            ds.SaveModel(target, m);
 
             target.Seek(0, SeekOrigin.Begin);
             var doc = XDocument.Load(target);
