@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using DMT.Common.Rest;
+using DMT.Module.Common;
 
 namespace DMT.Partition.Module.Remote.Service
 {
@@ -18,21 +19,12 @@ namespace DMT.Partition.Module.Remote.Service
 
             string path = PartitionModule.Instance.JobBinaryPath;
             byte[] binary = File.ReadAllBytes(path);
-            string checksum = GetChecksum(binary);
+            string checksum = Checksum.Calculate(binary);
 
             response.AddHeader(ChecksumHeaderName, checksum);
             using (var body = response.Body)
             {
                 body.Write(binary, 0, binary.Length);
-            }
-        }
-
-        private string GetChecksum(byte[] binary)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var hash = md5.ComputeHash(binary);
-                return string.Join(string.Empty, hash.Select(h => h.ToString("X2")));
             }
         }
     }
