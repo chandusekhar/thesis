@@ -81,7 +81,7 @@ namespace DMT.Partition
 
         private int CalculateGoalNodeCount(IEnumerable<INode> nodes)
         {
-            return (int)Math.Floor(this.Factor * nodes.Count());
+            return (int)Math.Ceiling(this.Factor * nodes.Count());
         }
     }
 }

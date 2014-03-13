@@ -50,5 +50,21 @@ namespace DMT.Partition.Test
             Assert.Equal(2, matching.Count());
             
         }
+
+        [Fact]
+        public void TreeGraphDoesNotGetStuckInALoop()
+        {
+            INode root = EntityHelper.CreateNode();
+            INode leaf1 = EntityHelper.CreateNode();
+            INode leaf2 = EntityHelper.CreateNode();
+
+            root.ConnectTo(leaf1, EdgeDirection.Both);
+            root.ConnectTo(leaf2, EdgeDirection.Both);
+
+            var mm = new MaximalMatching(new[] { root, leaf1, leaf2 });
+            var matching = mm.Find();
+
+            Assert.Equal(1, matching.Count());
+        }
     }
 }
