@@ -62,7 +62,6 @@
     <Compile Include="Entities\CoreEntityFactory.cs" />
     <Compile Include="Serialization\DeserializationContext.cs" />
     <Compile Include="Serialization\ModelXmlSerializer.cs" />
-    <Compile Include="Serialization\XmlDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\DMT.Common\DMT.Common.csproj">

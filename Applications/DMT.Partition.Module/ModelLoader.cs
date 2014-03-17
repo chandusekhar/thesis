@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
@@ -13,8 +14,10 @@ namespace DMT.Partition.Module
 {
     class ModelLoader : InjectableBase
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         [Import]
-        private IDataSource dataSource;
+        private IModelXmlSerializer serializer;
 
         private string filePath;
 
@@ -29,7 +32,16 @@ namespace DMT.Partition.Module
 
         public IModel LoadModel()
         {
-            return dataSource.LoadModel(new FileStream(this.filePath, FileMode.Open));
+            logger.Debug("Started loading model");
+
+            IModel model;
+            using (XmlReader reader = XmlReader.Create(this.filePath))
+            {
+                model = serializer.Deserialize(reader);
+            }
+
+            logger.Debug("Finished loading model.");
+            return model;
         }
     }
 }
