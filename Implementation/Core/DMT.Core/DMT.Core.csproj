@@ -61,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\CoreEntityFactory.cs" />
     <Compile Include="Serialization\DeserializationContext.cs" />
+    <Compile Include="Serialization\ModelXmlSerializer.cs" />
     <Compile Include="Serialization\XmlDataSource.cs" />
   </ItemGroup>
   <ItemGroup>

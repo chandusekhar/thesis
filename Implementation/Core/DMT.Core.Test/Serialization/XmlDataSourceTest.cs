@@ -19,7 +19,7 @@ namespace DMT.Core.Test.Serialization
         [Fact]
         public void LoadModelFromXml()
         {
-            var ds = new XmlDataSource(new CoreEntityFactory());
+            var ds = new XmlDataSource(new ModelXmlSerializer(new CoreEntityFactory()));
             var model = ds.LoadModel(File.OpenRead("model.xml"));
             // model.xml has 3 nodes
             Assert.Equal(3, model.Nodes.Count());
@@ -29,7 +29,7 @@ namespace DMT.Core.Test.Serialization
         public void EmptyModelThrownFormatException()
         {
             Stream stream = new MemoryStream(Encoding.UTF8.GetBytes("<Model></Model>"));
-            var ds = new XmlDataSource(new CoreEntityFactory());
+            var ds = new XmlDataSource(new ModelXmlSerializer(new CoreEntityFactory()));
 
             Assert.Throws(typeof(ModelXmlFormatException), () => ds.LoadModel(stream));
         }
@@ -48,21 +48,21 @@ namespace DMT.Core.Test.Serialization
         public void SavedXMLHasRootWithNameModel()
         {
             var doc = SaveModel();
-            Assert.Equal(XmlDataSource.RootTag, doc.Root.Name);
+            Assert.Equal(ModelXmlSerializer.RootTag, doc.Root.Name);
         }
 
         [Fact]
         public void SavedXmlHasTwoNodes()
         {
             var doc = SaveModel();
-            Assert.Equal(2, doc.Descendants(XmlDataSource.NodeTag).Count());
+            Assert.Equal(2, doc.Descendants(ModelXmlSerializer.NodeTag).Count());
         }
 
         [Fact]
         public void SavedXmlHasOneEdge()
         {
             var doc = SaveModel();
-            Assert.Equal(1, doc.Descendants(XmlDataSource.EdgeTag).Count());
+            Assert.Equal(1, doc.Descendants(ModelXmlSerializer.EdgeTag).Count());
         }
 
 
@@ -72,7 +72,7 @@ namespace DMT.Core.Test.Serialization
             n1.ConnectTo(n2, Interfaces.EdgeDirection.Both);
             Model m = new Model(new Node[] { n1, n2 });
             MemoryStream target = new MemoryStream();
-            var ds = new XmlDataSource(new CoreEntityFactory());
+            var ds = new XmlDataSource(new ModelXmlSerializer(new CoreEntityFactory()));
 
             ds.SaveModel(target, m);
 
