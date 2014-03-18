@@ -41,9 +41,8 @@ namespace DMT.Module.Common
             this.modelSerializer = serializer;
         }
 
-        public void Serialize(IPartition partition, Stream source, Stream dest)
+        public void Serialize(IPartition partition, XmlReader reader, Stream dest)
         {
-            using (var reader = XmlReader.Create(source))
             using (var writer = XmlWriter.Create(dest, new XmlWriterSettings { CloseOutput = false }))
             {
                 writer.WriteStartDocument();

@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using DMT.Common.Composition;
 using DMT.Common.Extensions;
 using DMT.Common.Rest;
@@ -35,8 +36,9 @@ namespace DMT.Partition.Module.Remote.Service
             IPartition partition = selector.Select(matcherId);
             logger.Info("Sending {0} partition to {1} matcher.", partition, matcherId);
             using (var input = new FileStream(pm.ModelFileName, FileMode.Open))
+            using (var reader = XmlReader.Create(input))
             {
-                this.partitionSerializer.Serialize(partition, input, response.Body);
+                this.partitionSerializer.Serialize(partition, reader, response.Body);
             }
         }
     }

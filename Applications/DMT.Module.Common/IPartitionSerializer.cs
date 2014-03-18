@@ -25,6 +25,6 @@ namespace DMT.Module.Common
         /// <param name="partition">the partition to be serialized</param>
         /// <param name="source">the model source</param>
         /// <param name="destination">stream to writer to</param>
-        void Serialize(IPartition partition, Stream source, Stream destination);
+        void Serialize(IPartition partition, XmlReader source, Stream destination);
     }
 }
