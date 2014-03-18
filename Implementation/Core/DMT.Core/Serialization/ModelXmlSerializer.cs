@@ -89,7 +89,9 @@ namespace DMT.Core.Serialization
         {
             if (source.ReadToFollowing(NodesTag))
             {
+                destination.WriteStartElement(NodesTag);
                 SelectAndCopy(NodeTag, source.ReadSubtree(), destination, nodeIdSet);
+                destination.WriteEndElement();
             }
         }
 
@@ -97,7 +99,9 @@ namespace DMT.Core.Serialization
         {
             if (source.ReadToFollowing(EdgesTag))
             {
+                destination.WriteStartElement(EdgesTag);
                 SelectAndCopy(EdgeTag, source.ReadSubtree(), destination, edgeIdSet);
+                destination.WriteEndElement();
             }
         }
 
