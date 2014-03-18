@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoreConstants.cs" />
     <Compile Include="CoreModelFactory.cs" />
     <Compile Include="Entities\Edge.cs" />
     <Compile Include="Entities\Entity.cs" />
