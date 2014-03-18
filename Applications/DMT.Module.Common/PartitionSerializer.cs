@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Exceptions;
+using DMT.Core.Interfaces.Serialization;
 using DMT.Partition.Interfaces;
 
 namespace DMT.Module.Common
@@ -32,12 +33,12 @@ namespace DMT.Module.Common
         private const string NodeTag = "Node";
         private const string NodesTag = "Nodes";
 
-        private IEntityFactory entityFactory;
+        private IModelXmlSerializer modelSerializer;
 
         [ImportingConstructor]
-        public PartitionSerializer(IEntityFactory entityFactory)
+        public PartitionSerializer(IModelXmlSerializer serializer)
         {
-            this.entityFactory = entityFactory;
+            this.modelSerializer = serializer;
         }
 
         public void Serialize(IPartition partition, Stream source, Stream dest)
@@ -50,15 +51,11 @@ namespace DMT.Module.Common
 
                 WriteCrossingEdges(partition, writer);
 
-                // nodes
-                writer.WriteStartElement(PartitionSerializer.NodesTag);
-                CopyNodes(partition, reader, writer);
-                writer.WriteEndElement();
+                var nodeIds = new HashSet<IId>(partition.Nodes.Select(n => n.Id));
+                this.modelSerializer.CopyNodes(reader, writer, nodeIds);
 
-                //edges
-                writer.WriteStartElement(PartitionSerializer.EdgesTag);
-                CopyEdges(partition, reader, writer);
-                writer.WriteEndElement();
+                var edgeIds = new HashSet<IId>(partition.CollectEdges().Select(e => e.Id));
+                this.modelSerializer.CopyEdges(reader, writer, edgeIds);
 
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
@@ -86,51 +83,6 @@ namespace DMT.Module.Common
             }
 
             writer.WriteEndElement();
-        }
-
-        private void CopyNodes(IPartition partition, XmlReader reader, XmlWriter writer)
-        {
-            HashSet<IId> nodeIds = new HashSet<IId>(partition.Nodes.Select(n => n.Id));
-
-            while (reader.ReadToFollowing(PartitionSerializer.NodeTag))
-            {
-                var node = (XElement)XElement.ReadFrom(reader.ReadSubtree());
-                var id = ParseId(node);
-                if (nodeIds.Contains(id))
-                {
-                    writer.WriteNode(node.CreateReader(), false);
-                }
-            }
-        }
-
-        private void CopyEdges(IPartition partition, XmlReader reader, XmlWriter writer)
-        {
-            HashSet<IId> edgeIds = new HashSet<IId>(partition.CollectEdges().Select(e => e.Id));
-
-            while (reader.ReadToFollowing(PartitionSerializer.EdgeTag))
-            {
-                var edge = (XElement)XElement.ReadFrom(reader.ReadSubtree());
-                var id = ParseId(edge);
-                if (edgeIds.Contains(id))
-                {
-                    writer.WriteNode(edge.CreateReader(), false);
-                }
-            }
-        }
-
-        private IId ParseId(XElement element)
-        {
-            var idElement = element.Element(PartitionSerializer.IdTag);
-            if (idElement == null)
-            {
-                throw new ModelXmlFormatException("No id found for node.");
-            }
-
-            IId id = entityFactory.CreateId();
-            id.Deserialize(idElement.CreateReader(), null);
-
-            return id;
-
         }
     }
 }

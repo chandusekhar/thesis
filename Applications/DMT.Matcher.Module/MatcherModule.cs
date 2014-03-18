@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
+using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
 using DMT.Matcher.Module.Partitioner;
@@ -39,6 +40,7 @@ namespace DMT.Matcher.Module
         private readonly Guid id;
         private ManualResetEvent done;
         private Job job;
+        private IModel model;
 
         public MatcherModule()
         {
@@ -72,6 +74,16 @@ namespace DMT.Matcher.Module
             this.job.Start(mode);
         }
 
+        /// <summary>
+        /// Start the matcher. The rocess is the following:
+        /// 
+        /// 1. start matcher service
+        /// 2. register matcher at partition module
+        /// 3. ask for a partition
+        /// 4. ask for a job
+        /// 5. send ready signal to parititon module
+        /// 6. wait for and 'done' signal
+        /// </summary>
         private void Start(string[] argv)
         {
             CompositionService.Default.Initialize();
@@ -87,7 +99,8 @@ namespace DMT.Matcher.Module
                 logger.Fatal("Could not register with partitioning module. Shutting down.");
                 return;
             }
-            // TODO: get partition, parse it
+
+            this.model = client.GetPartition(this.id);
 
             this.job = new Job(client.GetJob());
 

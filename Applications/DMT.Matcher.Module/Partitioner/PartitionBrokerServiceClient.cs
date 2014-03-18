@@ -116,5 +116,19 @@ namespace DMT.Matcher.Module.Partitioner
 
             return job;
         }
+
+        public IModel GetPartition(Guid id)
+        {
+            string url = string.Format("{0}/{1}/partition", MatchersPath, id);
+
+            using (var wc = new WebClient { BaseAddress = this.BaseAddress})
+            using (var stream = wc.OpenRead(url))
+            {
+                Console.WriteLine(new StreamReader(stream).ReadToEnd());
+            }
+
+            return null;
+            //throw new NotImplementedException();
+        }
     }
 }

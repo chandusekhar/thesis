@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
+using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Exceptions;
 using DMT.Core.Interfaces.Serialization;
@@ -85,12 +87,18 @@ namespace DMT.Core.Serialization
 
         public void CopyNodes(XmlReader source, XmlWriter destination, HashSet<IId> nodeIdSet)
         {
-            throw new NotImplementedException();
+            if (source.ReadToFollowing(NodesTag))
+            {
+                SelectAndCopy(NodeTag, source.ReadSubtree(), destination, nodeIdSet);
+            }
         }
 
         public void CopyEdges(XmlReader source, XmlWriter destination, HashSet<IId> edgeIdSet)
         {
-            throw new NotImplementedException();
+            if (source.ReadToFollowing(EdgesTag))
+            {
+                SelectAndCopy(EdgeTag, source.ReadSubtree(), destination, edgeIdSet);
+            }
         }
 
         #region private methods
@@ -146,6 +154,37 @@ namespace DMT.Core.Serialization
             }
 
             return nodes;
+        }
+
+        private void SelectAndCopy(string tag, XmlReader reader, XmlWriter writer, HashSet<IId> ids)
+        {
+            while (reader.ReadToFollowing(tag))
+            {
+                var subreader = reader.ReadSubtree();
+                subreader.Read();
+                var node = (XElement)XElement.ReadFrom(subreader);
+                IId id = ParseId(node);
+                if (ids.Contains(id))
+                {
+                    writer.WriteNode(node.CreateReader(), false);
+                }
+            }
+        }
+
+        private IId ParseId(XElement element)
+        {
+            var idElement = element.Element(DMTId.IdTagName);
+            if (idElement == null)
+            {
+                throw new ModelXmlFormatException("No id found for node.");
+            }
+
+            IId id = entityFactory.CreateId();
+            var idReader = idElement.CreateReader();
+            idReader.Read();
+            id.Deserialize(idReader, null);
+
+            return id;
         }
 
         #endregion
