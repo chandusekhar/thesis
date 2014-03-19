@@ -24,6 +24,7 @@ namespace DMT.Partition.Module.Remote.Service
             RegisterRoute(HttpMethod.Get, "/matchers/{id}/partition", new GetPartitionHandler());
             RegisterRoute(HttpMethod.Get, "/matchers/find/{partitionId}", new MatcherFinderHandler());
             RegisterRoute(HttpMethod.Get, "/matchers/job", new GetMatcherJobHandler());
+            RegisterRoute(HttpMethod.Put, "/matchers/{id}/done", new MatcherJobDoneHandler());
         }
     }
 }

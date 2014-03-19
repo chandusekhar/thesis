@@ -41,6 +41,9 @@ namespace DMT.Matcher.Module
         private ManualResetEvent done;
         private Job job;
         private IModel model;
+        private Uri partitionServiceUri;
+
+        public Guid Id { get { return this.id; } }
 
         public MatcherModule()
         {
@@ -74,6 +77,11 @@ namespace DMT.Matcher.Module
             this.job.Start(mode);
         }
 
+        internal PartitionBrokerServiceClient CreatePartitionServiceClient()
+        {
+            return new PartitionBrokerServiceClient(this.partitionServiceUri);
+        }
+
         /// <summary>
         /// Start the matcher. The rocess is the following:
         /// 
@@ -89,6 +97,7 @@ namespace DMT.Matcher.Module
             CompositionService.Default.Initialize();
 
             MatcherStartArguments startArgs = new MatcherStartArguments(argv);
+            this.partitionServiceUri = startArgs.PartitionServiceUri;
 
             MatcherService service = new MatcherService(startArgs.Port);
             service.Start();

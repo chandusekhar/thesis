@@ -40,7 +40,9 @@ namespace DMT.Matcher.Module
             this.jobStarted = false;
 
             logger.Info("Matcher job (name: {0}) has been finished.", this.job.Name);
-            // TODO signal back to partitioner
+            var client = MatcherModule.Instance.CreatePartitionServiceClient();
+            client.MarkMatcherDone(MatcherModule.Instance.Id);
+            logger.Debug("Matcher job reported done to partition module.");
         }
     }
 }

@@ -16,6 +16,8 @@ namespace DMT.Partition.Module.Remote
 
         public event EventHandler MatchersReady;
 
+        public event EventHandler MatchersDone;
+
         public MatcherRegistry()
         {
             this.matchers = new List<MatcherInfo>();
@@ -52,6 +54,16 @@ namespace DMT.Partition.Module.Remote
             }
         }
 
+        public void MarkDone(Guid id)
+        {
+            this.GetById(id).Done = true;
+
+            if (matchers.All(m => m.Done))
+            {
+                OnMatchersDone();
+            }
+        }
+
         public async void ReleaseMatchers()
         {
             var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).ReleaseMatcher());
@@ -60,6 +72,8 @@ namespace DMT.Partition.Module.Remote
 
         public async void StartMatchers(MatchMode mode)
         {
+            // mark every matcher unfinished
+            this.matchers.ForEach(m => m.Done = false);
             var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).StartMatcher(mode));
             await Task.WhenAll(tasks);
         }
@@ -72,6 +86,15 @@ namespace DMT.Partition.Module.Remote
         private void OnMatchersReady()
         {
             var handler = this.MatchersReady;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnMatchersDone()
+        {
+            var handler = this.MatchersDone;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

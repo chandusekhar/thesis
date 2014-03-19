@@ -70,6 +70,7 @@
     <Compile Include="Remote\Service\GetMatcherJobHandler.cs" />
     <Compile Include="Remote\Service\GetPartitionHandler.cs" />
     <Compile Include="Remote\Service\MatcherFinderHandler.cs" />
+    <Compile Include="Remote\Service\MatcherJobDoneHandler.cs" />
     <Compile Include="Remote\Service\MatcherReadyHandler.cs" />
     <Compile Include="Remote\Service\PartitionBrokerService.cs" />
     <Compile Include="Remote\Service\PartitionSerializer.cs" />

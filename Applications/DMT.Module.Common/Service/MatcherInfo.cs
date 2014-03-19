@@ -17,8 +17,13 @@ namespace DMT.Module.Common.Service
 
         [XmlIgnore]
         public bool Ready { get; private set;}
+
+        [XmlIgnore]
+        public bool Done { get; set; }
+
         [XmlIgnore]
         public IPartition Partition { get; set; }
+
         [XmlIgnore]
         public string Url
         {
