@@ -17,7 +17,7 @@ namespace DMT.Common.Rest
 
         void IRouteHandler.Handle(Request request, Response response)
         {
-            TResponse res = Activator.CreateInstance<TResponse>();
+            TResponse res = !typeof(TResponse).IsInterface ? Activator.CreateInstance<TResponse>() : default(TResponse);
 
             try
             {
