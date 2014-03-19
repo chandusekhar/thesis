@@ -53,13 +53,6 @@ namespace DMT.Partition.Data
             return node;
         }
 
-        public override IEdge CreateEdge()
-        {
-            var edge = new PartitionEdge(this.baseEntityFactory);
-            logger.Trace("Created new edge: {0}", edge);
-            return edge;
-        }
-
         public override IEdge CreateEdge(INode nodeA, INode nodeB, EdgeDirection direction)
         {
             var edge = new PartitionEdge(nodeA, nodeB, direction, this.baseEntityFactory);

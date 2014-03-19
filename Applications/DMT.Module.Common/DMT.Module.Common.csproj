@@ -47,8 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Checksum.cs" />
-    <Compile Include="IPartitionSerializer.cs" />
-    <Compile Include="PartitionSerializer.cs" />
+    <Compile Include="PartitionSerializerTags.cs" />
     <Compile Include="Service\BoolResponse.cs" />
     <Compile Include="Service\MatcherInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

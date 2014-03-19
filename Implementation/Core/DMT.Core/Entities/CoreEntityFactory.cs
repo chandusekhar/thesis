@@ -31,10 +31,10 @@ namespace DMT.Core.Entities
             return new Node(this);
         }
 
-        public virtual IEdge CreateEdge()
+        public IEdge CreateEdge()
         {
             logger.Trace("Created new edge with null nodes.");
-            return new Edge(null, null, EdgeDirection.Both, this);
+            return CreateEdge(null, null, EdgeDirection.Both);
         }
 
         public virtual IEdge CreateEdge(INode nodeA, INode nodeB, EdgeDirection direction)

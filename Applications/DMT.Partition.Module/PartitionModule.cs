@@ -88,7 +88,7 @@ namespace DMT.Partition.Module
 
             Console.CancelKeyPress += HandleInterupt;
 
-            CompositionService.Default.Initialize(typeof(IPartitionSerializer).Assembly);
+            CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
 
             var args = new CommandLineArgs(argv);

@@ -58,6 +58,11 @@ namespace DMT.Core.Serialization
 
         public IModel Deserialize(XmlReader reader)
         {
+            return this.Deserialize(reader, null);
+        }
+
+        public IModel Deserialize(XmlReader reader, Action<IEdge> edgeDeserializedCallback)
+        {
             IContext context = new DeserializationContext(this.entityFactory);
             List<INode> nodeList;
 
@@ -79,7 +84,7 @@ namespace DMT.Core.Serialization
                 throw new ModelXmlFormatException();
             }
             // loading edge: it connects appropriate nodes on the way
-            ReadEdges(reader.ReadSubtree(), context);
+            ReadEdges(reader.ReadSubtree(), context, edgeDeserializedCallback);
             logger.Trace("Reading edges done.");
 
             return new Model(nodeList);
@@ -137,12 +142,17 @@ namespace DMT.Core.Serialization
             writer.WriteEndElement();
         }
 
-        private void ReadEdges(XmlReader reader, IContext context)
+        private void ReadEdges(XmlReader reader, IContext context, Action<IEdge> edgeDeserialized)
         {
             while (reader.ReadToFollowing(EdgeTag))
             {
                 IEdge edge = context.EntityFactory.CreateEdge();
                 edge.Deserialize(reader.ReadSubtree(), context);
+
+                if (edgeDeserialized != null)
+                {
+                    edgeDeserialized(edge);
+                }
             }
         }
 

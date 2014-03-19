@@ -17,13 +17,7 @@ namespace DMT.Partition.Module.Remote.Service
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        [Import]
-        private IPartitionSerializer partitionSerializer;
-
-        public GetPartitionHandler()
-        {
-            CompositionService.Default.InjectOnce(this);
-        }
+        PartitionSerializer serializer = new PartitionSerializer();
 
         public void Handle(Request request, Response response)
         {
@@ -38,7 +32,7 @@ namespace DMT.Partition.Module.Remote.Service
             using (var input = new FileStream(pm.ModelFileName, FileMode.Open))
             using (var reader = XmlReader.Create(input))
             {
-                this.partitionSerializer.Serialize(partition, reader, response.Body);
+                this.serializer.Serialize(partition, reader, response.Body);
             }
         }
     }

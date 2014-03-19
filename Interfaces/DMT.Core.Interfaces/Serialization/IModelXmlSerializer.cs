@@ -29,8 +29,13 @@ namespace DMT.Core.Interfaces.Serialization
         /// <returns>the model</returns>
         IModel Deserialize(XmlReader reader);
 
+        IModel Deserialize(XmlReader reader, Action<IEdge> edgeDeserializedCallback);
+
         /// <summary>
-        /// Copy some nodes to the destination from the source.
+        /// Copy some nodes to the destination from the source. It wraps all the node tags in a parent
+        /// tag.
+        /// 
+        /// This method must produce the same structure that is understood by the Deserialize method.
         /// </summary>
         /// <param name="source">the xml source</param>
         /// <param name="destination">destination writer</param>
@@ -38,7 +43,9 @@ namespace DMT.Core.Interfaces.Serialization
         void CopyNodes(XmlReader source, XmlWriter destination, HashSet<IId> nodeIdSet);
 
         /// <summary>
-        /// Copy some edges to destination.
+        /// Copy some edges to destination. It wraps all the edge tags in a parent tag.
+        /// 
+        /// This method must produce the same structure that is understood by the Deserialize method.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>

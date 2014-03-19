@@ -124,7 +124,8 @@ namespace DMT.Matcher.Module.Partitioner
             using (var wc = new WebClient { BaseAddress = this.BaseAddress})
             using (var stream = wc.OpenRead(url))
             {
-                Console.WriteLine(new StreamReader(stream).ReadToEnd());
+                var deserializer = new MatcherDataDeserializer();
+                IModel model = deserializer.Deserialize(stream);
             }
 
             return null;
