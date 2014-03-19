@@ -12,6 +12,7 @@ namespace DMT.Partition.Module.Remote
 {
     class MatcherRegistry
     {
+        private object syncObject = new object();
         private List<MatcherInfo> matchers;
 
         public event EventHandler MatchersReady;
@@ -25,12 +26,18 @@ namespace DMT.Partition.Module.Remote
 
         public void AddMatcher(MatcherInfo matcherinfo)
         {
-            this.matchers.Add(matcherinfo);
+            lock (syncObject)
+            {
+                this.matchers.Add(matcherinfo);
+            }
         }
 
         public bool RemoveMatcher(Guid id)
         {
-            return this.matchers.RemoveAll(m => m.Id == id) > 0;
+            lock (syncObject)
+            {
+                return this.matchers.RemoveAll(m => m.Id == id) > 0;
+            }
         }
 
         public MatcherInfo GetById(Guid id)
