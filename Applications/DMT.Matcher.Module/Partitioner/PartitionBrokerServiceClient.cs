@@ -125,11 +125,10 @@ namespace DMT.Matcher.Module.Partitioner
             using (var stream = wc.OpenRead(url))
             {
                 var deserializer = new MatcherDataDeserializer();
-                IModel model = deserializer.Deserialize(stream);
+                return deserializer.Deserialize(stream);
             }
 
             return null;
-            //throw new NotImplementedException();
         }
     }
 }
