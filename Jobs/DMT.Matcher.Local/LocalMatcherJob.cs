@@ -24,11 +24,21 @@ namespace DMT.Matcher.Local
         public void Start(MatchMode mode)
         {
             Console.WriteLine("matcher started");
+            OnJobDone(new object[0]);
         }
 
         public IEnumerable<object> FindPartialMatch(Core.Interfaces.IId paritionId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        private void OnJobDone(IEnumerable<object> matches)
+        {
+            var handler = this.Done;
+            if (handler != null)
+            {
+                handler(this, new MatcherJobDoneEventArgs(matches));
+            }
         }
     }
 }

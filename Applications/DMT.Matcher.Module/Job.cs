@@ -10,6 +10,8 @@ namespace DMT.Matcher.Module
 {
     internal class Job
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IMatcherJob job;
         private bool jobStarted;
 
@@ -29,11 +31,15 @@ namespace DMT.Matcher.Module
 
             // start the task on a background thread
             Task.Run(() => this.job.Start(mode));
+
+            logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);
         }
 
         private void HandleJobDone(object sender, MatcherJobDoneEventArgs e)
         {
             this.jobStarted = false;
+
+            logger.Info("Matcher job (name: {0}) has been finished.", this.job.Name);
             // TODO signal back to partitioner
         }
     }
