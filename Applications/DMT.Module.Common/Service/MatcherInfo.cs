@@ -16,7 +16,7 @@ namespace DMT.Module.Common.Service
         public string Host { get; set; }
 
         [XmlIgnore]
-        public bool Ready { get; private set;}
+        public bool Ready { get; set;}
 
         [XmlIgnore]
         public bool Done { get; set; }
@@ -31,11 +31,6 @@ namespace DMT.Module.Common.Service
             {
                 return string.Format("http://{0}:{1}", Host, Port);
             }
-        }
-
-        public void MarkReady()
-        {
-            this.Ready = true;
         }
     }
 }

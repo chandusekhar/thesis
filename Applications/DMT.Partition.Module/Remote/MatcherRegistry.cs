@@ -53,7 +53,7 @@ namespace DMT.Partition.Module.Remote
 
         public void MarkReady(Guid id)
         {
-            this.GetById(id).MarkReady();
+            this.GetById(id).Ready = true;
 
             if (matchers.All(m => m.Ready))
             {
@@ -67,6 +67,7 @@ namespace DMT.Partition.Module.Remote
 
             if (matchers.All(m => m.Done))
             {
+                this.matchers.ForEach(m => m.Ready = false);
                 OnMatchersDone();
             }
         }
