@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DMT.Partition.Module.Exceptions;
 using DMT.Module.Common.Service;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Interfaces;
 
 namespace DMT.Partition.Module.Remote
 {
@@ -54,6 +55,12 @@ namespace DMT.Partition.Module.Remote
         public async void ReleaseMatchers()
         {
             var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).ReleaseMatcher());
+            await Task.WhenAll(tasks);
+        }
+
+        public async void StartMatchers(MatchMode mode)
+        {
+            var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).StartMatcher(mode));
             await Task.WhenAll(tasks);
         }
 

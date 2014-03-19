@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
+using DMT.Matcher.Interfaces;
 using DMT.Module.Common;
 using DMT.Partition.Module.CLI;
 using DMT.Partition.Module.Remote;
@@ -18,11 +19,12 @@ namespace DMT.Partition.Module
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static PartitionModule instance;
 
-        private MatcherRegistry matcherRegistry = new MatcherRegistry();
+        private MatcherRegistry matcherRegistry;
         private PartitionRegistry partitionRegistry;
 
         private ManualResetEvent exit;
         private bool matchersStarted = false;
+        private MatchMode? matchMode = null;
 
         internal static PartitionModule Instance
         {
@@ -53,6 +55,7 @@ namespace DMT.Partition.Module
         private PartitionModule()
         {
             this.exit = new ManualResetEvent(false);
+            this.matcherRegistry = new MatcherRegistry();
         }
 
         /// <summary>
@@ -86,15 +89,14 @@ namespace DMT.Partition.Module
 
             logger.Info("Partition module started.");
 
+            // event subscriptitons
             Console.CancelKeyPress += HandleInterupt;
+            this.matcherRegistry.MatchersReady += StartMatchers;
 
             CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
 
-            var args = new CommandLineArgs(argv);
-            args.Parse();
-            this.JobBinaryPath = args.JobBinaryPath;
-            this.ModelFileName = args.ModelFilePath;
+            ParseCommandLineArguments(argv);
 
             logger.Info("Selected {0} for model.", this.ModelFileName);
 
@@ -117,10 +119,35 @@ namespace DMT.Partition.Module
             service.Close();
         }
 
+        private void ParseCommandLineArguments(string[] argv)
+        {
+            var args = new CommandLineArgs(argv);
+            args.Parse();
+            this.JobBinaryPath = args.JobBinaryPath;
+            this.ModelFileName = args.ModelFilePath;
+            this.matchMode = args.MatchMode;
+        }
+
         private void HandleInterupt(object sender, ConsoleCancelEventArgs e)
         {
             e.Cancel = true;
             Exit();
+        }
+
+        private void StartMatchers(object sender, EventArgs e)
+        {
+            MatchMode? mode = this.matchMode;
+
+            if (mode == null)
+            {
+                var c = new EnumSelectCommand<MatchMode>('m', "Select how the matcher job will be started.");
+                new ConsoleHandler(c, c).Execute();
+                mode = c.Result;
+            }
+
+            this.matcherRegistry.StartMatchers((MatchMode)mode);
+            Console.WriteLine("Matcher jobs started.");
+            logger.Info("Matcher jobs started.");
         }
     }
 }

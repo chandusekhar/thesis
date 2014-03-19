@@ -23,7 +23,7 @@ namespace DMT.Matcher.Local
 
         public void Start(MatchMode mode)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("matcher started");
         }
 
         public IEnumerable<object> FindPartialMatch(Core.Interfaces.IId paritionId)
