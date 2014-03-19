@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Matcher.Interfaces;
 using NDesk.Options;
 
 namespace DMT.Partition.Module.CLI
@@ -14,6 +15,7 @@ namespace DMT.Partition.Module.CLI
 
         public string ModelFilePath { get; private set; }
         public string JobBinaryPath { get; private set; }
+        public MatchMode? MatchMode { get; private set; }
 
         public CommandLineArgs(string[] args)
         {
@@ -27,6 +29,7 @@ namespace DMT.Partition.Module.CLI
                 { "m|model=", "Path of the model file.", v => this.ModelFilePath = v },
                 { "j|job=", "Path of the first job's binary.", v => this.JobBinaryPath = v },
                 { "h|?|help", "Show this message.", v => this.showHelp = v != null },
+                { "mode=", "Mode of the matcher jobs. (either all or firstonly)", var => this.MatchMode = (MatchMode)Enum.Parse(typeof(MatchMode), var, true) },
             };
 
             p.Parse(this.args);
