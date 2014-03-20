@@ -15,6 +15,7 @@ namespace DMT.Partition.Module.Remote
     {
         private const string QuitPath = "/quit";
         private const string StartPath = "/start";
+        private const string RestartPath = "/restart";
 
         private string baseAddress;
 
@@ -25,20 +26,14 @@ namespace DMT.Partition.Module.Remote
 
         public Task ReleaseMatcher()
         {
-            string url = string.Format("{0}{1}", this.baseAddress, QuitPath);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = HttpMethod.Post;
-            // no body for this request
-            request.ContentLength = 0;
-
-            return request.GetResponseAsync();
+            return RestClientHelper.SendRequestWithoutBodyAsync(HttpMethod.Post, CreateUrl(QuitPath));
         }
 
         public Task StartMatcher(MatchMode mode)
         {
             return Task.Run(() =>
             {
-                string url = string.Format("{0}{1}", this.baseAddress, StartPath);
+                string url = CreateUrl(StartPath);
                 StartMatcherJobRequest req = new StartMatcherJobRequest();
                 req.Mode = mode;
 
@@ -53,7 +48,12 @@ namespace DMT.Partition.Module.Remote
 
         public Task RestartWithNewJob()
         {
-            throw new NotImplementedException();
+            return RestClientHelper.SendRequestWithoutBodyAsync(HttpMethod.Post, CreateUrl(RestartPath));
+        }
+
+        private string CreateUrl(string path)
+        {
+            return string.Format("{0}{1}", this.baseAddress, path);
         }
     }
 }

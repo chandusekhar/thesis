@@ -63,6 +63,7 @@
     <Compile Include="Rest\IXmlRouteResponse.cs" />
     <Compile Include="Rest\Request.cs" />
     <Compile Include="Rest\Response.cs" />
+    <Compile Include="Rest\RestClientHelper.cs" />
     <Compile Include="Rest\RestServiceHost.cs" />
     <Compile Include="Rest\Router\DefaultRouter.cs" />
     <Compile Include="Rest\Router\ParamPatternSegment.cs" />

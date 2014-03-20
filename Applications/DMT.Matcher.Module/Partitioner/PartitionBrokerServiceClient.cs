@@ -60,7 +60,7 @@ namespace DMT.Matcher.Module.Partitioner
         public void MarkMatcherReady(Guid id)
         {
             string url = string.Format("{0}{1}/{2}/ready", this.BaseAddress, MatchersPath, id);
-            SendRequestWithoutBody(HttpMethod.Put, url);
+            RestClientHelper.SendRequestWithoutBody(HttpMethod.Put, url);
         }
 
         public MatcherInfo FindMatcher(IId partitionId)
@@ -129,15 +129,7 @@ namespace DMT.Matcher.Module.Partitioner
         public void MarkMatcherDone(Guid id)
         {
             string url = string.Format("{0}{1}/{2}/done", this.BaseAddress, MatchersPath, id);
-            SendRequestWithoutBody(HttpMethod.Put, url);
-        }
-
-        private void SendRequestWithoutBody(HttpMethod method, string url)
-        {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = method;
-            req.ContentLength = 0;
-            using (req.GetResponse()) ;
+            RestClientHelper.SendRequestWithoutBody(HttpMethod.Put, url);
         }
     }
 }

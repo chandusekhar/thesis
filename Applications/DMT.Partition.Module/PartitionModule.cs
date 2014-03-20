@@ -148,18 +148,22 @@ namespace DMT.Partition.Module
             }
 
             this.matcherRegistry.StartMatchers((MatchMode)this.lastMode);
-            Console.WriteLine("Matcher jobs started.");
             logger.Info("Matcher jobs started.");
         }
 
         private void RestartMatchers(object sender, EventArgs e)
         {
+            logger.Info("Matchers are done. Restarting...");
+
             var ac = new ActionCommand('r', "Restart matchers with the same options.", () => this.matcherRegistry.StartMatchers((MatchMode)this.lastMode));
             var cc = new ContinuationCommand('s', "Restart matcher with with new job.");
 
-            var modeSelect = new EnumSelectCommand<MatchMode>();
             var binaryPath = new StringCommand("Path of the matcher job binary:");
-            cc.Then(binaryPath).Then(modeSelect).Done(() => this.matcherRegistry.RestartMatchers());
+            cc.Then(binaryPath).Done(() =>
+            {
+                this.JobBinaryPath = binaryPath.Answer;
+                this.matcherRegistry.RestartMatchers();
+            });
 
             var ch = new ConsoleHandler(new CommandBase[] { ac, cc });
 

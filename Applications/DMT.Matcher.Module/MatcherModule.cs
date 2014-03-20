@@ -82,6 +82,14 @@ namespace DMT.Matcher.Module
             return new PartitionBrokerServiceClient(this.partitionServiceUri);
         }
 
+        internal void AcquireJob()
+        {
+            var client = CreatePartitionServiceClient();
+            this.job = new Job(client.GetJob());
+            // signal back
+            client.MarkMatcherReady(this.id);
+        }
+
         /// <summary>
         /// Start the matcher. The rocess is the following:
         /// 
@@ -111,10 +119,8 @@ namespace DMT.Matcher.Module
 
             this.model = client.GetPartition(this.id);
 
-            this.job = new Job(client.GetJob());
-
-            // signal back
-            client.MarkMatcherReady(this.id);
+            // get a job, and signal back
+            AcquireJob();
 
             // wait for an exis signal
             this.done.WaitOne();
