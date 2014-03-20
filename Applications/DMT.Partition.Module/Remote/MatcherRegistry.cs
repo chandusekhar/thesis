@@ -67,7 +67,6 @@ namespace DMT.Partition.Module.Remote
 
             if (matchers.All(m => m.Done))
             {
-                this.matchers.ForEach(m => m.Ready = false);
                 OnMatchersDone();
             }
         }
@@ -83,6 +82,17 @@ namespace DMT.Partition.Module.Remote
             // mark every matcher unfinished
             this.matchers.ForEach(m => m.Done = false);
             var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).StartMatcher(mode));
+            await Task.WhenAll(tasks);
+        }
+
+        /// <summary>
+        /// Signalas the matchers to restart the process:
+        /// ask for a job, signal ready and wait for start
+        /// </summary>
+        public async void RestartMatchers()
+        {
+            this.matchers.ForEach(m => m.Ready = false);
+            var tasks = this.matchers.Select(m => new MatcherServiceClient(m.Url).RestartWithNewJob());
             await Task.WhenAll(tasks);
         }
 

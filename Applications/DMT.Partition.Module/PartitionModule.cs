@@ -159,7 +159,7 @@ namespace DMT.Partition.Module
 
             var modeSelect = new EnumSelectCommand<MatchMode>();
             var binaryPath = new StringCommand("Path of the matcher job binary:");
-            cc.Then(binaryPath).Then(modeSelect);
+            cc.Then(binaryPath).Then(modeSelect).Done(() => this.matcherRegistry.RestartMatchers());
 
             var ch = new ConsoleHandler(new CommandBase[] { ac, cc });
 

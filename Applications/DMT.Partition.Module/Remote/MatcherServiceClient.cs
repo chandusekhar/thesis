@@ -50,5 +50,10 @@ namespace DMT.Partition.Module.Remote
                 }
             });
         }
+
+        public Task RestartWithNewJob()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
