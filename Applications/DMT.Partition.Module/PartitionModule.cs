@@ -25,6 +25,7 @@ namespace DMT.Partition.Module
         private ManualResetEvent exit;
         private bool matchersStarted = false;
         private MatchMode? matchMode = null;
+        private MatchMode? lastMode;
 
         internal static PartitionModule Instance
         {
@@ -92,6 +93,7 @@ namespace DMT.Partition.Module
             // event subscriptitons
             Console.CancelKeyPress += HandleInterupt;
             this.matcherRegistry.MatchersReady += StartMatchers;
+            this.matcherRegistry.MatchersDone += RestartMatchers;
 
             CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
@@ -136,18 +138,32 @@ namespace DMT.Partition.Module
 
         private void StartMatchers(object sender, EventArgs e)
         {
-            MatchMode? mode = this.matchMode;
+            this.lastMode = this.matchMode;
 
-            if (mode == null)
+            if (this.lastMode == null)
             {
                 var c = new EnumSelectCommand<MatchMode>('m', "Select how the matcher job will be started.");
                 new ConsoleHandler(c, c).Execute();
-                mode = c.Result;
+                this.lastMode = c.Result;
             }
 
-            this.matcherRegistry.StartMatchers((MatchMode)mode);
+            this.matcherRegistry.StartMatchers((MatchMode)this.lastMode);
             Console.WriteLine("Matcher jobs started.");
             logger.Info("Matcher jobs started.");
+        }
+
+        private void RestartMatchers(object sender, EventArgs e)
+        {
+            var ac = new ActionCommand('r', "Restart matchers with the same options.", () => this.matcherRegistry.StartMatchers((MatchMode)this.lastMode));
+            var cc = new ContinuationCommand('s', "Restart matcher with with new job.");
+
+            var modeSelect = new EnumSelectCommand<MatchMode>();
+            var binaryPath = new StringCommand("Path of the matcher job binary:");
+            cc.Then(binaryPath).Then(modeSelect);
+
+            var ch = new ConsoleHandler(new CommandBase[] { ac, cc });
+
+            ch.Execute();
         }
     }
 }

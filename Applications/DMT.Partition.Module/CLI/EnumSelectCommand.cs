@@ -10,6 +10,12 @@ namespace DMT.Partition.Module.CLI
     {
         public T Result { get; private set; }
 
+        public EnumSelectCommand()
+            : this((char)0, null)
+        {
+
+        }
+
         public EnumSelectCommand(char code, string desc)
             : base(code, desc)
         {
@@ -29,14 +35,14 @@ namespace DMT.Partition.Module.CLI
                 Console.WriteLine("Select one:");
                 for (int i = 0; i < names.Length; ++i)
                 {
-                    Console.WriteLine("{0} - {1}", i, names[i]);
+                    Console.WriteLine("{0} - {1}", i + 1, names[i]);
                 }
 
                 var selected = Console.ReadLine();
                 int index;
                 if (ok = int.TryParse(selected, out index))
                 {
-                    this.Result = (T)Enum.Parse(typeof(T), names[index]);
+                    this.Result = (T)Enum.Parse(typeof(T), names[index - 1]);
                     break;
                 }
             }

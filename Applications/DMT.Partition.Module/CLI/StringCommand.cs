@@ -11,6 +11,12 @@ namespace DMT.Partition.Module.CLI
         public string Question { get; private set; }
         public string Answer { get; private set; }
 
+        public StringCommand(string question)
+            : this((char)0, null, question)
+        {
+
+        }
+
         public StringCommand(char code, string description, string question)
             : base(code, description)
         {

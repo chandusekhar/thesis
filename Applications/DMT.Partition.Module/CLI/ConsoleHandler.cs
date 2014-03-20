@@ -36,8 +36,6 @@ namespace DMT.Partition.Module.CLI
             this.DefaultComamnd = @default;
         }
 
-        public ConsoleHandler(params CommandBase[] commands) : this((IEnumerable<CommandBase>)commands) { }
-
         public ConsoleHandler(IEnumerable<CommandBase> commands)
             : this()
         {

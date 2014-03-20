@@ -47,8 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CLI\ActionCommand.cs" />
     <Compile Include="CLI\CommandBase.cs" />
     <Compile Include="CLI\CommandLineArgs.cs" />
+    <Compile Include="CLI\ContinuationCommand.cs" />
     <Compile Include="CLI\ConsoleHandler.cs" />
     <Compile Include="CLI\EnumSelectCommand.cs" />
     <Compile Include="CLI\QuitCommand.cs" />
