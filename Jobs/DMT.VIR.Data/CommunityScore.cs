@@ -29,5 +29,16 @@ namespace DMT.VIR.Data
 
             writer.WriteElementString("Score", this.Score.ToString());
         }
+
+        public override void Deserialize(System.Xml.XmlReader reader, Core.Interfaces.Serialization.IContext context)
+        {
+            base.Deserialize(reader, context);
+
+            this.Semester = new Semester();
+            this.Semester.Deserialize(reader.ReadSubtree(), context);
+
+            reader.ReadToNextSibling("Score");
+            this.Score = reader.ReadElementContentAsInt();
+        }
     }
 }

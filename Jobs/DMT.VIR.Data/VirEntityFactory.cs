@@ -16,6 +16,10 @@ namespace DMT.VIR.Data
         {
             { "Person", typeof(Person) },
             { "Group", typeof(Group) },
+            { "Membership", typeof(Membership) },
+            { "SemesterValuation", typeof(SemesterValuation) },
+            { "CommunityScore", typeof(CommunityScore) },
+
         };
 
         public override INode CreateNode(string typeInfo)

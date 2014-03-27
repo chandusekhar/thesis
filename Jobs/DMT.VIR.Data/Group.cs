@@ -29,9 +29,11 @@ namespace DMT.VIR.Data
 
         public override void Deserialize(XmlReader reader, IContext context)
         {
+            // id
             base.Deserialize(reader, context);
-            reader.ReadToFollowing(NameTag);
-            this.Name = reader.Value;
+
+            // name, reader is already on the element
+            this.Name = reader.ReadElementContentAsString();
         }
     }
 }

@@ -166,6 +166,7 @@ namespace DMT.Core.Serialization
                 if (reader.MoveToAttribute(TypeAttr))
                 {
                     node = context.EntityFactory.CreateNode(reader.Value);
+                    reader.MoveToElement();
                 }
                 else
                 {

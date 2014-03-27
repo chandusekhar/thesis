@@ -41,11 +41,10 @@ namespace DMT.VIR.Data
         {
             base.Deserialize(reader, context);
 
-            reader.ReadToFollowing(FirstNameTag);
-            this.FirstName = reader.ReadContentAsString();
-
-            reader.ReadToFollowing(LastNameTag);
-            this.LastName = reader.ReadContentAsString();
+            // reader is on the firstname element
+            this.FirstName = reader.ReadElementContentAsString();
+            // reader is on the lastname element
+            this.LastName = reader.ReadElementContentAsString();
         }
     }
 }

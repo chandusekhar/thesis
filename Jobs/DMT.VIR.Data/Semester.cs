@@ -47,13 +47,9 @@ namespace DMT.VIR.Data
         public void Deserialize(XmlReader reader, IContext context)
         {
             reader.ReadToFollowing(FirstYearTag);
-            this.FirstYear = int.Parse(reader.Value);
-
-            reader.ReadToFollowing(SecondYearTag);
-            this.SecondYear = int.Parse(reader.Value);
-
-            reader.ReadToFollowing(PeriodTag);
-            this.Period = (SemesterPeriod)Enum.Parse(typeof(SemesterPeriod), reader.Value);
+            this.FirstYear = reader.ReadElementContentAsInt();
+            this.SecondYear = reader.ReadElementContentAsInt();
+            this.Period = (SemesterPeriod)Enum.Parse(typeof(SemesterPeriod), reader.ReadElementContentAsString());
         }
     }
 }
