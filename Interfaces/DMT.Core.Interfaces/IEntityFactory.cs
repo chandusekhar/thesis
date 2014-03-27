@@ -31,6 +31,13 @@ namespace DMT.Core.Interfaces
         INode CreateNode();
 
         /// <summary>
+        /// Creates a new node with the suplied type info.
+        /// </summary>
+        /// <param name="typeInfo">a string which represents some kind of type information</param>
+        /// <returns>The new (and empty) node instance.</returns>
+        INode CreateNode(string typeInfo);
+
+        /// <summary>
         /// Creates a new edge instance.
         /// </summary>
         /// <returns>The new (and empty) edge instance.</returns>
