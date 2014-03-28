@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
 
 namespace DMT.Matcher.Module
@@ -14,7 +15,7 @@ namespace DMT.Matcher.Module
     /// </summary>
     class MatcherFrameworkLink : IMatcherFramework
     {
-        public void BeginFindPartialMatch(IId partitionId)
+        public void BeginFindPartialMatch(IId partitionId, IPattern pattern)
         {
             throw new NotImplementedException();
         }

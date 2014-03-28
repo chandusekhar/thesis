@@ -74,7 +74,7 @@ namespace DMT.Matcher.Module
                 throw new NoMatcherJobException("No matcher job has been received.");
             }
 
-            this.job.Start(mode);
+            this.job.Start(this.model, mode);
         }
 
         internal PartitionBrokerServiceClient CreatePartitionServiceClient()

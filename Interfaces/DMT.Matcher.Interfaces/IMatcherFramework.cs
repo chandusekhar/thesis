@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.Matcher.Interfaces
 {
@@ -20,7 +21,8 @@ namespace DMT.Matcher.Interfaces
         /// initiates the search.
         /// </summary>
         /// <param name="partitionId">id of the partition to search in</param>
-        void BeginFindPartialMatch(IId partitionId /*, partial matched pattern */);
+        /// <param name="pattern">the pattern that contains the already matcehd nodes</param>
+        void BeginFindPartialMatch(IId partitionId, IPattern pattern);
 
         /// <summary>
         /// This event is fired when the search for a partial match is done.

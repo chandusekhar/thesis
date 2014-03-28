@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
 
@@ -21,8 +22,12 @@ namespace DMT.Matcher.Module
             job.Done += HandleJobDone;
         }
 
-        public void Start(MatchMode mode)
+        public void Start(IModel model, MatchMode mode)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
             if (this.jobStarted)
             {
                 throw new JobAlreadyStartedException(string.Format("Job with name {0} has already started.", this.job.Name));
@@ -30,7 +35,7 @@ namespace DMT.Matcher.Module
             this.jobStarted = true;
 
             // start the task on a background thread
-            Task.Run(() => this.job.Start(mode));
+            Task.Run(() => this.job.Start(model, mode));
 
             logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);
         }

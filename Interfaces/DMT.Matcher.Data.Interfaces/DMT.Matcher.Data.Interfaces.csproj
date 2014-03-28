@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMatchEdge.cs" />
+    <Compile Include="IMatcherEntityFactory.cs" />
+    <Compile Include="IPattern.cs" />
+    <Compile Include="IPatternNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

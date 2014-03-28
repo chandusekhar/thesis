@@ -77,6 +77,10 @@
       <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
       <Name>DMT.Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\DMT.Matcher.Data.Interfaces\DMT.Matcher.Data.Interfaces.csproj">
+      <Project>{fb153db5-63c1-44e1-8861-7695ecf14ef1}</Project>
+      <Name>DMT.Matcher.Data.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DMT.VIR.Data\DMT.VIR.Data.csproj">
       <Project>{b27a9464-a44a-4780-a6be-329de6e6f1df}</Project>
       <Name>DMT.VIR.Data</Name>

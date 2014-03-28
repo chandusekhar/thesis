@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.Matcher.Interfaces
 {
@@ -36,15 +37,17 @@ namespace DMT.Matcher.Interfaces
         /// <summary>
         /// Start the matcher job.
         /// </summary>
+        /// <param name="matcherModel">The model that contains the nodes for the matcher instance.</param>
         /// <param name="mode">mode of the search</param>
-        void Start(/* nodes in partition ,*/MatchMode mode);
+        void Start(IModel matcherModel, MatchMode mode);
 
         /// <summary>
         /// Initiate a search for a partial pattern which already has discovered parts
         /// provided by an other matcher job.
         /// </summary>
         /// <param name="paritionId">The id of the partition to search in.</param>
+        /// <param name="pattern">The partially matched pattern.</param>
         /// <returns>The matches if any.</returns>
-        IEnumerable<object> FindPartialMatch(IId paritionId/*, partial match that has been already found in this partition*/);
+        IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern);
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
 
 namespace DMT.Matcher.Local
@@ -21,18 +23,18 @@ namespace DMT.Matcher.Local
             Console.WriteLine("Hello from local matcher!");
         }
 
-        public void Start(MatchMode mode)
+        public void Start(IModel matcherModel, MatchMode mode)
         {
             Console.WriteLine("matcher started");
-            OnJobDone(new object[0]);
+            OnJobDone(new IPattern[0]);
         }
 
-        public IEnumerable<object> FindPartialMatch(Core.Interfaces.IId paritionId)
+        public IEnumerable<object> FindPartialMatch(Core.Interfaces.IId paritionId, IPattern pattern)
         {
             throw new NotSupportedException();
         }
 
-        private void OnJobDone(IEnumerable<object> matches)
+        private void OnJobDone(IEnumerable<IPattern> matches)
         {
             var handler = this.Done;
             if (handler != null)
