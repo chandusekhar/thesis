@@ -8,6 +8,7 @@ using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
 using DMT.Common.Extensions;
+using System.Diagnostics;
 
 namespace DMT.Partition.Module
 {
@@ -22,6 +23,7 @@ namespace DMT.Partition.Module
 
         private IModel model;
         private IEnumerable<IPartition> partitions = null;
+        private TimeSpan lastRunDuration = TimeSpan.Zero;
 
         [Import]
         private IPartitionManager partitionManager;
@@ -31,6 +33,11 @@ namespace DMT.Partition.Module
             get { return this.partitions; }
         }
 
+        public TimeSpan LastRunDuration
+        {
+            get { return this.lastRunDuration; }
+        }
+
         public Partitioner(IModel model)
         {
             this.model = model;
@@ -38,10 +45,15 @@ namespace DMT.Partition.Module
 
         public IEnumerable<IPartition> Partition()
         {
+            var w = Stopwatch.StartNew();
+
             this.ConfigurePartitioner();
             this.partitions = this.partitionManager.PartitionModel(this.model);
 
             this.PartitionPostProcessing(this.partitions);
+
+            w.Stop();
+            this.lastRunDuration = w.Elapsed;
 
             logger.Info("Partitioning is done, ready to send partitions to matcher modules.");
             return this.partitions;
