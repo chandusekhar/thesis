@@ -66,6 +66,11 @@ namespace DMT.Common
             }
         }
 
+        public string GetOption(string key)
+        {
+            return ConfigurationManager.AppSettings.Get(key);
+        }
+
         internal void SetEnvironment(Environment env)
         {
             this.isEnvSet = true;

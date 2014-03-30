@@ -12,6 +12,7 @@ namespace DMT.Partition
 {
     [Export(typeof(IPartitionManager))]
     [Export(typeof(IThreeStepPartitionManager))]
+    [ExportMetadata("name", "three-step")]
     internal class PartitionManager : IThreeStepPartitionManager
     {
         private ICoarsener coarsener;
