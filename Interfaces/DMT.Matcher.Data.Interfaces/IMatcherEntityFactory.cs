@@ -20,5 +20,13 @@ namespace DMT.Matcher.Data.Interfaces
         /// </summary>
         /// <returns>a new pattern node</returns>
         IPatternNode CreatePatternNode();
+
+        /// <summary>
+        /// Creates a new unmatched pattern node, that does not 
+        /// belong to any pattern.
+        /// </summary>
+        /// <param name="name">name of the node</param>
+        /// <returns>a new pattern node</returns>
+        IPatternNode CreatePatternNode(string name);
     }
 }

@@ -16,6 +16,9 @@ namespace DMT.Matcher.Data.Interfaces
     /// </summary>
     public interface IPatternNode : INode
     {
+
+        string Name { get; }
+
         /// <summary>
         /// Gets or sets the node, that has been matched for this
         /// particular pattern node.
