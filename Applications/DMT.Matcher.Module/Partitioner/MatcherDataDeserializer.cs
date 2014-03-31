@@ -63,9 +63,8 @@ namespace DMT.Matcher.Module.Partitioner
             while (subReader.ReadToFollowing(PartitionSerializerTags.CrossingEdgeTag))
             {
                 subReader.ReadToFollowing(PartitionSerializerTags.IdTag);
-                edgeId = ParseId(subReader);
 
-                subReader.ReadToFollowing(PartitionSerializerTags.PartitionIdTag);
+                edgeId = ParseId(subReader);
                 partitionId = ParseId(subReader);
 
                 crossingEdges.Add(edgeId, new CrossingEdge(edgeId, partitionId));
@@ -76,8 +75,6 @@ namespace DMT.Matcher.Module.Partitioner
 
         private IId ParseId(XmlReader reader)
         {
-            reader.MoveToElement();
-
             IId id = entityFactory.CreateId();
             id.Deserialize(reader, null);
             return id;
