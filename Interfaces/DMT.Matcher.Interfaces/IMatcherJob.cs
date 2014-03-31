@@ -23,6 +23,11 @@ namespace DMT.Matcher.Interfaces
         string Name { get; }
 
         /// <summary>
+        /// Gets a list of dependencies that are probably not in the probing path.
+        /// </summary>
+        string[] Dependencies { get; }
+
+        /// <summary>
         /// Fires when the search is over.
         /// </summary>
         event MatcherJobDoneEventHandler Done;

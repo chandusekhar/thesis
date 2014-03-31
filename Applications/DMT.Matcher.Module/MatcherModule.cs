@@ -39,11 +39,25 @@ namespace DMT.Matcher.Module
 
         private readonly Guid id;
         private ManualResetEvent done;
-        private Job job;
         private IModel model;
+        private Job job;
         private Uri partitionServiceUri;
 
         public Guid Id { get { return this.id; } }
+
+        private Job Job
+        {
+            get { return this.job; }
+            set
+            {
+                if (this.job != null)
+                {
+                    this.job.Dispose();
+                }
+                this.job = value;
+            }
+        }
+
 
         public MatcherModule()
         {
@@ -69,12 +83,12 @@ namespace DMT.Matcher.Module
 
         internal void StartJob(MatchMode mode)
         {
-            if (this.job == null)
+            if (this.Job == null)
             {
                 throw new NoMatcherJobException("No matcher job has been received.");
             }
 
-            this.job.Start(this.model, mode);
+            this.Job.Start(this.model, mode);
         }
 
         internal PartitionBrokerServiceClient CreatePartitionServiceClient()
@@ -85,7 +99,7 @@ namespace DMT.Matcher.Module
         internal void AcquireJob()
         {
             var client = CreatePartitionServiceClient();
-            this.job = new Job(client.GetJob());
+            this.Job = new Job(client.GetJob());
             // signal back
             client.MarkMatcherReady(this.id);
         }
