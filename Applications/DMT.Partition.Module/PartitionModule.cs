@@ -49,6 +49,8 @@ namespace DMT.Partition.Module
             get { return this.partitionRegistry; }
         }
 
+        internal bool IsDebug { get; private set; }
+
         internal string ModelFileName { get; private set; }
 
         internal string JobBinaryPath { get; private set; }
@@ -112,11 +114,16 @@ namespace DMT.Partition.Module
             var service = new PartitionBrokerService();
             service.Start();
 
-            RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.BaseAddress);
-            rmi.Start(partitions.Count());
-            this.matchersStarted = true;
+            if (!this.IsDebug)
+            {
+                RemoteMatcherInstantiator rmi = new RemoteMatcherInstantiator(service.BaseAddress);
+                rmi.Start(partitions.Count());
+                this.matchersStarted = true;
 
-            Console.WriteLine("Started {0} matcher(s)...", partitions.Count());
+                Console.WriteLine("Started {0} matcher(s)...", partitions.Count());
+            }
+
+            Console.WriteLine("Partitioner started, waitng for matcher modules to come in.");
             this.exit.WaitOne();
             service.Close();
         }
@@ -128,6 +135,7 @@ namespace DMT.Partition.Module
             this.JobBinaryPath = args.JobBinaryPath;
             this.ModelFileName = args.ModelFilePath;
             this.matchMode = args.MatchMode;
+            this.IsDebug = args.IsDebug;
         }
 
         private void HandleInterupt(object sender, ConsoleCancelEventArgs e)
