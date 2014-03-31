@@ -12,7 +12,10 @@ namespace DMT.Common
     {
         public const string EnvironmentKey = "env";
         public const string EnvironmentFile = "." + EnvironmentKey;
-        
+
+        public const string DefaultCatalogPathKey = "default";
+        public const string PluginCatalogPathKey = "plugin";
+
         private Environment env = Environment.Development;
         private bool isEnvSet = false;
 
@@ -64,6 +67,16 @@ namespace DMT.Common
 
                 return this.env;
             }
+        }
+
+        public string PluginsFolder
+        {
+            get { return ConfigurationManager.AppSettings[PluginCatalogPathKey]; }
+        }
+
+        public string DefaultsFolder
+        {
+            get { return ConfigurationManager.AppSettings[DefaultCatalogPathKey]; }
         }
 
         public string GetOption(string key)
