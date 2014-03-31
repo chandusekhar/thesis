@@ -76,6 +76,8 @@ namespace DMT.Matcher.Module.Partitioner
 
         private IId ParseId(XmlReader reader)
         {
+            reader.MoveToElement();
+
             IId id = entityFactory.CreateId();
             id.Deserialize(reader, null);
             return id;
