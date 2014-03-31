@@ -95,7 +95,7 @@ namespace DMT.Partition.Module
             // event subscriptitons
             Console.CancelKeyPress += HandleInterupt;
             this.matcherRegistry.MatchersReady += StartMatchers;
-            this.matcherRegistry.MatchersDone += RestartMatchers;
+            this.matcherRegistry.MatchersDone += (s, e) => { Task.Run(new Action(RestartMatchers)); };
 
             CompositionService.Default.Initialize();
             logger.Info("CompositionService initalized successfully.");
@@ -159,7 +159,7 @@ namespace DMT.Partition.Module
             logger.Info("Matcher jobs started.");
         }
 
-        private void RestartMatchers(object sender, EventArgs e)
+        private void RestartMatchers()
         {
             logger.Info("Matchers are done. Restarting...");
 

@@ -61,6 +61,7 @@ namespace DMT.Matcher.Module
 
         private Assembly ResolveDependencies(object sender, ResolveEventArgs args)
         {
+            logger.Debug("Resolving dependency for {0}", args.Name);
             foreach (var dep in this.job.Dependencies)
             {
                 if (args.Name.Contains(dep))
@@ -68,6 +69,8 @@ namespace DMT.Matcher.Module
                     return LoadDepencdency(dep);
                 }
             }
+
+            logger.Warn("Could not resolve dependency for {0}", args.Name);
 
             return null;
         }
@@ -82,11 +85,16 @@ namespace DMT.Matcher.Module
 
             foreach (var path in paths)
             {
-                var fi = new FileInfo(path);
-
+                var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
                 if (fi.Exists)
                 {
-                    return Assembly.LoadFrom(fi.FullName);
+                    byte[] assembly;
+                    using (FileStream stream = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        assembly = new byte[stream.Length];
+                        stream.Read(assembly, 0, (int)stream.Length);
+                    }
+                    return Assembly.Load(assembly);
                 }
             }
 
