@@ -98,6 +98,7 @@ namespace DMT.Matcher.Module
                 }
             }
 
+            logger.Warn("No dll file exists in the additional probing paths.");
             return null;
         }
     }

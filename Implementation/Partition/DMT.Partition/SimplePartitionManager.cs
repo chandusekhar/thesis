@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Common;
+using DMT.Common.Extensions;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
 
@@ -28,14 +29,16 @@ namespace DMT.Partition
         public IEnumerable<IPartition> PartitionModel(IModel model)
         {
             List<IPartition> partitionList = new List<IPartition>();
+            List<INode> nodes = new List<INode>(model.Nodes);
+            nodes.Shuffle();
 
             int numberOfPartitions = int.Parse(Configuration.Current.GetOption("partitions"));
-            int numberOfNodesInPartion = (int)Math.Ceiling(model.Nodes.Count() / (double)numberOfPartitions);
+            int numberOfNodesInPartion = (int)Math.Ceiling(nodes.Count / (double)numberOfPartitions);
 
             int cntr = 0;
             IPartition partition = this.partitionFactory.CreatePartition();
 
-            foreach (var node in model.Nodes)
+            foreach (var node in nodes)
             {
                 if (cntr < numberOfNodesInPartion)
                 {
