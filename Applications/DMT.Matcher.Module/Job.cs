@@ -9,6 +9,7 @@ using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
+using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
 {
@@ -55,7 +56,7 @@ namespace DMT.Matcher.Module
 
             logger.Info("Matcher job (name: {0}) has been finished.", this.job.Name);
             var client = MatcherModule.Instance.CreatePartitionServiceClient();
-            client.MarkMatcherDone(MatcherModule.Instance.Id);
+            client.MarkMatcherDone(MatcherModule.Instance.Id, new MatchFoundRequest { MatchFound = e.HasMatches });
             logger.Debug("Matcher job reported done to partition module.");
         }
 

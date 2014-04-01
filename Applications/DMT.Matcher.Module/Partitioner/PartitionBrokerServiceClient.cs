@@ -126,10 +126,15 @@ namespace DMT.Matcher.Module.Partitioner
             }
         }
 
-        public void MarkMatcherDone(Guid id)
+        public void MarkMatcherDone(Guid id, MatchFoundRequest req)
         {
             string url = string.Format("{0}{1}/{2}/done", this.BaseAddress, MatchersPath, id);
-            RestClientHelper.SendRequestWithoutBody(HttpMethod.Put, url);
+            using (var wc = new WebClient())
+            using (var stream = wc.OpenWrite(url, HttpMethod.Put))
+            {
+                var s = new XmlSerializer(typeof(MatchFoundRequest));
+                s.Serialize(stream, req);
+            }
         }
     }
 }

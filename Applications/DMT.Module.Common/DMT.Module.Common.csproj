@@ -52,6 +52,7 @@
     <Compile Include="Service\MatcherInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\MatcherInfoResponse.cs" />
+    <Compile Include="Service\MatchFoundRequest.cs" />
     <Compile Include="Service\ServiceBase.cs" />
     <Compile Include="Service\StartMatcherJobRequest.cs" />
   </ItemGroup>
