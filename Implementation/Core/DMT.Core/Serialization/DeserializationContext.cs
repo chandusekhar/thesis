@@ -11,7 +11,7 @@ using NLog;
 
 namespace DMT.Core.Serialization
 {
-    public class DeserializationContext : IContext
+    class DeserializationContext : IContext
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -55,8 +55,12 @@ namespace DMT.Core.Serialization
                 return nodes[id];
             }
 
-            logger.Trace("No node with id [{0}] was found in the context!", id);
-            return null;
+            // create a new node, and add it to the context for reuse
+            logger.Trace("Creating remote node for {0} id.", id);
+            IRemoteNode rn = this.EntityFactory.CreateRemoteNode(id);
+            AddNode(rn);
+
+            return rn;
         }
 
         public void AddNode(INode node)

@@ -55,8 +55,6 @@
     <Compile Include="RemoteNode.cs" />
     <Compile Include="Semester.cs" />
     <Compile Include="SemesterValuation.cs" />
-    <Compile Include="Serialization\Context.cs" />
-    <Compile Include="Serialization\VirContextFactory.cs" />
     <Compile Include="VirEdge.cs" />
     <Compile Include="VirEntityFactory.cs" />
     <Compile Include="VirNode.cs" />
@@ -95,6 +93,6 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Matcher.App/bin/$(Configuration)/Plugins" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Matcher.App/bin/$(Configuration)/Defaults" />
   </Target>
 </Project>

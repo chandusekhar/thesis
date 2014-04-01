@@ -47,5 +47,10 @@ namespace DMT.Core.Entities
             logger.Trace("Created edge between {0} and {1} nodes for direction {2}.", nodeA, nodeB, direction);
             return new Edge(nodeA, nodeB, direction, this);
         }
+
+        public virtual IRemoteNode CreateRemoteNode(IId id)
+        {
+            return new RemoteNode(id, this);
+        }
     }
 }

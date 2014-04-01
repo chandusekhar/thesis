@@ -49,6 +49,7 @@
     <Compile Include="CoreModelFactory.cs" />
     <Compile Include="Entities\Edge.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\RemoteNode.cs" />
     <Compile Include="Graph\BFSGraphTraverser.cs" />
     <Compile Include="Graph\ComponentTraverser.cs" />
     <Compile Include="Graph\DFSGraphTraverser.cs" />
@@ -59,7 +60,6 @@
     <Compile Include="Entities\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\CoreEntityFactory.cs" />
-    <Compile Include="Serialization\ContextFactory.cs" />
     <Compile Include="Serialization\DeserializationContext.cs" />
     <Compile Include="Serialization\ModelXmlSerializer.cs" />
   </ItemGroup>
