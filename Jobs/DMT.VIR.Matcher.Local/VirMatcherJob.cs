@@ -22,9 +22,6 @@ namespace DMT.VIR.Matcher.Local
 
         private IPattern pattern;
 
-        [Import]
-        private IMatcherEntityFactory EntityFactory { get; set; }
-
         public string Name
         {
             get { return "VIR case study matcher - local only implementation"; }
@@ -36,11 +33,6 @@ namespace DMT.VIR.Matcher.Local
         }
 
         public event MatcherJobDoneEventHandler Done;
-
-        public VirMatcherJob()
-        {
-            CompositionService.Default.InjectOnce(this);
-        }
 
         public void Initialize(IMatcherFramework framework)
         {
