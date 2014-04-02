@@ -8,7 +8,7 @@ using DMT.Core.Interfaces.Serialization;
 
 namespace DMT.VIR.Data
 {
-    public class Semester : ISerializable
+    public class Semester : ISerializable, IEquatable<Semester>
     {
         const string FirstYearTag = "FirstYear";
         const string SecondYearTag = "SecondYear";
@@ -21,6 +21,13 @@ namespace DMT.VIR.Data
         public Semester()
         {
 
+        }
+
+        public Semester(int firstYear, int secondYear, SemesterPeriod period)
+        {
+            this.FirstYear = firstYear;
+            this.SecondYear = secondYear;
+            this.Period = period;
         }
 
         public Semester(string semester)
@@ -50,6 +57,14 @@ namespace DMT.VIR.Data
             this.FirstYear = reader.ReadElementContentAsInt();
             this.SecondYear = reader.ReadElementContentAsInt();
             this.Period = (SemesterPeriod)Enum.Parse(typeof(SemesterPeriod), reader.ReadElementContentAsString());
+        }
+
+        public bool Equals(Semester other)
+        {
+            return other != null
+                && this.FirstYear == other.FirstYear
+                && this.SecondYear == other.SecondYear 
+                && this.Period == other.Period;
         }
     }
 }

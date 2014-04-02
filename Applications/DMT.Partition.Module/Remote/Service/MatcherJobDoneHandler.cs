@@ -30,6 +30,12 @@ namespace DMT.Partition.Module.Remote.Service
                 logger.Info("Match found in {0} matcher module", id);
                 Console.WriteLine("Match found in {0} module", id);
             }
+            else
+            {
+                var msg = string.Format("No match was found in {0} module", id);
+                logger.Info(msg);
+                Console.WriteLine(msg);
+            }
 
             logger.Info("Matcher ({0}) is done.", id);
             PartitionModule.Instance.MatcherRegistry.MarkDone(id);
