@@ -20,11 +20,6 @@ namespace DMT.VIR.Matcher.Local
         private const string ExGroupLeaderPost = "volt körvezető";
         private const int CommunityScoreThreshold = 60;
 
-        // pattern node names
-        private const string PersonPatternNode = "person";
-        private const string GroupLeaderPatternNode = "group leader";
-        private const string CommunityScorePatternNode = "community point";
-
         private IPattern pattern;
 
         [Import]
@@ -82,17 +77,7 @@ namespace DMT.VIR.Matcher.Local
 
         private IPattern CreateUnmatchedPattern()
         {
-            var person = this.EntityFactory.CreatePatternNode(VirMatcherJob.PersonPatternNode);
-            var groupLeader = this.EntityFactory.CreatePatternNode(VirMatcherJob.GroupLeaderPatternNode);
-            var communityPoint = this.EntityFactory.CreatePatternNode(VirMatcherJob.CommunityScorePatternNode);
-
-            person.ConnectTo(groupLeader, EdgeDirection.Both);
-            person.ConnectTo(communityPoint, EdgeDirection.Both);
-
-            IPattern pattern = this.EntityFactory.CreatePattern();
-            pattern.AddNodes(person, groupLeader, communityPoint);
-
-            return pattern;
+            return PatternFactory.CreateUnmatched();
         }
 
         private void OnDone(IEnumerable<IPattern> matchedPatterns)
@@ -107,7 +92,7 @@ namespace DMT.VIR.Matcher.Local
         private bool TryMatchPerson(Person person)
         {
             // match person
-            this.pattern.GetNodeByName(VirMatcherJob.PersonPatternNode).MatchedNode = person;
+            this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode = person;
 
             bool found = false;
             IMatchEdge e;
@@ -122,7 +107,18 @@ namespace DMT.VIR.Matcher.Local
 
                 neighbour = edge.GetOtherNode(person);
 
-                TryMatchMembership(neighbour as Membership);
+                // could not match group leader (maybe because it has already been matched)
+                // then try to match an active membership
+                if (!TryMatchGroupLeader(neighbour as Membership))
+                {
+                    // could not match an active membership ((maybe because it has already been matched)
+                    // then try to match semester valuations with active
+                    if (!TryMatchActiveMembership2(neighbour as Membership))
+                    {
+
+                    }
+                }
+
                 TryMatchComminityScore(neighbour as CommunityScore);
 
                 if (this.pattern.IsFullyMatched)
@@ -135,15 +131,15 @@ namespace DMT.VIR.Matcher.Local
             return found;
         }
 
-        private bool TryMatchMembership(Membership ms)
+        private bool TryMatchGroupLeader(Membership ms)
         {
             // trying to match membership:
             // if not null, has not been matched before and has the correct post
             if (ms != null
-                && !this.pattern.HasMatchedNodeFor(VirMatcherJob.GroupLeaderPatternNode)
+                && !this.pattern.HasMatchedNodeFor(PatternNodes.GroupLeader)
                 && Array.Exists(ms.Posts, p => p == VirMatcherJob.GroupLeaderPost || p == VirMatcherJob.ExGroupLeaderPost))
             {
-                this.pattern.GetNodeByName(VirMatcherJob.GroupLeaderPatternNode).MatchedNode = ms;
+                this.pattern.GetNodeByName(PatternNodes.GroupLeader).MatchedNode = ms;
                 return true;
             }
 
@@ -153,11 +149,35 @@ namespace DMT.VIR.Matcher.Local
         private bool TryMatchComminityScore(CommunityScore cs)
         {
             if (cs != null
-                && !this.pattern.HasMatchedNodeFor(VirMatcherJob.CommunityScorePatternNode)
+                && !this.pattern.HasMatchedNodeFor(PatternNodes.CommunityScore)
                 && cs.Score > VirMatcherJob.CommunityScoreThreshold)
             {
-                this.pattern.GetNodeByName(VirMatcherJob.CommunityScorePatternNode).MatchedNode = cs;
+                this.pattern.GetNodeByName(PatternNodes.CommunityScore).MatchedNode = cs;
                 return true;
+            }
+
+            return false;
+        }
+
+        private bool TryMatchActiveMembership2(Membership ms)
+        {
+            // has a suitable membership.
+            if (ms != null
+                && !this.pattern.HasMatchedNodeFor(PatternNodes.ActiveMembership2)
+                && ms.IsActive)
+            {
+                IMatchEdge e;
+                foreach (var edge in ms.Edges)
+                {
+                    e = (IMatchEdge)edge;
+                    if (!e.IsRemote && e.GetOtherNode(ms) is Group)
+                    {
+                        // match nodes when there is an available group in the local partition
+                        this.pattern.GetNodeByName(PatternNodes.Group2).MatchedNode = e.GetOtherNode(ms);
+                        this.pattern.GetNodeByName(PatternNodes.ActiveMembership2).MatchedNode = ms;
+                        return true;
+                    }
+                }
             }
 
             return false;

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PatternFactory.cs" />
     <Compile Include="VirMatcherJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
