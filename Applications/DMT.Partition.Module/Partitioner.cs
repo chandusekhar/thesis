@@ -8,6 +8,7 @@ using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Partition.Interfaces;
 using DMT.Common.Extensions;
+using System.Diagnostics;
 
 namespace DMT.Partition.Module
 {
@@ -22,13 +23,19 @@ namespace DMT.Partition.Module
 
         private IModel model;
         private IEnumerable<IPartition> partitions = null;
+        private TimeSpan lastRunDuration = TimeSpan.Zero;
 
-        [Import]
-        private IPartitionManager partitionManager;
+        [ImportMany]
+        private Lazy<IPartitionManager, IDictionary<string, object>>[] PartitionManagers { get; set; }
 
         public IEnumerable<IPartition> Partitions
         {
             get { return this.partitions; }
+        }
+
+        public TimeSpan LastRunDuration
+        {
+            get { return this.lastRunDuration; }
         }
 
         public Partitioner(IModel model)
@@ -38,16 +45,38 @@ namespace DMT.Partition.Module
 
         public IEnumerable<IPartition> Partition()
         {
-            this.ConfigurePartitioner();
-            this.partitions = this.partitionManager.PartitionModel(this.model);
+            var w = Stopwatch.StartNew();
 
-            this.PartitionPostProcessing(this.partitions);
+            var pm = ChosePartitioner();
 
-            logger.Info("Partitioning is done, ready to send partitions to matcher modules.");
+            ConfigurePartitioner(pm);
+            this.partitions = pm.PartitionModel(this.model);
+
+            PartitionPostProcessing(this.partitions);
+
+            w.Stop();
+            this.lastRunDuration = w.Elapsed;
+
+            logger.Info("Partitioning is done, ready to send partitions to matcher modules. Took: {0}", w.Elapsed);
             return this.partitions;
         }
 
-        private void ConfigurePartitioner()
+        /// <summary>
+        /// Chose the correct partitioner implementation for the available choices.
+        /// TODO: make it configurable
+        /// </summary>
+        /// <returns></returns>
+        private IPartitionManager ChosePartitioner()
+        {
+            if (this.PartitionManagers.Length == 1)
+            {
+                return this.PartitionManagers.First().Value;
+            }
+
+            return this.PartitionManagers.First(pm => pm.Metadata.ContainsKey("name") && "simple".Equals(pm.Metadata["name"])).Value;
+        }
+
+        private void ConfigurePartitioner(IPartitionManager pm)
         {
             // TODO: fine tuning of partitioner
             // currently it does nothing

@@ -12,6 +12,7 @@ namespace DMT.VIR.Data
     public class PatternNode : Node, IPatternNode
     {
         private INode matchedNode;
+        private string name;
 
         public INode MatchedNode
         {
@@ -24,10 +25,21 @@ namespace DMT.VIR.Data
             get { return this.matchedNode != null; }
         }
 
+        public string Name
+        {
+            get { return this.name; }
+        }
+
         public PatternNode(IEntityFactory factory)
-            : base(factory)
+            : this(null, factory)
         {
 
+        }
+
+        public PatternNode(string name, IEntityFactory factory)
+            : base(factory)
+        {
+            this.name = name;
         }
 
         // TODO: serialization

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,9 +16,6 @@ namespace DMT.Common.Composition
     /// </summary>
     public sealed class CompositionService : IDisposable
     {
-        public const string DefaultCatalogPathKey = "default";
-        public const string PluginCatalogPathKey = "plugin";
-
         private static CompositionService instance;
         public static CompositionService Default
         {
@@ -60,8 +56,8 @@ namespace DMT.Common.Composition
         /// </summary>
         public void Initialize(params Assembly[] assemblies)
         {
-            var def = ConfigurationManager.AppSettings[CompositionService.DefaultCatalogPathKey];
-            var plugin = ConfigurationManager.AppSettings[CompositionService.PluginCatalogPathKey];
+            var def = Configuration.Current.DefaultsFolder;
+            var plugin = Configuration.Current.PluginsFolder;
 
             this.Initialize(def, plugin, assemblies);
         }

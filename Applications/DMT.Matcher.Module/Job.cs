@@ -1,24 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
+using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
+using DMT.Matcher.Module.Partitioner;
+using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
 {
-    internal class Job
+    internal class Job : IDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private string[] dependencies;
         private IMatcherJob job;
         private bool jobStarted;
 
-        public Job(IMatcherJob job)
+        public Job(JobTypeResult result)
         {
-            this.job = job;
+            this.dependencies = result.DependencyProvider.GetDependencies();
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveDependencies;
+
+            this.job = InstantiateJob(result.JobType);
             job.Done += HandleJobDone;
         }
 
@@ -40,14 +46,71 @@ namespace DMT.Matcher.Module
             logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);
         }
 
+        public void Dispose()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= ResolveDependencies;
+        }
+
         private void HandleJobDone(object sender, MatcherJobDoneEventArgs e)
         {
             this.jobStarted = false;
 
             logger.Info("Matcher job (name: {0}) has been finished.", this.job.Name);
             var client = MatcherModule.Instance.CreatePartitionServiceClient();
-            client.MarkMatcherDone(MatcherModule.Instance.Id);
+            client.MarkMatcherDone(MatcherModule.Instance.Id, new MatchFoundRequest { MatchFound = e.HasMatches });
             logger.Debug("Matcher job reported done to partition module.");
+        }
+
+        private Assembly ResolveDependencies(object sender, ResolveEventArgs args)
+        {
+            logger.Debug("Resolving dependency for {0}", args.Name);
+            foreach (var dep in this.dependencies)
+            {
+                if (args.Name.Contains(dep))
+                {
+                    return LoadDepencdency(dep);
+                }
+            }
+
+            logger.Warn("Could not resolve dependency for {0}", args.Name);
+
+            return null;
+        }
+
+        private Assembly LoadDepencdency(string depName)
+        {
+            string[] paths = new[]
+            {
+                string.Concat(Configuration.Current.DefaultsFolder, "/", depName, ".dll"),
+                string.Concat(Configuration.Current.PluginsFolder, "/", depName, ".dll"),
+            };
+
+            foreach (var path in paths)
+            {
+                var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
+                if (fi.Exists)
+                {
+                    byte[] assembly;
+                    using (FileStream stream = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        assembly = new byte[stream.Length];
+                        stream.Read(assembly, 0, (int)stream.Length);
+                    }
+                    return Assembly.Load(assembly);
+                }
+            }
+
+            logger.Warn("No dll file exists in the additional probing paths.");
+            return null;
+        }
+
+        private IMatcherJob InstantiateJob(Type jobType)
+        {
+            var job = (IMatcherJob)Activator.CreateInstance(jobType);
+            job.Initialize(new MatcherFrameworkLink());
+            logger.Info("Matcher job has been initialized successfully.");
+
+            return job;
         }
     }
 }

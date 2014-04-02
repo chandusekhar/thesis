@@ -52,6 +52,7 @@
     <Compile Include="PatternNode.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteNode.cs" />
     <Compile Include="Semester.cs" />
     <Compile Include="SemesterValuation.cs" />
     <Compile Include="VirEdge.cs" />
@@ -90,8 +91,8 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target>-->
   <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)/Applications/DMT.Matcher.App/bin/$(Configuration)/Defaults" />
   </Target>
-  -->
 </Project>

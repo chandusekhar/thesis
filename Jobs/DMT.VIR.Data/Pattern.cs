@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.VIR.Data
@@ -27,9 +28,30 @@ namespace DMT.VIR.Data
             this.patternNodes = new List<IPatternNode>();
         }
 
-        public IEnumerable<Core.Interfaces.INode> GetMatchedNodes()
+        public IEnumerable<INode> GetMatchedNodes()
         {
-            throw new NotImplementedException();
+            return this.patternNodes.Where(pn => pn.IsMatched);
+        }
+
+        public void AddNodes(params IPatternNode[] nodes)
+        {
+            this.patternNodes.AddRange(nodes);
+        }
+
+        public void Reset()
+        {
+            patternNodes.ForEach(pn => pn.MatchedNode = null);
+        }
+
+        public IPatternNode GetNodeByName(string name)
+        {
+            return this.patternNodes.Single(pn => pn.Name == name);
+        }
+
+        public bool HasMatchedNodeFor(string name)
+        {
+            var node = GetNodeByName(name);
+            return node.IsMatched;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DMT.Core.Serialization
     public class ModelXmlSerializer : IModelXmlSerializer
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        
+
         public const string NodesTag = "Nodes";
         public const string NodeTag = "Node";
         public const string EdgesTag = "Edges";
@@ -64,7 +64,7 @@ namespace DMT.Core.Serialization
 
         public IModel Deserialize(XmlReader reader, Action<IEdge> edgeDeserializedCallback)
         {
-            IContext context = new DeserializationContext(this.entityFactory);
+            IContext context = new DeserializationContext();
             List<INode> nodeList;
 
             // read nodes
@@ -162,7 +162,7 @@ namespace DMT.Core.Serialization
             List<INode> nodes = new List<INode>();
             while (reader.ReadToFollowing(NodeTag))
             {
-                INode node ;
+                INode node;
                 if (reader.MoveToAttribute(TypeAttr))
                 {
                     node = context.EntityFactory.CreateNode(reader.Value);

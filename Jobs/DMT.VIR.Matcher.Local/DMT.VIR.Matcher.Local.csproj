@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3EED8BE1-F2B3-4F5B-8890-D8B32560DEA7}</ProjectGuid>
+    <ProjectGuid>{682EE939-FB6D-48B3-8945-FF30785F021A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DMT.Module.Common</RootNamespace>
-    <AssemblyName>DMT.Module.Common</AssemblyName>
+    <RootNamespace>DMT.VIR.Matcher.Local</RootNamespace>
+    <AssemblyName>DMT.VIR.Matcher.Local</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -32,8 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NLog">
       <HintPath>..\..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -46,36 +45,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Checksum.cs" />
-    <Compile Include="PartitionSerializerTags.cs" />
-    <Compile Include="Service\BoolResponse.cs" />
-    <Compile Include="Service\MatcherInfo.cs" />
+    <Compile Include="PatternFactory.cs" />
+    <Compile Include="VirDependencyProvider.cs" />
+    <Compile Include="VirMatcherJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\MatcherInfoResponse.cs" />
-    <Compile Include="Service\MatchFoundRequest.cs" />
-    <Compile Include="Service\ServiceBase.cs" />
-    <Compile Include="Service\StartMatcherJobRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DMT.Common\DMT.Common.csproj">
       <Project>{1e908159-8480-4c0c-88d9-1d3cdff6541c}</Project>
       <Name>DMT.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementation\Core\DMT.Core\DMT.Core.csproj">
+      <Project>{6510e686-5c5b-447a-b22e-37798d78fc4a}</Project>
+      <Name>DMT.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Interfaces\DMT.Core.Interfaces\DMT.Core.Interfaces.csproj">
       <Project>{ff663f72-ac95-4d45-a590-c588b38d0d1a}</Project>
       <Name>DMT.Core.Interfaces</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\DMT.Matcher.Data.Interfaces\DMT.Matcher.Data.Interfaces.csproj">
+      <Project>{fb153db5-63c1-44e1-8861-7695ecf14ef1}</Project>
+      <Name>DMT.Matcher.Data.Interfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Interfaces\DMT.Matcher.Interfaces\DMT.Matcher.Interfaces.csproj">
       <Project>{5d9631fe-84bc-4876-a430-e59b92ddb76b}</Project>
       <Name>DMT.Matcher.Interfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Interfaces\DMT.Partition.Data.Interfaces\DMT.Partition.Data.Interfaces.csproj">
-      <Project>{f5e5ad75-5b93-4d50-9438-c53fa644879f}</Project>
-      <Name>DMT.Partition.Data.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Interfaces\DMT.Partition.Interfaces\DMT.Partition.Interfaces.csproj">
-      <Project>{8b4649ea-78fa-41fd-a066-d5dbabb333b7}</Project>
-      <Name>DMT.Partition.Interfaces</Name>
+    <ProjectReference Include="..\DMT.VIR.Data\DMT.VIR.Data.csproj">
+      <Project>{b27a9464-a44a-4780-a6be-329de6e6f1df}</Project>
+      <Name>DMT.VIR.Data</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

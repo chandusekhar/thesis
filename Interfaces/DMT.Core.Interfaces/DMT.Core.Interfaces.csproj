@@ -48,6 +48,7 @@
     <Compile Include="IEntity.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IModelFactory.cs" />
+    <Compile Include="IRemoteNode.cs" />
     <Compile Include="IWeighted.cs" />
     <Compile Include="Results\NeighbourResult.cs" />
     <Compile Include="IEdge.cs" />

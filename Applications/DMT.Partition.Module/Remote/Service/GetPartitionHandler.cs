@@ -29,7 +29,7 @@ namespace DMT.Partition.Module.Remote.Service
 
             IPartition partition = selector.Select(matcherId);
             logger.Info("Sending {0} partition to {1} matcher.", partition, matcherId);
-            using (var input = new FileStream(pm.ModelFileName, FileMode.Open))
+            using (var input = new FileStream(pm.ModelFileName, FileMode.Open, FileAccess.Read))
             using (var reader = XmlReader.Create(input))
             {
                 this.serializer.Serialize(partition, reader, response.Body);

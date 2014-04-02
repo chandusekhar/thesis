@@ -4,15 +4,42 @@ using System.Linq;
 using System.Text;
 using DMT.Common.Rest;
 using DMT.Common.Extensions;
+using DMT.Module.Common.Service;
+using System.Collections.Specialized;
 
 namespace DMT.Partition.Module.Remote.Service
 {
-    class MatcherJobDoneHandler : IRouteHandler
+    class MatcherJobDoneHandler : XmlRouteHandlerBase<MatchFoundRequest, IXmlRouteResponse>
     {
-        public void Handle(Request request, Response response)
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        protected override bool HasResponseBody
         {
-            Guid id = request.Params.Get("id").ParseGuid();
+            get
+            {
+                return false;
+            }
+        }
+
+        protected override IXmlRouteResponse Handle(MatchFoundRequest request, NameValueCollection urlParams)
+        {
+            Guid id = urlParams.Get("id").ParseGuid();
+
+            if (request.MatchFound)
+            {
+                logger.Info("Match found in {0} matcher module", id);
+                Console.WriteLine("Match found in {0} module", id);
+            }
+            else
+            {
+                var msg = string.Format("No match was found in {0} module", id);
+                logger.Info(msg);
+                Console.WriteLine(msg);
+            }
+
+            logger.Info("Matcher ({0}) is done.", id);
             PartitionModule.Instance.MatcherRegistry.MarkDone(id);
+            return null;
         }
     }
 }

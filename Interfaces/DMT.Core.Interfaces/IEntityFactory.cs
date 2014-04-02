@@ -38,6 +38,12 @@ namespace DMT.Core.Interfaces
         INode CreateNode(string typeInfo);
 
         /// <summary>
+        /// Creates a remote node.
+        /// </summary>
+        /// <returns></returns>
+        IRemoteNode CreateRemoteNode(IId id);
+
+        /// <summary>
         /// Creates a new edge instance.
         /// </summary>
         /// <returns>The new (and empty) edge instance.</returns>

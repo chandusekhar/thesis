@@ -1,34 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using NLog;
 
 namespace DMT.Core.Serialization
 {
-    public class DeserializationContext : IContext
+    class DeserializationContext : IContext
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private Dictionary<IId, INode> nodes;
-        private IEntityFactory entityFactory;
 
-        public IEntityFactory EntityFactory
-        {
-            get { return entityFactory; }
-        }
+        [Import]
+        public IEntityFactory EntityFactory { get; private set; }
 
-        public DeserializationContext(IEntityFactory entityFactory)
-            : this(entityFactory, new Dictionary<IId, INode>())
+        public DeserializationContext()
+            : this(new Dictionary<IId, INode>())
         {
 
         }
 
-        public DeserializationContext(IEntityFactory ef, IEnumerable<INode> nodes)
-            : this(ef, new Dictionary<IId, INode>())
+        internal DeserializationContext(IEntityFactory ef)
+            : this()
+        {
+            this.EntityFactory = ef;
+        }
+
+        public DeserializationContext(IEnumerable<INode> nodes)
+            : this(new Dictionary<IId, INode>())
         {
             foreach (var node in nodes)
             {
@@ -36,13 +41,13 @@ namespace DMT.Core.Serialization
             }
         }
 
-        protected DeserializationContext(IEntityFactory entityFactory, Dictionary<IId, INode> nodes)
+        protected DeserializationContext(Dictionary<IId, INode> nodes)
         {
             this.nodes = nodes;
-            this.entityFactory = entityFactory;
+            CompositionService.Default.InjectOnce(this);
         }
 
-        public INode GetNode(IId id)
+        public virtual INode GetNode(IId id)
         {
             if (nodes.ContainsKey(id))
             {
@@ -50,8 +55,12 @@ namespace DMT.Core.Serialization
                 return nodes[id];
             }
 
-            logger.Warn("No node with id [{0}] was found in the context!");
-            return null;
+            // create a new node, and add it to the context for reuse
+            logger.Trace("Creating remote node for {0} id.", id);
+            IRemoteNode rn = this.EntityFactory.CreateRemoteNode(id);
+            AddNode(rn);
+
+            return rn;
         }
 
         public void AddNode(INode node)

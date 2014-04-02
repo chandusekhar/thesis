@@ -22,6 +22,7 @@ namespace DMT.Core.Entities
         public IId Id
         {
             get { return _id; }
+            protected set { _id = value; }
         }
 
         public Entity(IEntityFactory factory)

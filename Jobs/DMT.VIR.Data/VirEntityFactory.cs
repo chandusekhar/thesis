@@ -52,5 +52,10 @@ namespace DMT.VIR.Data
         {
             return new PatternNode(this.baseFactory);
         }
+
+        public IPatternNode CreatePatternNode(string name)
+        {
+            return new PatternNode(name, this.baseFactory);
+        }
     }
 }

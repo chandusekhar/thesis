@@ -49,6 +49,7 @@
     <Compile Include="CoreModelFactory.cs" />
     <Compile Include="Entities\Edge.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\RemoteNode.cs" />
     <Compile Include="Graph\BFSGraphTraverser.cs" />
     <Compile Include="Graph\ComponentTraverser.cs" />
     <Compile Include="Graph\DFSGraphTraverser.cs" />

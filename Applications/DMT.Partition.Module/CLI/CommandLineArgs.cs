@@ -16,6 +16,7 @@ namespace DMT.Partition.Module.CLI
         public string ModelFilePath { get; private set; }
         public string JobBinaryPath { get; private set; }
         public MatchMode? MatchMode { get; private set; }
+        public bool IsDebug { get; private set; }
 
         public CommandLineArgs(string[] args)
         {
@@ -29,6 +30,7 @@ namespace DMT.Partition.Module.CLI
                 { "m|model=", "Path of the model file.", v => this.ModelFilePath = v },
                 { "j|job=", "Path of the first job's binary.", v => this.JobBinaryPath = v },
                 { "h|?|help", "Show this message.", v => this.showHelp = v != null },
+                { "d|debug", "Start in debug mode", v => this.IsDebug = v != null },
                 { "mode=", "Mode of the matcher jobs. (either all or firstonly)", var => this.MatchMode = (MatchMode)Enum.Parse(typeof(MatchMode), var, true) },
             };
 
