@@ -27,11 +27,6 @@ namespace DMT.VIR.Matcher.Local
             get { return "VIR case study matcher - local only implementation"; }
         }
 
-        public string[] Dependencies
-        {
-            get { return new[] { "DMT.VIR.Data", "DMT.Core" }; }
-        }
-
         public event MatcherJobDoneEventHandler Done;
 
         public void Initialize(IMatcherFramework framework)

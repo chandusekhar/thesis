@@ -54,6 +54,7 @@
     <Compile Include="MatcherModule.cs" />
     <Compile Include="MatcherStartArguments.cs" />
     <Compile Include="Partitioner\CrossingEdge.cs" />
+    <Compile Include="Partitioner\JobTypeResult.cs" />
     <Compile Include="Partitioner\MatcherDataDeserializer.cs" />
     <Compile Include="Partitioner\PartitionBrokerServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

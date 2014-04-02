@@ -87,7 +87,7 @@ namespace DMT.Matcher.Module.Partitioner
             }
         }
 
-        public IMatcherJob GetJob()
+        public JobTypeResult GetJob()
         {
             Assembly jobAssembly = null;
             using (WebClient wc = new WebClient() { BaseAddress = this.BaseAddress })
@@ -104,14 +104,8 @@ namespace DMT.Matcher.Module.Partitioner
                 jobAssembly = Assembly.Load(binary);
                 logger.Info("Successfully loaded job assembly into domain.");
             }
-            // TODO: add assembly to CompositionService
-            var type = jobAssembly.GetTypes().Single(t => typeof(IMatcherJob).IsAssignableFrom(t));
-            IMatcherJob job = (IMatcherJob)Activator.CreateInstance(type);
-            job.Initialize(new MatcherFrameworkLink());
 
-            logger.Info("Matcher job has been initialized successfully.");
-
-            return job;
+            return new JobTypeResult(jobAssembly);
         }
 
         public IModel GetPartition(Guid id)

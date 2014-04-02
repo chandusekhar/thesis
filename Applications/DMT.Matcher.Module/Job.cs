@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using DMT.Common;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.Matcher.Module.Exceptions;
+using DMT.Matcher.Module.Partitioner;
 using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
@@ -17,14 +15,17 @@ namespace DMT.Matcher.Module
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private string[] dependencies;
         private IMatcherJob job;
         private bool jobStarted;
 
-        public Job(IMatcherJob job)
+        public Job(JobTypeResult result)
         {
-            this.job = job;
-            job.Done += HandleJobDone;
+            this.dependencies = result.DependencyProvider.GetDependencies();
             AppDomain.CurrentDomain.AssemblyResolve += ResolveDependencies;
+
+            this.job = InstantiateJob(result.JobType);
+            job.Done += HandleJobDone;
         }
 
         public void Start(IModel model, MatchMode mode)
@@ -63,7 +64,7 @@ namespace DMT.Matcher.Module
         private Assembly ResolveDependencies(object sender, ResolveEventArgs args)
         {
             logger.Debug("Resolving dependency for {0}", args.Name);
-            foreach (var dep in this.job.Dependencies)
+            foreach (var dep in this.dependencies)
             {
                 if (args.Name.Contains(dep))
                 {
@@ -101,6 +102,15 @@ namespace DMT.Matcher.Module
 
             logger.Warn("No dll file exists in the additional probing paths.");
             return null;
+        }
+
+        private IMatcherJob InstantiateJob(Type jobType)
+        {
+            var job = (IMatcherJob)Activator.CreateInstance(jobType);
+            job.Initialize(new MatcherFrameworkLink());
+            logger.Info("Matcher job has been initialized successfully.");
+
+            return job;
         }
     }
 }
