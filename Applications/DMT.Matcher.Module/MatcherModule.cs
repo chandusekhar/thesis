@@ -11,6 +11,8 @@ using DMT.Matcher.Module.Exceptions;
 using DMT.Matcher.Module.Partitioner;
 using DMT.Matcher.Module.Service;
 using DMT.Module.Common.Service;
+using NLog;
+using NLog.Targets;
 
 namespace DMT.Matcher.Module
 {
@@ -73,6 +75,7 @@ namespace DMT.Matcher.Module
             }
 
             instance = new MatcherModule();
+            instance.RedirectLogFile();
             instance.Start(argv);
         }
 
@@ -139,6 +142,12 @@ namespace DMT.Matcher.Module
             // wait for an exis signal
             this.done.WaitOne();
             service.Close();
+        }
+
+        private void RedirectLogFile()
+        {
+            FileTarget ft = LogManager.Configuration.FindTargetByName("logfile-dev") as FileTarget;
+            ft.FileName = string.Format("${{basedir}}/log/dmt-matcher-dev-{0}.log", this.id);
         }
 
         private string GetHost()
