@@ -52,7 +52,6 @@
     <Compile Include="PatternNode.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteNode.cs" />
     <Compile Include="Semester.cs" />
     <Compile Include="SemesterValuation.cs" />
     <Compile Include="VirEdge.cs" />
