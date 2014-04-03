@@ -90,13 +90,7 @@ namespace DMT.Matcher.Module
                 var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
                 if (fi.Exists)
                 {
-                    byte[] assembly;
-                    using (FileStream stream = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        assembly = new byte[stream.Length];
-                        stream.Read(assembly, 0, (int)stream.Length);
-                    }
-                    return Assembly.Load(assembly);
+                    return Assembly.LoadFile(fi.FullName);
                 }
             }
 
