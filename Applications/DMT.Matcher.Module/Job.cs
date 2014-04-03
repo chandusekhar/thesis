@@ -24,7 +24,7 @@ namespace DMT.Matcher.Module
             this.dependencies = result.DependencyProvider.GetDependencies();
             AppDomain.CurrentDomain.AssemblyResolve += ResolveDependencies;
 
-            this.job = InstantiateJob(result.JobType);
+            this.job = InstantiateJob(result.JobFactoryType);
             job.Done += HandleJobDone;
         }
 
@@ -98,9 +98,11 @@ namespace DMT.Matcher.Module
             return null;
         }
 
-        private IMatcherJob InstantiateJob(Type jobType)
+        private IMatcherJob InstantiateJob(Type jobFactoryType)
         {
-            var job = (IMatcherJob)Activator.CreateInstance(jobType);
+            var factory = (IMatcherJobFactory)Activator.CreateInstance(jobFactoryType);
+
+            var job = factory.CreateMatcherJob();
             job.Initialize(new MatcherFrameworkLink());
             logger.Info("Matcher job has been initialized successfully.");
 

@@ -43,6 +43,7 @@
     <Compile Include="IMatcherDependencyProvider.cs" />
     <Compile Include="IMatcherFramework.cs" />
     <Compile Include="IMatcherJob.cs" />
+    <Compile Include="IMatcherJobFactory.cs" />
     <Compile Include="MatcherJobDoneEvent.cs" />
     <Compile Include="MatchMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
