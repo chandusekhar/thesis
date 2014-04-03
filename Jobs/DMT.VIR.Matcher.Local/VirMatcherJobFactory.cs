@@ -19,7 +19,7 @@ namespace DMT.VIR.Matcher.Local
 
             if (strategy == LocalStartegy)
             {
-                return new VirMatcherJob();
+                return new VirLocalMatcherJob();
             }
 
             throw new InvalidOperationException("Not supported strategy: " + strategy);

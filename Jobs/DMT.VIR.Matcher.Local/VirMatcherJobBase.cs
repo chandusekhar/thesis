@@ -12,45 +12,44 @@ using DMT.VIR.Data;
 
 namespace DMT.VIR.Matcher.Local
 {
-    public class VirMatcherJob : IMatcherJob
+    public abstract class VirMatcherJobBase : IMatcherJob
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string GroupLeaderPost = "körvezető";
-        private const string ExGroupLeaderPost = "volt körvezető";
-        private const int CommunityScoreThreshold = 60;
+        protected const string GroupLeaderPost = "körvezető";
+        protected const string ExGroupLeaderPost = "volt körvezető";
+        protected const int CommunityScoreThreshold = 60;
 
-        private IPattern pattern;
-        private static readonly Semester semester = new Semester(2013, 2014, Semester.SemesterPeriod.Autumn); 
+        protected IPattern pattern;
 
-        public string Name
+        public abstract string Name { get; }
+
+        public virtual Semester Semester
         {
-            get { return "VIR case study matcher - local only implementation"; }
+            get
+            {
+                return new Semester(2013, 2014, Semester.SemesterPeriod.Autumn);
+            }
         }
 
         public event MatcherJobDoneEventHandler Done;
 
         public void Initialize(IMatcherFramework framework)
         {
-            pattern = CreateUnmatchedPattern();
+            this.pattern = CreateUnmatchedPattern();
         }
 
-        public void Start(IModel matcherModel, MatchMode mode)
+        public virtual void Start(IModel matcherModel, MatchMode mode)
         {
-            logger.Info("Starting VIR local matcher.");
-            foreach (var node in matcherModel.Nodes)
+            logger.Info("Starting {0}", this.Name);
+            foreach (var person in matcherModel.Nodes.OfType<Person>())
             {
                 this.pattern.Reset();
-
-                var person = node as Person;
-                if (person != null)
+                if (TryMatchPerson(person))
                 {
-                    if (TryMatchPerson(person))
-                    {
-                        logger.Info("Match found: {0}", person.FullName);
-                        OnDone(new[] { this.pattern });
-                        return;
-                    }
+                    logger.Info("Match found: {0}", person.FullName);
+                    OnDone(new[] { this.pattern });
+                    return;
                 }
             }
 
@@ -58,23 +57,25 @@ namespace DMT.VIR.Matcher.Local
             OnDone(new IPattern[0]);
         }
 
-        public IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern)
+        public virtual IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern)
         {
             throw new NotSupportedException();
         }
 
-        private IPattern CreateUnmatchedPattern()
-        {
-            return PatternFactory.CreateUnmatched();
-        }
 
-        private void OnDone(IEnumerable<IPattern> matchedPatterns)
+
+        protected void OnDone(IEnumerable<IPattern> matchedPatterns)
         {
             var handler = this.Done;
             if (handler != null)
             {
                 handler(this, new MatcherJobDoneEventArgs(matchedPatterns));
             }
+        }
+
+        protected virtual bool SkipEdge(IMatchEdge edge)
+        {
+            return false;
         }
 
         private bool TryMatchPerson(Person person)
@@ -85,10 +86,9 @@ namespace DMT.VIR.Matcher.Local
             bool found = false;
             IMatchEdge e;
             INode neighbour;
-            foreach (var edge in person.Edges)
+            foreach (var edge in person.Edges.Cast<IMatchEdge>())
             {
-                e = (IMatchEdge)edge;
-                if (e.IsRemote)
+                if (SkipEdge(edge))
                 {
                     continue;
                 }
@@ -125,7 +125,7 @@ namespace DMT.VIR.Matcher.Local
             // trying to match membership:
             // if not null, has not been matched before and has the correct post
             if (CheckNode(ms, PatternNodes.GroupLeader,
-                n => Array.Exists(n.Posts, p => p == VirMatcherJob.GroupLeaderPost || p == VirMatcherJob.ExGroupLeaderPost)))
+                n => Array.Exists(n.Posts, p => p == VirMatcherJobBase.GroupLeaderPost || p == VirMatcherJobBase.ExGroupLeaderPost)))
             {
                 this.pattern.GetNodeByName(PatternNodes.GroupLeader).MatchedNode = ms;
                 return true;
@@ -136,7 +136,7 @@ namespace DMT.VIR.Matcher.Local
 
         private bool TryMatchComminityScore(CommunityScore cs)
         {
-            if (CheckNode(cs, PatternNodes.CommunityScore, n => n.Score > VirMatcherJob.CommunityScoreThreshold))
+            if (CheckNode(cs, PatternNodes.CommunityScore, n => n.Score > VirMatcherJobBase.CommunityScoreThreshold))
             {
                 this.pattern.GetNodeByName(PatternNodes.CommunityScore).MatchedNode = cs;
                 return true;
@@ -150,14 +150,16 @@ namespace DMT.VIR.Matcher.Local
             // has a suitable membership.
             if (CheckNode(ms, PatternNodes.ActiveMembership2, n => n.IsActive))
             {
-                IMatchEdge e;
-                foreach (var edge in ms.Edges)
+                foreach (var edge in ms.Edges.Cast<IMatchEdge>())
                 {
-                    e = (IMatchEdge)edge;
-                    if (!e.IsRemote && e.GetOtherNode(ms) is Group)
+                    if (SkipEdge(edge))
+                    {
+                        continue;
+                    }
+                    if (edge.GetOtherNode(ms) is Group)
                     {
                         // match nodes when there is an available group in the local partition
-                        this.pattern.GetNodeByName(PatternNodes.Group2).MatchedNode = e.GetOtherNode(ms);
+                        this.pattern.GetNodeByName(PatternNodes.Group2).MatchedNode = edge.GetOtherNode(ms);
                         this.pattern.GetNodeByName(PatternNodes.ActiveMembership2).MatchedNode = ms;
                         return true;
                     }
@@ -172,22 +174,21 @@ namespace DMT.VIR.Matcher.Local
             // needs an active membership
             if (CheckNode(ms, PatternNodes.ActiveMembership1, n => n.IsActive))
             {
-                foreach (var edge in ms.Edges)
+                foreach (var edge in ms.Edges.Cast<IMatchEdge>())
                 {
-                    var e = (IMatchEdge)edge;
-                    if (e.IsRemote)
+                    if (SkipEdge(edge))
                     {
                         // skip remote, looking for local only
                         continue;
                     }
 
                     // has group
-                    Group g = e.GetOtherNode(ms) as Group;
+                    Group g = edge.GetOtherNode(ms) as Group;
                     if (g != null)
                     {
-                        foreach (var groupEdge in g.Edges)
+                        foreach (var groupEdge in g.Edges.Cast<IMatchEdge>())
                         {
-                            if (((IMatchEdge)groupEdge).IsRemote)
+                            if (SkipEdge(edge))
                             {
                                 continue;
                             }
@@ -199,9 +200,9 @@ namespace DMT.VIR.Matcher.Local
                                 // semester valuation is ok, check for next (or prev) version
                                 // versions are symmetric, no need to differentiate between 
                                 // how we find these: orig -> next or next <- orig
-                                foreach (var svEdge in sv.Edges)
+                                foreach (var svEdge in sv.Edges.Cast<IMatchEdge>())
                                 {
-                                    if (((IMatchEdge)svEdge).IsRemote)
+                                    if (SkipEdge(svEdge))
                                     {
                                         continue;
                                     }
@@ -238,12 +239,12 @@ namespace DMT.VIR.Matcher.Local
         {
             return CheckNode(sv, name, n =>
             {
-                bool semOk = n.Semester.Equals(VirMatcherJob.semester);
+                bool semOk = n.Semester.Equals(this.Semester);
                 bool hasPerson = false;
 
-                foreach (var edge in n.Edges)
+                foreach (var edge in n.Edges.Cast<IMatchEdge>())
                 {
-                    if (((IMatchEdge)edge).IsRemote)
+                    if (SkipEdge(edge))
                     {
                         continue;
                     }
@@ -257,6 +258,11 @@ namespace DMT.VIR.Matcher.Local
 
                 return semOk && hasPerson;
             });
+        }
+
+        private IPattern CreateUnmatchedPattern()
+        {
+            return PatternFactory.CreateUnmatched();
         }
     }
 }
