@@ -78,6 +78,11 @@ namespace DMT.VIR.Matcher.Local
             return false;
         }
 
+        protected virtual T ConvertNode<T>(IEdge incomingEdge, INode node) where T : class, INode
+        {
+            return node as T;
+        }
+
         private bool TryMatchPerson(Person person)
         {
             // match person
@@ -94,7 +99,7 @@ namespace DMT.VIR.Matcher.Local
                 }
 
                 neighbour = edge.GetOtherNode(person);
-                var membership = neighbour as Membership;
+                var membership = ConvertNode<Membership>(edge, neighbour);
 
                 // could not match group leader (maybe because it has already been matched)
                 // then try to match an active membership
@@ -108,7 +113,7 @@ namespace DMT.VIR.Matcher.Local
                     }
                 }
 
-                TryMatchComminityScore(neighbour as CommunityScore);
+                TryMatchComminityScore(ConvertNode<CommunityScore>(edge, neighbour));
 
                 if (this.pattern.IsFullyMatched)
                 {
@@ -183,7 +188,7 @@ namespace DMT.VIR.Matcher.Local
                     }
 
                     // has group
-                    Group g = edge.GetOtherNode(ms) as Group;
+                    Group g = ConvertNode<Group>(edge, edge.GetOtherNode(ms));
                     if (g != null)
                     {
                         foreach (var groupEdge in g.Edges.Cast<IMatchEdge>())
@@ -194,7 +199,7 @@ namespace DMT.VIR.Matcher.Local
                             }
 
                             // has semester valuation for the specfied semester
-                            SemesterValuation sv = groupEdge.GetOtherNode(g) as SemesterValuation;
+                            SemesterValuation sv = ConvertNode<SemesterValuation>(groupEdge, groupEdge.GetOtherNode(g));
                             if (CheckSemesterValuation(sv, PatternNodes.SemesterValuation))
                             {
                                 // semester valuation is ok, check for next (or prev) version
@@ -207,7 +212,7 @@ namespace DMT.VIR.Matcher.Local
                                         continue;
                                     }
 
-                                    SemesterValuation svNext = svEdge.GetOtherNode(sv) as SemesterValuation;
+                                    SemesterValuation svNext = ConvertNode<SemesterValuation>(svEdge, svEdge.GetOtherNode(sv));
                                     if (CheckSemesterValuation(svNext, PatternNodes.SemesterValuationNext)
                                         && svNext.Edges.Any(svNextEdge => !((IMatchEdge)svNextEdge).IsRemote && svNextEdge.GetOtherNode(svNext) == sv))
                                     {
