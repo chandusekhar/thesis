@@ -37,7 +37,7 @@ namespace DMT.VIR.Data.Parser
             allNodes.AddRange(scores.Values.Select(e => e.Entity));
             allNodes.AddRange(valuations.Select(e => e.Entity));
 
-            ModelXmlSerializer s = new ModelXmlSerializer(new VirEntityFactory());
+            ModelXmlSerializer s = new ModelXmlSerializer(new VirEntityFactory(), new ContextFactory());
 
             using (var modelWriter = XmlWriter.Create("model.xml"))
             {

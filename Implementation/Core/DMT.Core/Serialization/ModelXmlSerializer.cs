@@ -26,11 +26,13 @@ namespace DMT.Core.Serialization
         public const string TypeAttr = "type";
 
         private IEntityFactory entityFactory;
+        private IContextFactory contextFactory;
 
         [ImportingConstructor]
-        public ModelXmlSerializer(IEntityFactory factory)
+        public ModelXmlSerializer(IEntityFactory factory, IContextFactory cFactory)
         {
             this.entityFactory = factory;
+            this.contextFactory = cFactory;
         }
 
         public void Serialize(XmlWriter writer, IModel model)
@@ -64,7 +66,7 @@ namespace DMT.Core.Serialization
 
         public IModel Deserialize(XmlReader reader, Action<IEdge> edgeDeserializedCallback)
         {
-            IContext context = new DeserializationContext();
+            IContext context = this.contextFactory.CreateContext();
             List<INode> nodeList;
 
             // read nodes

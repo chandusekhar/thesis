@@ -17,7 +17,7 @@ namespace DMT.Core.Test.Serialization
 {
     public class ModelXmlSerializerTest
     {
-        ModelXmlSerializer serializer = new ModelXmlSerializer(new CoreEntityFactory());
+        ModelXmlSerializer serializer = new ModelXmlSerializer(new CoreEntityFactory(), new ContextFactory());
 
         [Fact]
         public void LoadModelFromXml()
