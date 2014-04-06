@@ -17,6 +17,7 @@ namespace DMT.Matcher.Module.Service
             RegisterRoute(HttpMethod.Post, "/quit", new QuitHandler());
             RegisterRoute(HttpMethod.Post, "/start", new StartHandler());
             RegisterRoute(HttpMethod.Post, "/restart", new RestartHandler());
+            RegisterRoute(HttpMethod.Get, "/nodes/{id}", new GetNodeHandler());
         }
     }
 }

@@ -17,6 +17,11 @@ namespace DMT.Matcher.Interfaces
     public interface IMatcherFramework
     {
         /// <summary>
+        /// This event is fired when the search for a partial match is done.
+        /// </summary>
+        event FoundPartialMatchEventHandler FoundPartialMatch;
+
+        /// <summary>
         /// Ask a relevant matcher instance to find a partial match. This method only
         /// initiates the search.
         /// </summary>
@@ -25,9 +30,11 @@ namespace DMT.Matcher.Interfaces
         void BeginFindPartialMatch(IId partitionId, IPattern pattern);
 
         /// <summary>
-        /// This event is fired when the search for a partial match is done.
+        /// Gets a (remote) node from a given partition.
         /// </summary>
-        event FoundPartialMatchEventHandler FoundPartialMatch;
-
+        /// <param name="partitionId">id of the partition</param>
+        /// <param name="nodeId">id of the node</param>
+        /// <returns>the node itself</returns>
+        INode GetNode(IId partitionId, IId nodeId);
     }
 }

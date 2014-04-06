@@ -34,7 +34,7 @@ namespace DMT.VIR.Matcher.Local
 
         public event MatcherJobDoneEventHandler Done;
 
-        public void Initialize(IMatcherFramework framework)
+        public virtual void Initialize(IMatcherFramework framework)
         {
             this.pattern = CreateUnmatchedPattern();
         }
@@ -62,8 +62,6 @@ namespace DMT.VIR.Matcher.Local
             throw new NotSupportedException();
         }
 
-
-
         protected void OnDone(IEnumerable<IPattern> matchedPatterns)
         {
             var handler = this.Done;
@@ -78,7 +76,7 @@ namespace DMT.VIR.Matcher.Local
             return false;
         }
 
-        protected virtual T ConvertNode<T>(IEdge incomingEdge, INode node) where T : class, INode
+        protected virtual T ConvertNode<T>(IMatchEdge incomingEdge, INode node) where T : class, INode
         {
             return node as T;
         }

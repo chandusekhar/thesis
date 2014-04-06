@@ -18,11 +18,5 @@ namespace DMT.VIR.Data
         {
 
         }
-
-        public override void Serialize(XmlWriter writer)
-        {
-            writer.WriteAttributeString(TypeAttr, this.GetType().Name);
-            base.Serialize(writer);
-        }
     }
 }

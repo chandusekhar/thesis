@@ -60,7 +60,6 @@ namespace DMT.Matcher.Module
             }
         }
 
-
         public MatcherModule()
         {
             this.id = Guid.NewGuid();
@@ -105,6 +104,16 @@ namespace DMT.Matcher.Module
             this.Job = new Job(client.GetJob());
             // signal back
             client.MarkMatcherReady(this.id);
+        }
+
+        internal INode GetNode(IId nodeid)
+        {
+            if (nodeid == null)
+            {
+                throw new ArgumentNullException("nodeid");
+            }
+
+            return this.model.Nodes.FirstOrDefault(n => n.Id.Equals(nodeid));
         }
 
         /// <summary>
