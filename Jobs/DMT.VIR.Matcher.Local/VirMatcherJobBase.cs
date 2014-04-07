@@ -28,7 +28,7 @@ namespace DMT.VIR.Matcher.Local
         {
             get
             {
-                return new Semester(2013, 2014, Semester.SemesterPeriod.Autumn);
+                return new Semester(2012, 2013, Semester.SemesterPeriod.Spring);
             }
         }
 
@@ -244,7 +244,7 @@ namespace DMT.VIR.Matcher.Local
             {
                 bool semOk = n.Semester.Equals(this.Semester);
                 bool hasPerson = false;
-                var person = this.pattern.GetNodeByName(PatternNodes.Person);
+                var person = this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode;
 
                 foreach (var edge in n.Edges.Cast<IMatchEdge>())
                 {
