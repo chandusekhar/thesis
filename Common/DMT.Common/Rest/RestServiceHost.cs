@@ -97,7 +97,7 @@ namespace DMT.Common.Rest
                 }
                 catch (Exception ex)
                 {
-                    logger.ErrorException(string.Format("Unhandled exception on [{1}] {0} route. Message: {2}", req.RawUrl, method, ex.Message), ex);
+                    logger.ErrorException(string.Format("Unhandled exception on [{1}] {0} route.", req.RawUrl, method), ex);
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("Exception occured!");
                     sb.AppendFormat("Message: {0}\n", ex.Message);

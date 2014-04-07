@@ -26,7 +26,7 @@ namespace DMT.Matcher.Module.Service
 
             if (node != null)
             {
-                new NodeSerializer(response.Body).Serialize(node);
+                new NodeSerializer(response.Body, factory, null).Serialize(node);
             }
             else
             {

@@ -244,6 +244,7 @@ namespace DMT.VIR.Matcher.Local
             {
                 bool semOk = n.Semester.Equals(this.Semester);
                 bool hasPerson = false;
+                var person = this.pattern.GetNodeByName(PatternNodes.Person);
 
                 foreach (var edge in n.Edges.Cast<IMatchEdge>())
                 {
@@ -252,7 +253,7 @@ namespace DMT.VIR.Matcher.Local
                         continue;
                     }
 
-                    if (edge.GetOtherNode(n).Equals(this.pattern.GetNodeByName(PatternNodes.Person).Id))
+                    if (edge.GetOtherNode(n).Id.Equals(person.Id))
                     {
                         hasPerson = true;
                         break;

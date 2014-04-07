@@ -68,6 +68,10 @@
       <Project>{5d9631fe-84bc-4876-a430-e59b92ddb76b}</Project>
       <Name>DMT.Matcher.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Jobs\DMT.VIR.Data\DMT.VIR.Data.csproj">
+      <Project>{b27a9464-a44a-4780-a6be-329de6e6f1df}</Project>
+      <Name>DMT.VIR.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DMT.Matcher.Module\DMT.Matcher.Module.csproj">
       <Project>{9447bfdf-37bd-495c-ae22-6ba7d9d1ff9e}</Project>
       <Name>DMT.Matcher.Module</Name>
