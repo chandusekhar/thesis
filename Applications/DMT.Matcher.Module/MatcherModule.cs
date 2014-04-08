@@ -50,14 +50,7 @@ namespace DMT.Matcher.Module
         private Job Job
         {
             get { return this.job; }
-            set
-            {
-                if (this.job != null)
-                {
-                    this.job.Dispose();
-                }
-                this.job = value;
-            }
+            set { this.job = value; }
         }
 
         public MatcherModule()

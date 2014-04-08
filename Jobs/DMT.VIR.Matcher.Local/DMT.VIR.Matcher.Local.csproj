@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PatternFactory.cs" />
-    <Compile Include="VirDependencyProvider.cs" />
     <Compile Include="VirLocalMatcherJob.cs" />
     <Compile Include="VirMatcherJobBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

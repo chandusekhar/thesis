@@ -11,19 +11,15 @@ using DMT.Module.Common.Service;
 
 namespace DMT.Matcher.Module
 {
-    internal class Job : IDisposable
+    internal class Job
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private string[] dependencies;
         private IMatcherJob job;
         private bool jobStarted;
 
         public Job(JobTypeResult result)
         {
-            this.dependencies = result.DependencyProvider.GetDependencies();
-            AppDomain.CurrentDomain.AssemblyResolve += ResolveDependencies;
-
             this.job = InstantiateJob(result.JobFactoryType);
             job.Done += HandleJobDone;
         }
@@ -46,11 +42,6 @@ namespace DMT.Matcher.Module
             logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);
         }
 
-        public void Dispose()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve -= ResolveDependencies;
-        }
-
         private void HandleJobDone(object sender, MatcherJobDoneEventArgs e)
         {
             this.jobStarted = false;
@@ -59,43 +50,6 @@ namespace DMT.Matcher.Module
             var client = MatcherModule.Instance.CreatePartitionServiceClient();
             client.MarkMatcherDone(MatcherModule.Instance.Id, new MatchFoundRequest { MatchFound = e.HasMatches });
             logger.Debug("Matcher job reported done to partition module.");
-        }
-
-        private Assembly ResolveDependencies(object sender, ResolveEventArgs args)
-        {
-            logger.Debug("Resolving dependency for {0}", args.Name);
-            foreach (var dep in this.dependencies)
-            {
-                if (args.Name.Contains(dep))
-                {
-                    return LoadDepencdency(dep);
-                }
-            }
-
-            logger.Warn("Could not resolve dependency for {0}", args.Name);
-
-            return null;
-        }
-
-        private Assembly LoadDepencdency(string depName)
-        {
-            string[] paths = new[]
-            {
-                string.Concat(Configuration.Current.DefaultsFolder, "/", depName, ".dll"),
-                string.Concat(Configuration.Current.PluginsFolder, "/", depName, ".dll"),
-            };
-
-            foreach (var path in paths)
-            {
-                var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
-                if (fi.Exists)
-                {
-                    return Assembly.LoadFile(fi.FullName);
-                }
-            }
-
-            logger.Warn("No dll file exists in the additional probing paths.");
-            return null;
         }
 
         private IMatcherJob InstantiateJob(Type jobFactoryType)
