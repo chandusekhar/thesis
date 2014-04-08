@@ -34,6 +34,13 @@ namespace DMT.Matcher.Module
 
         public INode GetNode(IId partitionId, IId nodeId)
         {
+            // try to lookup the node in this module (this should be O(1))
+            var node = MatcherModule.Instance.GetNode(nodeId);
+            if (node != null)
+            {
+                return node;
+            }
+
             if (!this.partitionRouting.ContainsKey(partitionId))
             {
                 MatcherInfo mi = MatcherModule.Instance.CreatePartitionServiceClient().FindMatcher(partitionId);

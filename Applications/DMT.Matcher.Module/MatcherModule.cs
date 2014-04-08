@@ -106,7 +106,9 @@ namespace DMT.Matcher.Module
                 throw new ArgumentNullException("nodeid");
             }
 
-            return this.model.Nodes.FirstOrDefault(n => n.Id.Equals(nodeid));
+            INode node = null;
+            this.model.GetNodeDictionary().TryGetValue(nodeid, out node);
+            return node;
         }
 
         /// <summary>

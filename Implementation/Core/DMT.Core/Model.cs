@@ -10,6 +10,7 @@ namespace DMT.Core
     public class Model : IModel
     {
         private List<INode> nodesList;
+        private Dictionary<IId, INode> nodeDic;
 
         public ICollection<INode> Nodes
         {
@@ -29,6 +30,17 @@ namespace DMT.Core
         public Model(IEnumerable<INode> nodes)
         {
             this.nodesList = new List<INode>(nodes);
+        }
+
+
+        public IDictionary<IId, INode> GetNodeDictionary()
+        {
+            if (nodeDic == null)
+            {
+                nodeDic = this.nodesList.ToDictionary(n => n.Id);
+            }
+
+            return nodeDic;
         }
     }
 }
