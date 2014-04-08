@@ -27,8 +27,9 @@ namespace DMT.Partition.Module.Remote.Service
 
             if (request.MatchFound)
             {
-                logger.Info("Match found in {0} matcher module", id);
+                logger.Info("Match found in {0} matcher module, cancalling others.", id);
                 Console.WriteLine("Match found in {0} module", id);
+                PartitionModule.Instance.MatcherRegistry.CancelMatchers(id);
             }
             else
             {

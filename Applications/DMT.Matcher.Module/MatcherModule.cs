@@ -47,7 +47,7 @@ namespace DMT.Matcher.Module
 
         public Guid Id { get { return this.id; } }
 
-        private Job Job
+        internal Job Job
         {
             get { return this.job; }
             set { this.job = value; }

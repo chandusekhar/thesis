@@ -23,6 +23,11 @@ namespace DMT.Matcher.Interfaces
         string Name { get; }
 
         /// <summary>
+        /// Determines whether the job is currently running or not.
+        /// </summary>
+        bool IsRunning { get; }
+
+        /// <summary>
         /// Fires when the search is over.
         /// </summary>
         event MatcherJobDoneEventHandler Done;
@@ -35,11 +40,16 @@ namespace DMT.Matcher.Interfaces
         void Initialize(IMatcherFramework framework);
 
         /// <summary>
-        /// Start the matcher job.
+        /// Start the matcher job asyncronously.
         /// </summary>
         /// <param name="matcherModel">The model that contains the nodes for the matcher instance.</param>
         /// <param name="mode">mode of the search</param>
-        void Start(IModel matcherModel, MatchMode mode);
+        void StartAsync(IModel matcherModel, MatchMode mode);
+
+        /// <summary>
+        /// Cancel a running job.
+        /// </summary>
+        void Cancel();
 
         /// <summary>
         /// Initiate a search for a partial pattern which already has discovered parts

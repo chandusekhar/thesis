@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common;
 using DMT.Core.Interfaces;
@@ -16,7 +17,6 @@ namespace DMT.Matcher.Module
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private IMatcherJob job;
-        private bool jobStarted;
 
         public Job(JobTypeResult result)
         {
@@ -30,22 +30,24 @@ namespace DMT.Matcher.Module
             {
                 throw new ArgumentNullException("model");
             }
-            if (this.jobStarted)
+            if (this.job.IsRunning)
             {
                 throw new JobAlreadyStartedException(string.Format("Job with name {0} has already started.", this.job.Name));
             }
-            this.jobStarted = true;
 
-            // start the task on a background thread
-            Task.Run(() => this.job.Start(model, mode));
+            this.job.StartAsync(model, mode);
 
             logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);
         }
 
+        public void Cancel()
+        {
+            this.job.Cancel();
+            logger.Info("Job cancelled before termination.");
+        }
+
         private void HandleJobDone(object sender, MatcherJobDoneEventArgs e)
         {
-            this.jobStarted = false;
-
             logger.Info("Matcher job (name: {0}) has been finished.", this.job.Name);
             var client = MatcherModule.Instance.CreatePartitionServiceClient();
             client.MarkMatcherDone(MatcherModule.Instance.Id, new MatchFoundRequest { MatchFound = e.HasMatches });

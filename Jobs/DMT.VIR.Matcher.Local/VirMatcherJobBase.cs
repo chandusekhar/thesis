@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
 using DMT.Core.Interfaces;
@@ -22,7 +23,15 @@ namespace DMT.VIR.Matcher.Local
 
         protected IPattern pattern;
 
+        private bool isRunning = false;
+        private CancellationTokenSource cancellationTokenSource;
+
         public abstract string Name { get; }
+
+        public bool IsRunning
+        {
+            get { return this.isRunning; }
+        }
 
         public virtual Semester Semester
         {
@@ -39,22 +48,29 @@ namespace DMT.VIR.Matcher.Local
             this.pattern = CreateUnmatchedPattern();
         }
 
-        public virtual void Start(IModel matcherModel, MatchMode mode)
+        public void StartAsync(IModel matcherModel, MatchMode mode)
         {
-            logger.Info("Starting {0}", this.Name);
-            foreach (var person in matcherModel.Nodes.OfType<Person>())
-            {
-                this.pattern.Reset();
-                if (TryMatchPerson(person))
-                {
-                    logger.Info("Match found: {0}", person.FullName);
-                    OnDone(new[] { this.pattern });
-                    return;
-                }
-            }
+            this.isRunning = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken ct = this.cancellationTokenSource.Token;
 
-            logger.Warn("No match found.");
-            OnDone(new IPattern[0]);
+            Task.Run(() =>
+            {
+                try
+                {
+                    Start(matcherModel, mode, ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    logger.Info("{0} was cancelled", this.Name);
+                }
+            }, ct);
+        }
+
+        public virtual void Cancel()
+        {
+            this.isRunning = false;
+            this.cancellationTokenSource.Cancel();
         }
 
         public virtual IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern)
@@ -62,8 +78,35 @@ namespace DMT.VIR.Matcher.Local
             throw new NotSupportedException();
         }
 
+        protected virtual void Start(IModel matcherModel, MatchMode mode, CancellationToken ct)
+        {
+            // cancelled before start?
+            if (ct.IsCancellationRequested)
+            {
+                logger.Warn("Cancelled before start");
+                ct.ThrowIfCancellationRequested();
+            }
+
+            foreach (var person in matcherModel.Nodes.OfType<Person>())
+            {
+                this.pattern.Reset();
+                if (TryMatchPerson(person, ct))
+                {
+                    logger.Info("Match found: {0}", person.FullName);
+                    OnDone(new[] { this.pattern });
+                    return;
+                }
+
+                ct.ThrowIfCancellationRequested();
+            }
+
+            logger.Warn("No match found.");
+            OnDone(new IPattern[0]);
+        }
+
         protected void OnDone(IEnumerable<IPattern> matchedPatterns)
         {
+            this.isRunning = false;
             var handler = this.Done;
             if (handler != null)
             {
@@ -81,7 +124,7 @@ namespace DMT.VIR.Matcher.Local
             return node as T;
         }
 
-        private bool TryMatchPerson(Person person)
+        private bool TryMatchPerson(Person person, CancellationToken ct)
         {
             // match person
             this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode = person;
@@ -118,6 +161,9 @@ namespace DMT.VIR.Matcher.Local
                     found = true;
                     break;
                 }
+
+                // check for cancellation after every edge
+                ct.ThrowIfCancellationRequested();
             }
 
             return found;
