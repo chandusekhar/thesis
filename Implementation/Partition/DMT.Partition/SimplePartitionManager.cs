@@ -18,6 +18,8 @@ namespace DMT.Partition
     [ExportMetadata("name", "simple")]
     class SimplePartitionManager : IPartitionManager
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private IPartitionEntityFactory partitionFactory;
 
         [ImportingConstructor]
@@ -30,7 +32,9 @@ namespace DMT.Partition
         {
             List<IPartition> partitionList = new List<IPartition>();
             List<INode> nodes = new List<INode>(model.Nodes);
-            nodes.Shuffle();
+            var seed = new Random().Next();
+            logger.Debug("Seed used for partition shuffling: {0}", seed);
+            nodes.Shuffle(seed);
 
             int numberOfPartitions = int.Parse(Configuration.Current.GetOption("partitions"));
             int numberOfNodesInPartion = (int)Math.Ceiling(nodes.Count / (double)numberOfPartitions);

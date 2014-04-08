@@ -8,9 +8,9 @@ namespace DMT.Common.Extensions
 {
     public static class ListExtensions
     {
-        public static void Shuffle<T>(this IList<T> list)
+        public static void Shuffle<T>(this IList<T> list, int seed)
         {
-            Random rng = new Random();
+            Random rng = new Random(seed);
             int n = list.Count;
             while (n > 1)
             {
