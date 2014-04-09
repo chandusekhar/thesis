@@ -32,7 +32,8 @@ namespace DMT.Partition
         {
             List<IPartition> partitionList = new List<IPartition>();
             List<INode> nodes = new List<INode>(model.Nodes);
-            var seed = new Random().Next();
+
+            int seed = Seed();
             logger.Debug("Seed used for partition shuffling: {0}", seed);
             nodes.Shuffle(seed);
 
@@ -64,6 +65,17 @@ namespace DMT.Partition
             }
 
             return partitionList;
+        }
+
+        private int Seed()
+        {
+            string seedStr = Configuration.Current.GetOption("seed");
+            if (string.IsNullOrEmpty(seedStr))
+            {
+                return new Random().Next();
+            }
+
+            return int.Parse(seedStr);
         }
     }
 }
