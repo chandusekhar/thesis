@@ -7,22 +7,17 @@ using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 
-namespace DMT.VIR.Matcher.Local.Pattern
+namespace DMT.VIR.Matcher.Local.Patterns
 {
-    public class PatternNode : Node, IPatternNode
+    public class PatternNode : Node
     {
-        private INode matchedNode;
         private string name;
 
-        public INode MatchedNode
-        {
-            get { return this.matchedNode; }
-            set { this.matchedNode = value; }
-        }
+        public INode MatchedNode { get; set; }
 
         public bool IsMatched
         {
-            get { return this.matchedNode != null; }
+            get { return this.MatchedNode != null; }
         }
 
         public string Name

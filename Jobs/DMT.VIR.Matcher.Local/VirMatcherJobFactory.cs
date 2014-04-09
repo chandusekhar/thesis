@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DMT.Common;
 using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
-using DMT.VIR.Matcher.Local.Pattern;
+using DMT.VIR.Matcher.Local.Patterns;
 
 namespace DMT.VIR.Matcher.Local
 {
@@ -33,7 +33,7 @@ namespace DMT.VIR.Matcher.Local
 
         public IPattern CreateEmptyPattern()
         {
-            return new Pattern.Pattern();
+            return new Pattern();
         }
     }
 }

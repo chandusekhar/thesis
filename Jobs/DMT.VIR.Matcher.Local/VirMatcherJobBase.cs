@@ -10,6 +10,7 @@ using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.VIR.Data;
+using DMT.VIR.Matcher.Local.Patterns;
 
 namespace DMT.VIR.Matcher.Local
 {
@@ -21,7 +22,7 @@ namespace DMT.VIR.Matcher.Local
         protected const string ExGroupLeaderPost = "volt körvezető";
         protected const int CommunityScoreThreshold = 60;
 
-        protected IPattern pattern;
+        protected Pattern pattern;
 
         private bool isRunning = false;
         private CancellationTokenSource cancellationTokenSource;
@@ -127,7 +128,7 @@ namespace DMT.VIR.Matcher.Local
         private bool TryMatchPerson(Person person, CancellationToken ct)
         {
             // match person
-            this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode = person;
+            this.pattern.SetMatchedNodeForPatternNode(PatternNodes.Person, person);
 
             bool found = false;
             IMatchEdge e;
@@ -156,7 +157,7 @@ namespace DMT.VIR.Matcher.Local
 
                 TryMatchComminityScore(ConvertNode<CommunityScore>(edge, neighbour));
 
-                if (this.pattern.IsFullyMatched)
+                if (this.pattern.IsMatched)
                 {
                     found = true;
                     break;
@@ -176,7 +177,7 @@ namespace DMT.VIR.Matcher.Local
             if (CheckNode(ms, PatternNodes.GroupLeader,
                 n => Array.Exists(n.Posts, p => p == VirMatcherJobBase.GroupLeaderPost || p == VirMatcherJobBase.ExGroupLeaderPost)))
             {
-                this.pattern.GetNodeByName(PatternNodes.GroupLeader).MatchedNode = ms;
+                this.pattern.SetMatchedNodeForPatternNode(PatternNodes.GroupLeader, ms);
                 return true;
             }
 
@@ -187,7 +188,7 @@ namespace DMT.VIR.Matcher.Local
         {
             if (CheckNode(cs, PatternNodes.CommunityScore, n => n.Score > VirMatcherJobBase.CommunityScoreThreshold))
             {
-                this.pattern.GetNodeByName(PatternNodes.CommunityScore).MatchedNode = cs;
+                this.pattern.SetMatchedNodeForPatternNode(PatternNodes.CommunityScore, cs);
                 return true;
             }
 
@@ -208,8 +209,8 @@ namespace DMT.VIR.Matcher.Local
                     if (edge.GetOtherNode(ms) is Group)
                     {
                         // match nodes when there is an available group in the local partition
-                        this.pattern.GetNodeByName(PatternNodes.Group2).MatchedNode = edge.GetOtherNode(ms);
-                        this.pattern.GetNodeByName(PatternNodes.ActiveMembership2).MatchedNode = ms;
+                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.Group2, edge.GetOtherNode(ms));
+                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.ActiveMembership2, ms);
                         return true;
                     }
                 }
@@ -261,10 +262,10 @@ namespace DMT.VIR.Matcher.Local
                                         && svNext.Edges.Any(svNextEdge => !((IMatchEdge)svNextEdge).IsRemote && svNextEdge.GetOtherNode(svNext) == sv))
                                     {
                                         // everything lines up, set matches for pattern and return
-                                        this.pattern.GetNodeByName(PatternNodes.ActiveMembership1).MatchedNode = ms;
-                                        this.pattern.GetNodeByName(PatternNodes.Group1).MatchedNode = g;
-                                        this.pattern.GetNodeByName(PatternNodes.SemesterValuation).MatchedNode = sv;
-                                        this.pattern.GetNodeByName(PatternNodes.SemesterValuationNext).MatchedNode = svNext;
+                                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.ActiveMembership1, ms);
+                                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.Group1, g);
+                                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.SemesterValuation, sv);
+                                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.SemesterValuationNext, svNext);
                                         return true;
                                     }
                                 }
@@ -310,7 +311,7 @@ namespace DMT.VIR.Matcher.Local
             });
         }
 
-        private IPattern CreateUnmatchedPattern()
+        private Pattern CreateUnmatchedPattern()
         {
             return PatternFactory.CreateUnmatched();
         }
