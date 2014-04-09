@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.VIR.Matcher.Local.Patterns
@@ -37,6 +39,31 @@ namespace DMT.VIR.Matcher.Local.Patterns
             this.name = name;
         }
 
-        // TODO: serialization
+        public override void Serialize(XmlWriter writer)
+        {
+            base.Serialize(writer);
+
+            writer.WriteElementString("Name", name);
+            writer.WriteStartElement("MatchedNode");
+            if (IsMatched) {
+
+                writer.WriteAttributeString("type", MatchedNode.GetType().Name);
+                MatchedNode.Serialize(writer);
+            }
+            writer.WriteEndElement();
+        }
+
+        public override void Deserialize(XmlReader reader, IContext context)
+        {
+            base.Deserialize(reader, context);
+
+            this.name = reader.ReadElementContentAsString();
+            if (!reader.IsEmptyElement)
+            {
+                var type = reader.GetAttribute("type");
+                this.MatchedNode = this.factory.CreateNode(type);
+                this.MatchedNode.Deserialize(reader.ReadSubtree(), context);
+            }
+        }
     }
 }
