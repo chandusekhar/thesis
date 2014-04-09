@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,15 +12,6 @@ namespace DMT.VIR.Matcher.Local.Patterns
     public class Pattern : IPattern
     {
         private List<PatternNode> patternNodes;
-
-        /// <summary>
-        /// Gets or sets the nodes for the pattern.
-        /// </summary>
-        public IEnumerable<PatternNode> PatternNodes
-        {
-            get { return this.patternNodes; }
-            set { this.patternNodes = new List<PatternNode>(value); }
-        }
 
         public bool IsMatched
         {
