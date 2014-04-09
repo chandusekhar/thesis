@@ -11,8 +11,7 @@ using DMT.Matcher.Data.Interfaces;
 namespace DMT.VIR.Data
 {
     [Export(typeof(IEntityFactory))]
-    [Export(typeof(IMatcherEntityFactory))]
-    public class VirEntityFactory : CoreEntityFactory, IMatcherEntityFactory
+    public class VirEntityFactory : CoreEntityFactory
     {
         private readonly static Dictionary<string, Type> nodeTypes = new Dictionary<string, Type>
         {
@@ -41,21 +40,6 @@ namespace DMT.VIR.Data
         public override IEdge CreateEdge(INode nodeA, INode nodeB, EdgeDirection direction)
         {
             return new VirEdge(nodeA, nodeB, direction, this.baseFactory);
-        }
-
-        public IPattern CreatePattern()
-        {
-            return new Pattern();
-        }
-
-        public IPatternNode CreatePatternNode()
-        {
-            return new PatternNode(this.baseFactory);
-        }
-
-        public IPatternNode CreatePatternNode(string name)
-        {
-            return new PatternNode(name, this.baseFactory);
         }
     }
 }

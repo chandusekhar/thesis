@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Common;
+using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
+using DMT.VIR.Matcher.Local.Pattern;
 
 namespace DMT.VIR.Matcher.Local
 {
@@ -27,6 +29,11 @@ namespace DMT.VIR.Matcher.Local
                 default:
                     throw new NotSupportedException("Not supported strategy: " + strategy);
             }
+        }
+
+        public IPattern CreateEmptyPattern()
+        {
+            return new Pattern.Pattern();
         }
     }
 }

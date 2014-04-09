@@ -7,19 +7,21 @@ using System.Threading.Tasks;
 using DMT.Common.Composition;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
+using DMT.VIR.Matcher.Local.Pattern;
 
 namespace DMT.VIR.Matcher.Local
 {
     class PatternFactory
     {
-        [Import]
-        private IMatcherEntityFactory entityFactory;
         private IPattern pattern;
+
+        [Import]
+        private IEntityFactory factory;
 
         public PatternFactory()
         {
             CompositionService.Default.InjectOnce(this);
-            this.pattern = this.entityFactory.CreatePattern();
+            this.pattern = new VirMatcherJobFactory().CreateEmptyPattern();
         }
 
         public static IPattern CreateUnmatched()
@@ -30,7 +32,7 @@ namespace DMT.VIR.Matcher.Local
         public IPattern CreateUnmatchedPattern()
         {
             // Create person as the center of the pattern.
-            var person = this.entityFactory.CreatePatternNode(PatternNodes.Person);
+            var person = CreatePatternNode(PatternNodes.Person);
             this.pattern.AddNodes(person);
 
             AddActiveMembershipSubpattern(person);
@@ -41,12 +43,17 @@ namespace DMT.VIR.Matcher.Local
             return this.pattern;
         }
 
+        private IPatternNode CreatePatternNode(string name)
+        {
+            return new PatternNode(name, factory);
+        }
+
         private void AddSemesterValuationWithActiveMemebershipSuppattern(IPatternNode person)
         {
-            var activeMembership1 = this.entityFactory.CreatePatternNode(PatternNodes.ActiveMembership1);
-            var group1 = this.entityFactory.CreatePatternNode(PatternNodes.Group1);
-            var semesterValuation = this.entityFactory.CreatePatternNode(PatternNodes.SemesterValuation);
-            var semesterValuationNext = this.entityFactory.CreatePatternNode(PatternNodes.SemesterValuationNext);
+            var activeMembership1 = CreatePatternNode(PatternNodes.ActiveMembership1);
+            var group1 = CreatePatternNode(PatternNodes.Group1);
+            var semesterValuation = CreatePatternNode(PatternNodes.SemesterValuation);
+            var semesterValuationNext = CreatePatternNode(PatternNodes.SemesterValuationNext);
 
             person.ConnectTo(activeMembership1, EdgeDirection.Both);
             activeMembership1.ConnectTo(group1, EdgeDirection.Both);
@@ -61,14 +68,14 @@ namespace DMT.VIR.Matcher.Local
 
         private void AddCommunityScoreSubpattern(IPatternNode person)
         {
-            var communityPoint = this.entityFactory.CreatePatternNode(PatternNodes.CommunityScore);
+            var communityPoint = CreatePatternNode(PatternNodes.CommunityScore);
             person.ConnectTo(communityPoint, EdgeDirection.Both);
             this.pattern.AddNodes(communityPoint);
         }
 
         private void AddGroupLeaderSubpattern(IPatternNode person)
         {
-            var groupLeader = this.entityFactory.CreatePatternNode(PatternNodes.GroupLeader);
+            var groupLeader = CreatePatternNode(PatternNodes.GroupLeader);
             person.ConnectTo(groupLeader, EdgeDirection.Both);
 
             this.pattern.AddNodes(groupLeader);
@@ -76,8 +83,8 @@ namespace DMT.VIR.Matcher.Local
 
         private void AddActiveMembershipSubpattern(IPatternNode person)
         {
-            var activeMembership2 = this.entityFactory.CreatePatternNode(PatternNodes.ActiveMembership2);
-            var group2 = this.entityFactory.CreatePatternNode(PatternNodes.Group2);
+            var activeMembership2 = CreatePatternNode(PatternNodes.ActiveMembership2);
+            var group2 = CreatePatternNode(PatternNodes.Group2);
 
             person.ConnectTo(activeMembership2, EdgeDirection.Both);
             activeMembership2.ConnectTo(group2, EdgeDirection.Both);

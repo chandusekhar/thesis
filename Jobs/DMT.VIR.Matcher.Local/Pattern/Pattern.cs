@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 
-namespace DMT.VIR.Data
+namespace DMT.VIR.Matcher.Local.Pattern
 {
     public class Pattern : IPattern
     {

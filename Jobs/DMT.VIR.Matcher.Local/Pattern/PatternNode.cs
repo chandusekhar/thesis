@@ -7,7 +7,7 @@ using DMT.Core.Entities;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 
-namespace DMT.VIR.Data
+namespace DMT.VIR.Matcher.Local.Pattern
 {
     public class PatternNode : Node, IPatternNode
     {
@@ -28,12 +28,6 @@ namespace DMT.VIR.Data
         public string Name
         {
             get { return this.name; }
-        }
-
-        public PatternNode(IEntityFactory factory)
-            : this(null, factory)
-        {
-
         }
 
         public PatternNode(string name, IEntityFactory factory)
