@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Common.Composition;
 using DMT.Core.Interfaces;
@@ -22,39 +23,54 @@ namespace DMT.VIR.Matcher.Local
 
         protected IPattern pattern;
 
+        private bool isRunning = false;
+        private CancellationTokenSource cancellationTokenSource;
+
         public abstract string Name { get; }
+
+        public bool IsRunning
+        {
+            get { return this.isRunning; }
+        }
 
         public virtual Semester Semester
         {
             get
             {
-                return new Semester(2013, 2014, Semester.SemesterPeriod.Autumn);
+                return new Semester(2012, 2013, Semester.SemesterPeriod.Spring);
             }
         }
 
         public event MatcherJobDoneEventHandler Done;
 
-        public void Initialize(IMatcherFramework framework)
+        public virtual void Initialize(IMatcherFramework framework)
         {
             this.pattern = CreateUnmatchedPattern();
         }
 
-        public virtual void Start(IModel matcherModel, MatchMode mode)
+        public void StartAsync(IModel matcherModel, MatchMode mode)
         {
-            logger.Info("Starting {0}", this.Name);
-            foreach (var person in matcherModel.Nodes.OfType<Person>())
-            {
-                this.pattern.Reset();
-                if (TryMatchPerson(person))
-                {
-                    logger.Info("Match found: {0}", person.FullName);
-                    OnDone(new[] { this.pattern });
-                    return;
-                }
-            }
+            this.isRunning = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken ct = this.cancellationTokenSource.Token;
 
-            logger.Warn("No match found.");
-            OnDone(new IPattern[0]);
+            Task.Run(() =>
+            {
+                try
+                {
+                    Start(matcherModel, mode, ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    logger.Info("{0} was cancelled", this.Name);
+                }
+            }, ct);
+        }
+
+        public virtual void Cancel()
+        {
+            this.isRunning = false;
+            this.cancellationTokenSource.Cancel();
         }
 
         public virtual IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern)
@@ -62,10 +78,35 @@ namespace DMT.VIR.Matcher.Local
             throw new NotSupportedException();
         }
 
+        protected virtual void Start(IModel matcherModel, MatchMode mode, CancellationToken ct)
+        {
+            // cancelled before start?
+            if (ct.IsCancellationRequested)
+            {
+                logger.Warn("Cancelled before start");
+                ct.ThrowIfCancellationRequested();
+            }
 
+            foreach (var person in matcherModel.Nodes.OfType<Person>())
+            {
+                this.pattern.Reset();
+                if (TryMatchPerson(person, ct))
+                {
+                    logger.Info("Match found: {0}", person.FullName);
+                    OnDone(new[] { this.pattern });
+                    return;
+                }
+
+                ct.ThrowIfCancellationRequested();
+            }
+
+            logger.Warn("No match found.");
+            OnDone(new IPattern[0]);
+        }
 
         protected void OnDone(IEnumerable<IPattern> matchedPatterns)
         {
+            this.isRunning = false;
             var handler = this.Done;
             if (handler != null)
             {
@@ -78,7 +119,12 @@ namespace DMT.VIR.Matcher.Local
             return false;
         }
 
-        private bool TryMatchPerson(Person person)
+        protected virtual T ConvertNode<T>(IMatchEdge incomingEdge, INode node) where T : class, INode
+        {
+            return node as T;
+        }
+
+        private bool TryMatchPerson(Person person, CancellationToken ct)
         {
             // match person
             this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode = person;
@@ -94,7 +140,7 @@ namespace DMT.VIR.Matcher.Local
                 }
 
                 neighbour = edge.GetOtherNode(person);
-                var membership = neighbour as Membership;
+                var membership = ConvertNode<Membership>(edge, neighbour);
 
                 // could not match group leader (maybe because it has already been matched)
                 // then try to match an active membership
@@ -108,13 +154,16 @@ namespace DMT.VIR.Matcher.Local
                     }
                 }
 
-                TryMatchComminityScore(neighbour as CommunityScore);
+                TryMatchComminityScore(ConvertNode<CommunityScore>(edge, neighbour));
 
                 if (this.pattern.IsFullyMatched)
                 {
                     found = true;
                     break;
                 }
+
+                // check for cancellation after every edge
+                ct.ThrowIfCancellationRequested();
             }
 
             return found;
@@ -183,7 +232,7 @@ namespace DMT.VIR.Matcher.Local
                     }
 
                     // has group
-                    Group g = edge.GetOtherNode(ms) as Group;
+                    Group g = ConvertNode<Group>(edge, edge.GetOtherNode(ms));
                     if (g != null)
                     {
                         foreach (var groupEdge in g.Edges.Cast<IMatchEdge>())
@@ -194,7 +243,7 @@ namespace DMT.VIR.Matcher.Local
                             }
 
                             // has semester valuation for the specfied semester
-                            SemesterValuation sv = groupEdge.GetOtherNode(g) as SemesterValuation;
+                            SemesterValuation sv = ConvertNode<SemesterValuation>(groupEdge, groupEdge.GetOtherNode(g));
                             if (CheckSemesterValuation(sv, PatternNodes.SemesterValuation))
                             {
                                 // semester valuation is ok, check for next (or prev) version
@@ -207,7 +256,7 @@ namespace DMT.VIR.Matcher.Local
                                         continue;
                                     }
 
-                                    SemesterValuation svNext = svEdge.GetOtherNode(sv) as SemesterValuation;
+                                    SemesterValuation svNext = ConvertNode<SemesterValuation>(svEdge, svEdge.GetOtherNode(sv));
                                     if (CheckSemesterValuation(svNext, PatternNodes.SemesterValuationNext)
                                         && svNext.Edges.Any(svNextEdge => !((IMatchEdge)svNextEdge).IsRemote && svNextEdge.GetOtherNode(svNext) == sv))
                                     {
@@ -241,6 +290,7 @@ namespace DMT.VIR.Matcher.Local
             {
                 bool semOk = n.Semester.Equals(this.Semester);
                 bool hasPerson = false;
+                var person = this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode;
 
                 foreach (var edge in n.Edges.Cast<IMatchEdge>())
                 {
@@ -249,7 +299,7 @@ namespace DMT.VIR.Matcher.Local
                         continue;
                     }
 
-                    if (edge.GetOtherNode(n).Equals(this.pattern.GetNodeByName(PatternNodes.Person).Id))
+                    if (edge.GetOtherNode(n).Id.Equals(person.Id))
                     {
                         hasPerson = true;
                         break;

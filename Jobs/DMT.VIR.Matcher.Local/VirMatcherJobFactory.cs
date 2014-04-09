@@ -12,17 +12,21 @@ namespace DMT.VIR.Matcher.Local
     {
         private const string MatcherStrategyKey = "strategy";
         private const string LocalStartegy = "local";
+        private const string ProxyStrategy = "proxy";
 
         public IMatcherJob CreateMatcherJob()
         {
             string strategy = Configuration.Current.GetOption(MatcherStrategyKey);
 
-            if (strategy == LocalStartegy)
+            switch (strategy)
             {
-                return new VirLocalMatcherJob();
+                case LocalStartegy:
+                    return new VirLocalMatcherJob();
+                case ProxyStrategy:
+                    return new VirProxyMatcherJob();
+                default:
+                    throw new NotSupportedException("Not supported strategy: " + strategy);
             }
-
-            throw new InvalidOperationException("Not supported strategy: " + strategy);
         }
     }
 }

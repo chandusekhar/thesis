@@ -59,6 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\IContext.cs" />
     <Compile Include="IEntityFactory.cs" />
+    <Compile Include="Serialization\IContextFactory.cs" />
     <Compile Include="Serialization\IModelXmlSerializer.cs" />
     <Compile Include="Serialization\ISerializable.cs" />
   </ItemGroup>

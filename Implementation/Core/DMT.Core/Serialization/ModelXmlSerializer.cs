@@ -26,11 +26,13 @@ namespace DMT.Core.Serialization
         public const string TypeAttr = "type";
 
         private IEntityFactory entityFactory;
+        private IContextFactory contextFactory;
 
         [ImportingConstructor]
-        public ModelXmlSerializer(IEntityFactory factory)
+        public ModelXmlSerializer(IEntityFactory factory, IContextFactory cFactory)
         {
             this.entityFactory = factory;
+            this.contextFactory = cFactory;
         }
 
         public void Serialize(XmlWriter writer, IModel model)
@@ -44,7 +46,7 @@ namespace DMT.Core.Serialization
 
             // nodes
             logger.Debug("Saving nodes.");
-            WriteCollectionToXml(nodes, writer, NodesTag, NodeTag);
+            WriteCollectionToXml(nodes, writer, NodesTag, NodeTag, o => Tuple.Create(TypeAttr, o.GetType().Name));
             logger.Debug("End of saving nodes.");
 
             // edges
@@ -64,7 +66,7 @@ namespace DMT.Core.Serialization
 
         public IModel Deserialize(XmlReader reader, Action<IEdge> edgeDeserializedCallback)
         {
-            IContext context = new DeserializationContext();
+            IContext context = this.contextFactory.CreateContext();
             List<INode> nodeList;
 
             // read nodes
@@ -131,12 +133,17 @@ namespace DMT.Core.Serialization
             return edgeDict.Values;
         }
 
-        private void WriteCollectionToXml(IEnumerable<ISerializable> elements, XmlWriter writer, string collectionTag, string elementTag)
+        private void WriteCollectionToXml(IEnumerable<ISerializable> elements, XmlWriter writer, string collectionTag, string elementTag, Func<object, Tuple<string, string>> attribute = null)
         {
             writer.WriteStartElement(collectionTag);
             foreach (var element in elements)
             {
                 writer.WriteStartElement(elementTag);
+                if (attribute != null)
+                {
+                    var a = attribute(element);
+                    writer.WriteAttributeString(a.Item1, a.Item2);
+                }
                 element.Serialize(writer);
                 writer.WriteEndElement();
             }

@@ -96,6 +96,16 @@ namespace DMT.Partition.Module.Remote
             await Task.WhenAll(tasks);
         }
 
+        public async void CancelMatchers(Guid except)
+        {
+            // restart the whole matcher cycle by setting every matcher to done
+            this.matchers.ForEach(m => m.Done = true);
+            var tasks = this.matchers
+                            .Where(m => m.Id != except)
+                            .Select(m => new MatcherServiceClient(m.Url).CancelMatcher());
+            await Task.WhenAll(tasks);
+        }
+
         public MatcherInfo GetByPartitionId(IId id)
         {
             return this.matchers.Find(m => m.Partition != null && m.Partition.Id.Equals(id));

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using DMT.Common.Composition;
+using DMT.Common.Extensions;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
@@ -52,6 +53,7 @@ namespace DMT.Matcher.Module.Partitioner
                 });
             }
             logger.Info("Deserialization finished. Loaded {0} node(s).", model.Nodes.Count);
+            SortEdgesInNodes(model);
             return model;
         }
 
@@ -78,6 +80,11 @@ namespace DMT.Matcher.Module.Partitioner
             IId id = entityFactory.CreateId();
             id.Deserialize(reader, null);
             return id;
+        }
+
+        private void SortEdgesInNodes(IModel model)
+        {
+            model.Nodes.Cast<IMatchNode>().ForEach(n => n.SortEdges());
         }
     }
 }

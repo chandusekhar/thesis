@@ -58,7 +58,11 @@
     <Compile Include="Partitioner\MatcherDataDeserializer.cs" />
     <Compile Include="Partitioner\PartitionBrokerServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\CancelHandler.cs" />
+    <Compile Include="Service\GetNodeHandler.cs" />
+    <Compile Include="Service\NodeSerializer.cs" />
     <Compile Include="Service\MatcherService.cs" />
+    <Compile Include="Service\MatcherServiceClient.cs" />
     <Compile Include="Service\QuitHandler.cs" />
     <Compile Include="Service\RestartHandler.cs" />
     <Compile Include="Service\StartHandler.cs" />

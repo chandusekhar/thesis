@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using DMT.Core.Entities;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.VIR.Data
 {
-    public abstract class VirNode : Node
+    public abstract class VirNode : Node, IMatchNode
     {
         const string TypeAttr = "type";
 
@@ -19,10 +20,36 @@ namespace DMT.VIR.Data
 
         }
 
-        public override void Serialize(XmlWriter writer)
+        public void SortEdges()
         {
-            writer.WriteAttributeString(TypeAttr, this.GetType().Name);
-            base.Serialize(writer);
+            this.edges.Sort(new Comparison<IEdge>(CompareEdgesBasedOnRemoteness));
+        }
+
+        // sort edges in a way that remote edges end up toward the end of list
+        private int CompareEdgesBasedOnRemoteness(IEdge e1, IEdge e2)
+        {
+            IMatchEdge me1 = (IMatchEdge)e1;
+            IMatchEdge me2 = (IMatchEdge)e2;
+
+            bool bothRemote = me1.IsRemote && me2.IsRemote;
+            bool bothLocal = !me1.IsRemote && !me2.IsRemote;
+
+            if (bothLocal || bothRemote)
+            {
+                return 0;
+            }
+
+            if (me1.IsRemote)
+            {
+                return 1;
+            }
+
+            if (me2.IsRemote)
+            {
+                return -1;
+            }
+
+            throw new InvalidOperationException("Cannot decide which edge comes first...");
         }
     }
 }

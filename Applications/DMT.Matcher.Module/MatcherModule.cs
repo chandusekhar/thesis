@@ -47,19 +47,11 @@ namespace DMT.Matcher.Module
 
         public Guid Id { get { return this.id; } }
 
-        private Job Job
+        internal Job Job
         {
             get { return this.job; }
-            set
-            {
-                if (this.job != null)
-                {
-                    this.job.Dispose();
-                }
-                this.job = value;
-            }
+            set { this.job = value; }
         }
-
 
         public MatcherModule()
         {
@@ -105,6 +97,18 @@ namespace DMT.Matcher.Module
             this.Job = new Job(client.GetJob());
             // signal back
             client.MarkMatcherReady(this.id);
+        }
+
+        internal INode GetNode(IId nodeid)
+        {
+            if (nodeid == null)
+            {
+                throw new ArgumentNullException("nodeid");
+            }
+
+            INode node = null;
+            this.model.GetNodeDictionary().TryGetValue(nodeid, out node);
+            return node;
         }
 
         /// <summary>

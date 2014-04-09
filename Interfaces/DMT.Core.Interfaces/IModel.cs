@@ -21,5 +21,11 @@ namespace DMT.Core.Interfaces
         /// Gets the nodes of the graph.
         /// </summary>
         ICollection<INode> Nodes { get; }
+
+        /// <summary>
+        /// Gets the nodes in a dictionary where the key is the node id.
+        /// </summary>
+        /// <returns></returns>
+        IDictionary<IId, INode> GetNodeDictionary();
     }
 }

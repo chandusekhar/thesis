@@ -16,6 +16,7 @@ namespace DMT.Partition.Module.Remote
         private const string QuitPath = "/quit";
         private const string StartPath = "/start";
         private const string RestartPath = "/restart";
+        private const string CancelPath = "/cancel";
 
         private string baseAddress;
 
@@ -49,6 +50,11 @@ namespace DMT.Partition.Module.Remote
         public Task RestartWithNewJob()
         {
             return RestClientHelper.SendRequestWithoutBodyAsync(HttpMethod.Post, CreateUrl(RestartPath));
+        }
+
+        public Task CancelMatcher()
+        {
+            return RestClientHelper.SendRequestWithoutBodyAsync(HttpMethod.Post, CreateUrl(CancelPath));
         }
 
         private string CreateUrl(string path)
