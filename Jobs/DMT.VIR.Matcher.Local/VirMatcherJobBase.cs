@@ -74,7 +74,7 @@ namespace DMT.VIR.Matcher.Local
             this.cancellationTokenSource.Cancel();
         }
 
-        public virtual IEnumerable<object> FindPartialMatch(IId paritionId, IPattern pattern)
+        public virtual IEnumerable<object> FindPartialMatch(IPattern pattern)
         {
             throw new NotSupportedException();
         }
