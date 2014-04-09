@@ -25,6 +25,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
             get { return this.name; }
         }
 
+        public PatternNode(IEntityFactory factory)
+            : base(factory)
+        {
+
+        }
+
         public PatternNode(string name, IEntityFactory factory)
             : base(factory)
         {

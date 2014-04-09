@@ -4,7 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using DMT.Core.Interfaces;
+using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.VIR.Matcher.Local.Patterns
@@ -89,5 +91,34 @@ namespace DMT.VIR.Matcher.Local.Patterns
             var node = GetNodeByName(name);
             return node.IsMatched;
         }
+
+        #region ISerializable
+
+        public void Serialize(XmlWriter writer)
+        {
+            writer.WriteStartElement("PatternNodes");
+            foreach (var patternNode in this.patternNodes)
+            {
+                writer.WriteStartElement("PatternNode");
+                patternNode.Serialize(writer);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
+
+        public void Deserialize(XmlReader reader, IContext context)
+        {
+            List<PatternNode> nodes = new List<PatternNode>();
+            while (reader.ReadToFollowing("PatternNode"))
+            {
+                var pn = new PatternNode(context.EntityFactory);
+                pn.Deserialize(reader, context);
+                nodes.Add(pn);
+            }
+
+            this.patternNodes = nodes;
+        }
+
+        #endregion
     }
 }
