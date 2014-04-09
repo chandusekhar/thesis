@@ -13,6 +13,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
 {
     public class Pattern : IPattern
     {
+        private Guid id;
         private List<PatternNode> patternNodes;
 
         public bool IsMatched
@@ -20,8 +21,14 @@ namespace DMT.VIR.Matcher.Local.Patterns
             get { return this.patternNodes.All(pn => pn.IsMatched); }
         }
 
+        public Guid Id
+        {
+            get { return this.id; }
+        }
+
         public Pattern()
         {
+            this.id = Guid.NewGuid();
             this.patternNodes = new List<PatternNode>();
         }
 
@@ -96,6 +103,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public void Serialize(XmlWriter writer)
         {
+            writer.WriteElementString("Id", this.id.ToString());
             writer.WriteStartElement("PatternNodes");
             foreach (var patternNode in this.patternNodes)
             {
@@ -108,6 +116,10 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public void Deserialize(XmlReader reader, IContext context)
         {
+            if (reader.Name != "Id") { reader.ReadToFollowing("Id"); }
+
+            this.id = Guid.Parse(reader.ReadElementContentAsString());
+
             List<PatternNode> nodes = new List<PatternNode>();
             while (reader.ReadToFollowing("PatternNode"))
             {
