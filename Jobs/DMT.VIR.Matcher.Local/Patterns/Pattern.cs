@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using DMT.Common.Extensions;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
@@ -14,11 +15,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
     public class Pattern : IPattern
     {
         private Guid id;
-        private List<PatternNode> patternNodes;
+        private Dictionary<string, PatternNode> patternNodes;
 
         public bool IsMatched
         {
-            get { return this.patternNodes.All(pn => pn.IsMatched); }
+            // TODO: cache true value
+            get { return this.patternNodes.Values.All(pn => pn.IsMatched); }
         }
 
         public Guid Id
@@ -29,12 +31,17 @@ namespace DMT.VIR.Matcher.Local.Patterns
         public Pattern()
         {
             this.id = Guid.NewGuid();
-            this.patternNodes = new List<PatternNode>();
+            this.patternNodes = new Dictionary<string, PatternNode>();
         }
 
-        public IEnumerable<INode> GetMatchedNodes()
+        public HashSet<INode> GetMatchedNodes()
         {
-            return this.patternNodes.Where(pn => pn.IsMatched);
+            return new HashSet<INode>(this.patternNodes.Values.Where(pn => pn.IsMatched));
+        }
+
+        IEnumerable<INode> IPattern.GetMatchedNodes()
+        {
+            return this.GetMatchedNodes();
         }
 
         /// <summary>
@@ -43,7 +50,10 @@ namespace DMT.VIR.Matcher.Local.Patterns
         /// <param name="nodes"></param>
         public void AddNodes(params PatternNode[] nodes)
         {
-            this.patternNodes.AddRange(nodes);
+            foreach (var item in nodes)
+            {
+                this.patternNodes.Add(item.Name, item);
+            }
         }
 
         /// <summary>
@@ -51,7 +61,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         /// </summary>
         public void Reset()
         {
-            patternNodes.ForEach(pn => pn.MatchedNode = null);
+            patternNodes.Values.ForEach(pn => pn.MatchedNode = null);
         }
 
         /// <summary>
@@ -62,7 +72,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         /// <exception cref="InvalidOperationException">there is more than one element OR no element</exception>
         public PatternNode GetNodeByName(string name)
         {
-            return this.patternNodes.Single(pn => pn.Name == name);
+            return this.patternNodes[name];
         }
 
         /// <summary>
@@ -105,7 +115,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         {
             writer.WriteElementString("Id", this.id.ToString());
             writer.WriteStartElement("PatternNodes");
-            foreach (var patternNode in this.patternNodes)
+            foreach (var patternNode in this.patternNodes.Values)
             {
                 writer.WriteStartElement("PatternNode");
                 patternNode.Serialize(writer);
@@ -120,12 +130,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
             this.id = Guid.Parse(reader.ReadElementContentAsString());
 
-            List<PatternNode> nodes = new List<PatternNode>();
+            Dictionary<string, PatternNode> nodes = new Dictionary<string, PatternNode>();
             while (reader.ReadToFollowing("PatternNode"))
             {
                 var pn = new PatternNode(context.EntityFactory);
                 pn.Deserialize(reader, context);
-                nodes.Add(pn);
+                nodes.Add(pn.Name, pn);
             }
 
             this.patternNodes = nodes;
