@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patterns\PatternCriteria.cs" />
     <Compile Include="Patterns\PatternFactory.cs" />
     <Compile Include="Patterns\Pattern.cs" />
     <Compile Include="Patterns\PatternNode.cs" />

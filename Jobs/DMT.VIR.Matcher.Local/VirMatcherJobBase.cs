@@ -18,10 +18,6 @@ namespace DMT.VIR.Matcher.Local
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        protected const string GroupLeaderPost = "körvezető";
-        protected const string ExGroupLeaderPost = "volt körvezető";
-        protected const int CommunityScoreThreshold = 60;
-
         protected Pattern pattern;
 
         private bool isRunning = false;
@@ -32,14 +28,6 @@ namespace DMT.VIR.Matcher.Local
         public bool IsRunning
         {
             get { return this.isRunning; }
-        }
-
-        public virtual Semester Semester
-        {
-            get
-            {
-                return new Semester(2012, 2013, Semester.SemesterPeriod.Spring);
-            }
         }
 
         public event MatcherJobDoneEventHandler Done;
@@ -175,7 +163,7 @@ namespace DMT.VIR.Matcher.Local
             // trying to match membership:
             // if not null, has not been matched before and has the correct post
             if (CheckNode(ms, PatternNodes.GroupLeader,
-                n => Array.Exists(n.Posts, p => p == VirMatcherJobBase.GroupLeaderPost || p == VirMatcherJobBase.ExGroupLeaderPost)))
+                n => Array.Exists(n.Posts, p => p == PatternCriteria.GroupLeaderPost || p == PatternCriteria.ExGroupLeaderPost)))
             {
                 this.pattern.SetMatchedNodeForPatternNode(PatternNodes.GroupLeader, ms);
                 return true;
@@ -186,7 +174,13 @@ namespace DMT.VIR.Matcher.Local
 
         private bool TryMatchComminityScore(CommunityScore cs)
         {
-            if (CheckNode(cs, PatternNodes.CommunityScore, n => n.Score > VirMatcherJobBase.CommunityScoreThreshold))
+            var match = new Predicate<CommunityScore>(n =>
+            {
+                return n.Score > PatternCriteria.CommunityScoreThreshold
+                    && PatternCriteria.Semester.Equals(n.Semester);
+            });
+
+            if (CheckNode(cs, PatternNodes.CommunityScore, match))
             {
                 this.pattern.SetMatchedNodeForPatternNode(PatternNodes.CommunityScore, cs);
                 return true;
@@ -289,7 +283,7 @@ namespace DMT.VIR.Matcher.Local
         {
             return CheckNode(sv, name, n =>
             {
-                bool semOk = n.Semester.Equals(this.Semester);
+                bool semOk = n.Semester.Equals(PatternCriteria.Semester);
                 bool hasPerson = false;
                 var person = this.pattern.GetNodeByName(PatternNodes.Person).MatchedNode;
 
