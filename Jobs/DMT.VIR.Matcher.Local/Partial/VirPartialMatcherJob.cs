@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
@@ -18,16 +19,14 @@ namespace DMT.VIR.Matcher.Local.Partial
         private IModel model;
         private IMatcherFramework framework;
         private List<Func<INode, Pattern, bool>> matcherFuncs;
+        private CancellationTokenSource cts;
 
         public string Name
         {
             get { return "VIR Partial matcher"; }
         }
 
-        public bool IsRunning
-        {
-            get { return false; }
-        }
+        public bool IsRunning { get; private set; }
 
         public event MatcherJobDoneEventHandler Done;
 
@@ -50,12 +49,26 @@ namespace DMT.VIR.Matcher.Local.Partial
         public void StartAsync(IModel matcherModel, MatchMode mode)
         {
             this.model = matcherModel;
-            Task.Run(new Action(Start));
+            this.IsRunning = true;
+            this.cts = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    Start(cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    logger.Info("{0} was cancelled.", this.Name);
+                }
+            }, cts.Token);
         }
 
         public void Cancel()
         {
-            throw new NotImplementedException();
+            this.IsRunning = false;
+            this.cts.Cancel();
         }
 
         public IEnumerable<object> FindPartialMatch(IPattern pattern)
@@ -63,18 +76,26 @@ namespace DMT.VIR.Matcher.Local.Partial
             throw new NotImplementedException();
         }
 
-        private void Start()
+        private void Start(CancellationToken ct)
         {
+            if (ct.IsCancellationRequested)
+            {
+                logger.Warn("Cancelled before start.");
+                return;
+            }
+
             Pattern pattern = PatternFactory.CreateUnmatched();
             foreach (var person in this.model.Nodes.OfType<Person>())
             {
                 pattern.Reset();
-                if (TryMatchPerson(person, pattern))
+                if (TryMatchPerson(person, pattern, ct))
                 {
                     logger.Info("Match found: {0}", person.FullName);
                     OnDone(new IPattern[] { pattern });
                     return;
                 }
+
+                ct.ThrowIfCancellationRequested();
             }
             OnDone(new IPattern[0]);
         }
@@ -99,7 +120,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             throw new NotImplementedException();
         }
 
-        private bool TryMatchPerson(Person person, Pattern pattern)
+        private bool TryMatchPerson(Person person, Pattern pattern, CancellationToken ct)
         {
             // always match a person
             pattern.SetMatchedNodeForPatternNode(PatternNodes.Person, person);
@@ -121,6 +142,8 @@ namespace DMT.VIR.Matcher.Local.Partial
                 {
                     return true;
                 }
+
+                ct.ThrowIfCancellationRequested();
             }
 
             return false;
@@ -138,123 +161,83 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         private bool TryMatchActiveMemebership(INode node, Pattern pattern)
         {
-            if (!TryMatchNode<Membership>(node, pattern.GetNodeByName(PatternNodes.ActiveMembership2), ms => ms.IsActive))
-            {
-                return false;
-            }
-            bool isSubpatternMatch = false;
-
-            foreach (var edge in node.Edges.Cast<IMatchEdge>())
-            {
-                INode neighbour = edge.GetOtherNode(node);
-                if (TryMatchGroup(neighbour, pattern.GetNodeByName(PatternNodes.Group2)))
-                {
-                    isSubpatternMatch = true;
-                    break;
-                }
-            }
-
-            if (!isSubpatternMatch)
-            {
-                // clear matched nodes
-                pattern.SetMatchedNodeForPatternNode(PatternNodes.ActiveMembership2, null);
-            }
-
-            return isSubpatternMatch;
+            return TryMatchNodeWithNext<Membership>(
+                node,
+                pattern,
+                pattern.GetNodeByName(PatternNodes.ActiveMembership2),
+                n => n.IsActive,
+                TryMatchGroup
+            );
         }
 
-        private bool TryMatchGroup(INode neighbour, PatternNode patternNode)
+        private bool TryMatchGroup(INode neighbour, Pattern pattern)
         {
-            return TryMatchNode<Group>(neighbour, patternNode, n => true);
+            return TryMatchNode<Group>(neighbour, pattern.GetNodeByName(PatternNodes.Group2), n => true);
         }
 
         private bool TryMatchActiveMembershipForSemesterValuation(INode node, Pattern pattern)
         {
-            // semester valuation subpattern needs an active membership first
-            if (!TryMatchNode<Membership>(node, pattern.GetNodeByName(PatternNodes.ActiveMembership1), n => n.IsActive))
-            {
-                // return immediately if no active membersip
-                return false;
-            }
-
-            bool isSubpatternMatch = false;
-
-            foreach (var edge in node.Edges.Cast<IMatchEdge>())
-            {
-                INode neighbour = edge.GetOtherNode(node);
-                if (TryMatchGroupForSemesterValuation(neighbour, pattern))
-                {
-                    isSubpatternMatch = true;
-                    break;
-                }
-            }
-
-            if (!isSubpatternMatch)
-            {
-                // clear
-                pattern.SetMatchedNodeForPatternNode(PatternNodes.ActiveMembership1, null);
-            }
-
-            return isSubpatternMatch;
+            return TryMatchNodeWithNext<Membership>(
+                node,
+                pattern,
+                pattern.GetNodeByName(PatternNodes.ActiveMembership1),
+                n => n.IsActive,
+                TryMatchGroupForSemesterValuation
+            );
         }
 
         private bool TryMatchGroupForSemesterValuation(INode node, Pattern pattern)
         {
-            if (!TryMatchNode<Group>(node, pattern.GetNodeByName(PatternNodes.Group1), n => true))
-            {
-                return false;
-            }
-
-            bool isSubpatternMatch = false;
-            foreach (var edge in node.Edges.Cast<IMatchEdge>())
-            {
-                INode neigbour = edge.GetOtherNode(node);
-                if (TryMatchSemesterValuation(neigbour, pattern))
-                {
-                    isSubpatternMatch = true;
-                    break;
-                }
-            }
-
-            if (!isSubpatternMatch)
-            {
-                // clear
-                pattern.SetMatchedNodeForPatternNode(PatternNodes.Group1, null);
-            }
-
-            return isSubpatternMatch;
+            return TryMatchNodeWithNext<Group>(
+                node,
+                pattern,
+                pattern.GetNodeByName(PatternNodes.Group1),
+                n => true,
+                TryMatchSemesterValuation
+            );
         }
 
         private bool TryMatchSemesterValuation(INode node, Pattern pattern)
         {
-            if (!TryMatchNode<SemesterValuation>(node, pattern.GetNodeByName(PatternNodes.SemesterValuation), n => n.Semester.Equals(PatternCriteria.Semester)))
-            {
-                return false;
-            }
-
-            bool isSubpatternMatch = false;
-            foreach (var edge in node.Edges.Cast<IMatchEdge>())
-            {
-                INode neigbour = edge.GetOtherNode(node);
-                if (TryMatchNexSemesterValuation(neigbour, pattern))
-                {
-                    isSubpatternMatch = true;
-                    break;
-                }
-            }
-
-            if (!isSubpatternMatch)
-            {
-                // clear
-                pattern.SetMatchedNodeForPatternNode(PatternNodes.SemesterValuation, null);
-            }
-
-            return isSubpatternMatch;
+            return TryMatchNodeWithNext<SemesterValuation>(
+                node,
+                pattern,
+                pattern.GetNodeByName(PatternNodes.SemesterValuation),
+                n => n.Semester.Equals(PatternCriteria.Semester),
+                TryMatchNexSemesterValuation
+            );
         }
 
         private bool TryMatchNexSemesterValuation(INode node, Pattern pattern)
         {
             return TryMatchNode<SemesterValuation>(node, pattern.GetNodeByName(PatternNodes.SemesterValuationNext), n => n.Semester.Equals(PatternCriteria.Semester));
+        }
+
+        private bool TryMatchNodeWithNext<T>(INode node, Pattern pattern, PatternNode patternNode, Predicate<T> predicate, Func<INode, Pattern, bool> next) where T: class, INode
+        {
+            if (!TryMatchNode<T>(node, patternNode, predicate))
+            {
+                return false;
+            }
+
+            bool isSubpatternMatch = false;
+            foreach (var edge in node.Edges.Cast<IMatchEdge>())
+            {
+                INode neighbour = edge.GetOtherNode(node);
+                if (next(neighbour, pattern))
+                {
+                    isSubpatternMatch = true;
+                    break;
+                }
+            }
+
+            if (!isSubpatternMatch)
+            {
+                // clear
+                patternNode.MatchedNode = null;
+            }
+
+            return isSubpatternMatch;
         }
 
         private bool TryMatchNode<T>(INode node, PatternNode patternNode, Predicate<T> predicate) where T : class, INode
