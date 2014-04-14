@@ -117,9 +117,13 @@ namespace DMT.VIR.Matcher.Local.Partial
         /// <param name="remoteNode"></param>
         /// <param name="pattern"></param>
         /// <returns>true if node is handle remotely, false otherwise</returns>
-        private bool HandleRemoteNode(INode remoteNode, Pattern pattern)
+        private void HandleRemoteNode<T>(MatchNodeArg<T> args) where T : class, INode
         {
-            throw new NotImplementedException();
+            var pattern = args.Pattern.Copy();
+            pattern.CurrentNode = args.NodeToMatch.Id;
+            pattern.CurrentPatternNodeName = args.PatternNode.Name;
+
+            framework.BeginFindPartialMatch(args.IncomingEdge.RemotePartitionId, pattern);
         }
 
         private bool TryMatchPerson(Person person, Pattern pattern, CancellationToken ct)
@@ -151,73 +155,105 @@ namespace DMT.VIR.Matcher.Local.Partial
             return false;
         }
 
-        private bool TryMatchGroupLeader(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchGroupLeader(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
-            return TryMatchNode<Membership>(node, pattern.GetNodeByName(PatternNodes.GroupLeader), n => PatternCriteria.HasGroupLeader(n.Posts));
+            return TryMatchNode(new MatchNodeArg<Membership>
+            {
+                NodeToMatch = node,
+                PatternNode = pattern.GetNodeByName(PatternNodes.GroupLeader),
+                Predicate = n => PatternCriteria.HasGroupLeader(n.Posts),
+                IncomingEdge = incomingEdge,
+                Pattern = pattern,
+            });
         }
 
-        private bool TryMatchCommunityScore(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchCommunityScore(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
-            return TryMatchNode<CommunityScore>(node, pattern.GetNodeByName(PatternNodes.CommunityScore), PatternCriteria.CheckCommunityScore);
+            return TryMatchNode(new MatchNodeArg<CommunityScore>
+            {
+                NodeToMatch = node,
+                PatternNode = pattern.GetNodeByName(PatternNodes.CommunityScore),
+                Predicate = new Predicate<CommunityScore>(PatternCriteria.CheckCommunityScore),
+                IncomingEdge = incomingEdge,
+                Pattern = pattern,
+            });
         }
 
-        private bool TryMatchActiveMemebership(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchActiveMemebership(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Membership>(
                 node,
                 pattern,
                 pattern.GetNodeByName(PatternNodes.ActiveMembership2),
                 n => n.IsActive,
-                TryMatchGroup
+                TryMatchGroup,
+                incomingEdge
             );
         }
 
-        private bool TryMatchGroup(INode neighbour, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchGroup(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
-            return TryMatchNode<Group>(neighbour, pattern.GetNodeByName(PatternNodes.Group2), n => true);
+            return TryMatchNode(new MatchNodeArg<Group>
+            {
+                NodeToMatch = node,
+                Pattern = pattern,
+                PatternNode = pattern.GetNodeByName(PatternNodes.Group2),
+                IncomingEdge = incomingEdge,
+                Predicate = n => true,
+            });
         }
 
-        private bool TryMatchActiveMembershipForSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchActiveMembershipForSemesterValuation(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Membership>(
                 node,
                 pattern,
                 pattern.GetNodeByName(PatternNodes.ActiveMembership1),
                 n => n.IsActive,
-                TryMatchGroupForSemesterValuation
+                TryMatchGroupForSemesterValuation,
+                incomingEdge
             );
         }
 
-        private bool TryMatchGroupForSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchGroupForSemesterValuation(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Group>(
                 node,
                 pattern,
                 pattern.GetNodeByName(PatternNodes.Group1),
                 n => true,
-                TryMatchSemesterValuation
+                TryMatchSemesterValuation,
+                incomingEdge
             );
         }
 
-        private bool TryMatchSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchSemesterValuation(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
             return TryMatchNodeWithNext<SemesterValuation>(
                 node,
                 pattern,
                 pattern.GetNodeByName(PatternNodes.SemesterValuation),
                 n => n.Semester.Equals(PatternCriteria.Semester),
-                TryMatchNexSemesterValuation
+                TryMatchNexSemesterValuation,
+                incomingEdge
             );
         }
 
-        private bool TryMatchNexSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
+        private bool TryMatchNexSemesterValuation(INode node, Pattern pattern, IMatchEdge incomingEdge)
         {
-            return TryMatchNode<SemesterValuation>(node, pattern.GetNodeByName(PatternNodes.SemesterValuationNext), n => n.Semester.Equals(PatternCriteria.Semester));
+            return TryMatchNode(new MatchNodeArg<SemesterValuation>
+            {
+                NodeToMatch = node,
+                Pattern = pattern,
+                PatternNode = pattern.GetNodeByName(PatternNodes.SemesterValuationNext),
+                IncomingEdge = incomingEdge,
+                Predicate = n => n.Semester.Equals(PatternCriteria.Semester),
+            });
         }
 
-        private bool TryMatchNodeWithNext<T>(INode node, Pattern pattern, PatternNode patternNode, Predicate<T> predicate, MatcherFunc next) where T: class, INode
+        private bool TryMatchNodeWithNext<T>(INode node, Pattern pattern, PatternNode patternNode, Predicate<T> predicate, MatcherFunc next, IMatchEdge incomingEdge) where T : class, INode
         {
-            if (!TryMatchNode<T>(node, patternNode, predicate))
+            if (!TryMatchNode(new MatchNodeArg<T>(node, patternNode, predicate, incomingEdge, pattern)))
             {
                 return false;
             }
@@ -242,12 +278,19 @@ namespace DMT.VIR.Matcher.Local.Partial
             return isSubpatternMatch;
         }
 
-        private bool TryMatchNode<T>(INode node, PatternNode patternNode, Predicate<T> predicate) where T : class, INode
+        private bool TryMatchNode<T>(MatchNodeArg<T> args) where T : class, INode
         {
-            T typedNode = node as T;
-            if (typedNode != null && !patternNode.IsMatched && predicate(typedNode) && CheckNeighbours(node, patternNode))
+            // handling remote edge
+            if (args.IsRemote) {
+                HandleRemoteNode(args);
+                // returning false, so the local search can be continued undisturbed
+                return false;
+            }
+
+            T typedNode = args.NodeToMatch as T;
+            if (typedNode != null && !args.PatternNode.IsMatched && args.Predicate(typedNode) && CheckNeighbours(args.NodeToMatch, args.PatternNode))
             {
-                patternNode.MatchedNode = node;
+                args.MarkMatch();
                 return true;
             }
 

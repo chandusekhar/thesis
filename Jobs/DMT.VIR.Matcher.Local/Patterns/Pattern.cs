@@ -14,7 +14,6 @@ namespace DMT.VIR.Matcher.Local.Patterns
 {
     public class Pattern : IPattern
     {
-        private Guid id;
         private Dictionary<string, PatternNode> patternNodes;
 
         public bool IsMatched
@@ -23,14 +22,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
             get { return this.patternNodes.Values.All(pn => pn.IsMatched); }
         }
 
-        public Guid Id
-        {
-            get { return this.id; }
-        }
+        public IId CurrentNode { get; set; }
+
+        public string CurrentPatternNodeName { get; set; }
 
         public Pattern()
         {
-            this.id = Guid.NewGuid();
             this.patternNodes = new Dictionary<string, PatternNode>();
         }
 
@@ -112,7 +109,6 @@ namespace DMT.VIR.Matcher.Local.Patterns
         public Pattern Copy()
         {
             var p = new Pattern();
-            p.id = this.id;
             p.patternNodes = patternNodes.Values.Select(pn => pn.Copy()).ToDictionary(pn => pn.Name);
 
             return p;
@@ -122,7 +118,11 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public void Serialize(XmlWriter writer)
         {
-            writer.WriteElementString("Id", this.id.ToString());
+            writer.WriteElementString("CurrentPatternNodeName", this.CurrentPatternNodeName);
+            writer.WriteStartElement("CurrentNode");
+            this.CurrentNode.Serialize(writer);
+            writer.WriteEndElement();
+
             writer.WriteStartElement("PatternNodes");
             foreach (var patternNode in this.patternNodes.Values)
             {
@@ -135,9 +135,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public void Deserialize(XmlReader reader, IContext context)
         {
-            if (reader.Name != "Id") { reader.ReadToFollowing("Id"); }
+            if (reader.Name != "CurrentPatternNodeName") { reader.ReadToFollowing("CurrentPatternNodeName"); }
 
-            this.id = Guid.Parse(reader.ReadElementContentAsString());
+            this.CurrentPatternNodeName = reader.ReadElementContentAsString();
+
+            this.CurrentNode = context.EntityFactory.CreateId();
+            this.CurrentNode.Deserialize(reader, context);
 
             Dictionary<string, PatternNode> nodes = new Dictionary<string, PatternNode>();
             while (reader.ReadToFollowing("PatternNode"))
