@@ -53,6 +53,7 @@
     <Compile Include="VirMatcherJobBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VirMatcherJobFactory.cs" />
+    <Compile Include="Partial\VirPartialMatcherJob.cs" />
     <Compile Include="VirProxyMatcherJob.cs" />
   </ItemGroup>
   <ItemGroup>

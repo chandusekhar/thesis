@@ -20,5 +20,23 @@ namespace DMT.VIR.Matcher.Local.Patterns
                 return new Semester(2012, 2013, Semester.SemesterPeriod.Spring);
             }
         }
+
+        public static bool HasGroupLeader(string[] posts)
+        {
+            foreach (var post in posts)
+            {
+                if (post == GroupLeaderPost || post == ExGroupLeaderPost)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool CheckCommunityScore(CommunityScore cs)
+        {
+            return cs.Score > CommunityScoreThreshold && cs.Semester.Equals(Semester);
+        }
     }
 }

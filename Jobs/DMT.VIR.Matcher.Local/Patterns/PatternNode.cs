@@ -39,6 +39,11 @@ namespace DMT.VIR.Matcher.Local.Patterns
             this.name = name;
         }
 
+        public override string ToString()
+        {
+            return string.Format("PatternNode: {0}, IsMatched: {1}", this.Name, this.IsMatched);
+        }
+
         public override void Serialize(XmlWriter writer)
         {
             base.Serialize(writer);
