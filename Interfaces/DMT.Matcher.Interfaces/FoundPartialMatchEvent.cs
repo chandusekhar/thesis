@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DMT.Core.Interfaces;
+using DMT.Matcher.Data.Interfaces;
 
 namespace DMT.Matcher.Interfaces
 {
@@ -12,9 +13,9 @@ namespace DMT.Matcher.Interfaces
     public class FoundPartialMatchEventArgs : EventArgs
     {
         public IId PartitionId { get; private set; }
-        public IEnumerable<object> Matches { get; private set; }
+        public IEnumerable<IPattern> Matches { get; private set; }
 
-        public FoundPartialMatchEventArgs(IEnumerable<object> matches, IId partitionId)
+        public FoundPartialMatchEventArgs(IEnumerable<IPattern> matches, IId partitionId)
         {
             this.Matches = matches;
             this.PartitionId = partitionId;

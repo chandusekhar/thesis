@@ -14,7 +14,6 @@ namespace DMT.VIR.Matcher.Local.Partial
         public INode NodeToMatch { get; set; }
         public IMatchEdge IncomingEdge { get; set; }
         public Predicate<T> Predicate { get; set; }
-        public Pattern Pattern { get; set; }
         public PatternNode PatternNode { get; set; }
 
         public bool IsRemote
@@ -26,10 +25,9 @@ namespace DMT.VIR.Matcher.Local.Partial
         {
         }
 
-        public MatchNodeArg(INode node, PatternNode patternNode, Predicate<T> predicate, IMatchEdge incomingEdge, Pattern pattern)
+        public MatchNodeArg(INode node, PatternNode patternNode, Predicate<T> predicate, IMatchEdge incomingEdge)
         {
             this.NodeToMatch = node;
-            this.Pattern = pattern;
             this.IncomingEdge = incomingEdge;
             this.PatternNode = patternNode;
             this.Predicate = predicate;

@@ -114,6 +114,11 @@ namespace DMT.VIR.Matcher.Local.Patterns
             return p;
         }
 
+        public void Merge(Pattern match)
+        {
+            throw new NotImplementedException();
+        }
+
         #region ISerializable
 
         public void Serialize(XmlWriter writer)
