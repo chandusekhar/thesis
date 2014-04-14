@@ -16,9 +16,11 @@ namespace DMT.VIR.Matcher.Local.Partial
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private delegate bool MatcherFunc(INode node, Pattern pattern, IMatchEdge incomingEdge);
+
         private IModel model;
         private IMatcherFramework framework;
-        private List<Func<INode, Pattern, bool>> matcherFuncs;
+        private List<MatcherFunc> matcherFuncs;
         private CancellationTokenSource cts;
 
         public string Name
@@ -32,7 +34,7 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         public VirPartialMatcherJob()
         {
-            this.matcherFuncs = new List<Func<INode, Pattern, bool>>
+            this.matcherFuncs = new List<MatcherFunc>
             {
                 TryMatchGroupLeader,
                 TryMatchCommunityScore,
@@ -132,7 +134,7 @@ namespace DMT.VIR.Matcher.Local.Partial
 
                 foreach (var match in this.matcherFuncs)
                 {
-                    if (match(neighbour, pattern))
+                    if (match(neighbour, pattern, edge))
                     {
                         break;
                     }
@@ -149,17 +151,17 @@ namespace DMT.VIR.Matcher.Local.Partial
             return false;
         }
 
-        private bool TryMatchGroupLeader(INode node, Pattern pattern)
+        private bool TryMatchGroupLeader(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNode<Membership>(node, pattern.GetNodeByName(PatternNodes.GroupLeader), n => PatternCriteria.HasGroupLeader(n.Posts));
         }
 
-        private bool TryMatchCommunityScore(INode node, Pattern pattern)
+        private bool TryMatchCommunityScore(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNode<CommunityScore>(node, pattern.GetNodeByName(PatternNodes.CommunityScore), PatternCriteria.CheckCommunityScore);
         }
 
-        private bool TryMatchActiveMemebership(INode node, Pattern pattern)
+        private bool TryMatchActiveMemebership(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Membership>(
                 node,
@@ -170,12 +172,12 @@ namespace DMT.VIR.Matcher.Local.Partial
             );
         }
 
-        private bool TryMatchGroup(INode neighbour, Pattern pattern)
+        private bool TryMatchGroup(INode neighbour, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNode<Group>(neighbour, pattern.GetNodeByName(PatternNodes.Group2), n => true);
         }
 
-        private bool TryMatchActiveMembershipForSemesterValuation(INode node, Pattern pattern)
+        private bool TryMatchActiveMembershipForSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Membership>(
                 node,
@@ -186,7 +188,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             );
         }
 
-        private bool TryMatchGroupForSemesterValuation(INode node, Pattern pattern)
+        private bool TryMatchGroupForSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNodeWithNext<Group>(
                 node,
@@ -197,7 +199,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             );
         }
 
-        private bool TryMatchSemesterValuation(INode node, Pattern pattern)
+        private bool TryMatchSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNodeWithNext<SemesterValuation>(
                 node,
@@ -208,12 +210,12 @@ namespace DMT.VIR.Matcher.Local.Partial
             );
         }
 
-        private bool TryMatchNexSemesterValuation(INode node, Pattern pattern)
+        private bool TryMatchNexSemesterValuation(INode node, Pattern pattern, IEdge incomingEdge)
         {
             return TryMatchNode<SemesterValuation>(node, pattern.GetNodeByName(PatternNodes.SemesterValuationNext), n => n.Semester.Equals(PatternCriteria.Semester));
         }
 
-        private bool TryMatchNodeWithNext<T>(INode node, Pattern pattern, PatternNode patternNode, Predicate<T> predicate, Func<INode, Pattern, bool> next) where T: class, INode
+        private bool TryMatchNodeWithNext<T>(INode node, Pattern pattern, PatternNode patternNode, Predicate<T> predicate, MatcherFunc next) where T: class, INode
         {
             if (!TryMatchNode<T>(node, patternNode, predicate))
             {
@@ -224,7 +226,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             foreach (var edge in node.Edges.Cast<IMatchEdge>())
             {
                 INode neighbour = edge.GetOtherNode(node);
-                if (next(neighbour, pattern))
+                if (next(neighbour, pattern, edge))
                 {
                     isSubpatternMatch = true;
                     break;
