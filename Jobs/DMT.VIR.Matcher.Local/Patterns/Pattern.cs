@@ -109,6 +109,15 @@ namespace DMT.VIR.Matcher.Local.Patterns
             return node.IsMatched;
         }
 
+        public Pattern Copy()
+        {
+            var p = new Pattern();
+            p.id = this.id;
+            p.patternNodes = patternNodes.Values.Select(pn => pn.Copy()).ToDictionary(pn => pn.Name);
+
+            return p;
+        }
+
         #region ISerializable
 
         public void Serialize(XmlWriter writer)

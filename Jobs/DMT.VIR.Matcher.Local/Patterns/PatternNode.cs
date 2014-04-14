@@ -39,6 +39,13 @@ namespace DMT.VIR.Matcher.Local.Patterns
             this.name = name;
         }
 
+        public PatternNode Copy()
+        {
+            var pn = new PatternNode(this.name, this.factory);
+            pn.MatchedNode = this.MatchedNode;
+            return pn;
+        }
+
         public override string ToString()
         {
             return string.Format("PatternNode: {0}, IsMatched: {1}", this.Name, this.IsMatched);
