@@ -55,8 +55,8 @@ namespace DMT.Matcher.Interfaces
         /// Initiate a search for a partial pattern which already has discovered parts
         /// provided by an other matcher job.
         /// </summary>
+        /// <param name="sessionId">an id for the session</param>
         /// <param name="pattern">The partially matched pattern.</param>
-        /// <returns>The matches if any.</returns>
-        IEnumerable<object> FindPartialMatch(IPattern pattern);
+        void FindPartialMatch(Guid sessionId, IPattern pattern);
     }
 }

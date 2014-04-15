@@ -18,19 +18,30 @@ namespace DMT.Matcher.Module
     class MatcherFrameworkLink : IMatcherFramework
     {
         private Dictionary<IId, MatcherInfo> partitionRouting;
+        private Dictionary<Guid, PartialMatchResult> results;
 
         public MatcherFrameworkLink()
         {
             this.partitionRouting = new Dictionary<IId, MatcherInfo>();
         }
 
-        public void BeginFindPartialMatch(IId partitionId, IPattern pattern)
+        public IPartialMatchResult BeginFindPartialMatch(IId partitionId, IPattern pattern)
+        {
+            var matcher = FindMatcher(partitionId);
+            MatcherServiceClient client = new MatcherServiceClient(matcher.Url);
+
+            var res = new PartialMatchResult();
+            results.Add(res.Id, res);
+
+            client.FindPartialMatch(res.Id, pattern);
+
+            return res;
+        }
+
+        public void EndFindPartialMatch(Guid sessionId, IEnumerable<IPattern> matchedPatterns)
         {
             throw new NotImplementedException();
         }
-
-        public event FoundPartialMatchEventHandler FoundPartialMatch;
-
 
         public INode GetNode(IId partitionId, IId nodeId)
         {
@@ -41,16 +52,27 @@ namespace DMT.Matcher.Module
                 return node;
             }
 
+            MatcherInfo matcher = FindMatcher(partitionId);
+            MatcherServiceClient client = new MatcherServiceClient(matcher.Url);
+            return client.GetNode(nodeId);
+        }
+
+        public void ReleasePartialMatchNode(Guid id, IEnumerable<IPattern> patterns)
+        {
+            var res = results[id];
+            res.Matches = patterns;
+            res.Release();
+        }
+
+        private MatcherInfo FindMatcher(IId partitionId)
+        {
             if (!this.partitionRouting.ContainsKey(partitionId))
             {
                 MatcherInfo mi = MatcherModule.Instance.CreatePartitionServiceClient().FindMatcher(partitionId);
                 this.partitionRouting.Add(partitionId, mi);
             }
 
-            MatcherInfo matcher = this.partitionRouting[partitionId];
-
-            MatcherServiceClient client = new MatcherServiceClient(matcher.Url);
-            return client.GetNode(nodeId);
+            return this.partitionRouting[partitionId];
         }
     }
 }

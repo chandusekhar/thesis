@@ -116,7 +116,13 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public void Merge(Pattern match)
         {
-            throw new NotImplementedException();
+            foreach (var matchItem in match.patternNodes)
+            {
+                if (matchItem.Value.IsMatched && !patternNodes[matchItem.Key].IsMatched)
+                {
+                    patternNodes[matchItem.Key].MatchedNode = matchItem.Value.MatchedNode;
+                }
+            }
         }
 
         #region ISerializable

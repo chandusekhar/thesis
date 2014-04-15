@@ -62,7 +62,7 @@ namespace DMT.VIR.Matcher.Local
             this.cancellationTokenSource.Cancel();
         }
 
-        public virtual IEnumerable<object> FindPartialMatch(IPattern pattern)
+        public virtual void FindPartialMatch(Guid sessionId, IPattern pattern)
         {
             throw new NotSupportedException();
         }

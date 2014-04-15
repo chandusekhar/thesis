@@ -71,9 +71,12 @@ namespace DMT.VIR.Matcher.Local.Partial
             this.cts.Cancel();
         }
 
-        public IEnumerable<object> FindPartialMatch(IPattern pattern)
+        public void FindPartialMatch(Guid sessionId, IPattern pattern)
         {
-            throw new NotImplementedException();
+            var p = (Pattern)pattern;
+            var node = this.model.GetNodeDictionary()[p.CurrentNode];
+            var lpm = new LocalOnlyPartialMatch(sessionId, node, p, framework);
+            lpm.StartAsync();
         }
 
         private void Start(CancellationToken ct)

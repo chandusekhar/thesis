@@ -18,6 +18,13 @@ namespace DMT.Matcher.Module
 
         private IMatcherJob job;
 
+        public IMatcherJobFactory JobFactory { get; private set; }
+
+        public IMatcherJob InnerJob
+        {
+            get { return this.job; }
+        }
+
         public Job(JobTypeResult result)
         {
             this.job = InstantiateJob(result.JobFactoryType);
@@ -56,9 +63,9 @@ namespace DMT.Matcher.Module
 
         private IMatcherJob InstantiateJob(Type jobFactoryType)
         {
-            var factory = (IMatcherJobFactory)Activator.CreateInstance(jobFactoryType);
+            this.JobFactory = (IMatcherJobFactory)Activator.CreateInstance(jobFactoryType);
 
-            var job = factory.CreateMatcherJob();
+            var job = this.JobFactory.CreateMatcherJob();
             job.Initialize(new MatcherFrameworkLink());
             logger.Info("Matcher job has been initialized successfully.");
 

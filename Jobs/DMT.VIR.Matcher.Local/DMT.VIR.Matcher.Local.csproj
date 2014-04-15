@@ -45,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Partial\LocalOnlyPartialMatch.cs" />
     <Compile Include="Partial\MatchNodeArg.cs" />
     <Compile Include="Partial\PartialMatch.cs" />
+    <Compile Include="Partial\PartialMatchBase.cs" />
     <Compile Include="Partial\PartialMatchState.cs" />
     <Compile Include="Patterns\PatternCriteria.cs" />
     <Compile Include="Patterns\PatternFactory.cs" />
