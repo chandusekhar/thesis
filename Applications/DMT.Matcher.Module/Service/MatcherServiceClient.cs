@@ -57,20 +57,32 @@ namespace DMT.Matcher.Module.Service
 
         private void SendPartialPattern(string path, IPattern pattern)
         {
-            using (WebClient wc = new WebClient { BaseAddress = this.baseAddress })
-            using (Stream stream = wc.OpenWrite(path, HttpMethod.Post))
-            using (XmlWriter writer = XmlWriter.Create(stream))
+            try
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("Pattern");
-
-                if (pattern != null)
+                using (WebClient wc = new WebClient { BaseAddress = this.baseAddress })
+                using (Stream stream = wc.OpenWrite(path, HttpMethod.Post))
+                using (XmlWriter writer = XmlWriter.Create(stream))
                 {
-                    pattern.Serialize(writer);
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("Pattern");
+
+                    if (pattern != null)
+                    {
+                        pattern.Serialize(writer);
+                    }
+
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (StreamReader r = new StreamReader(ex.Response.GetResponseStream()))
+                {
+                    logger.Error("Error happend during SendPartition: {0}", r.ReadToEnd());
                 }
 
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
+                throw;
             }
         }
     }

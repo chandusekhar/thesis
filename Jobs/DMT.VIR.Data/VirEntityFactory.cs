@@ -23,23 +23,19 @@ namespace DMT.VIR.Data
 
         };
 
-        [Import]
-        private IEntityFactory baseFactory;
-
         public VirEntityFactory()
         {
-            this.baseFactory = this;
         }
 
         public override INode CreateNode(string typeInfo)
         {
             Type t = nodeTypes[typeInfo];
-            return (INode)Activator.CreateInstance(t, this.baseFactory);
+            return (INode)Activator.CreateInstance(t, this);
         }
 
         public override IEdge CreateEdge(INode nodeA, INode nodeB, EdgeDirection direction)
         {
-            return new VirEdge(nodeA, nodeB, direction, this.baseFactory);
+            return new VirEdge(nodeA, nodeB, direction, this);
         }
     }
 }

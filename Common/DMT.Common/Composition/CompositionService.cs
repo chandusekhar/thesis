@@ -141,7 +141,7 @@ namespace DMT.Common.Composition
 
             var defaultCatalogEP = new CatalogExportProvider(new DirectoryCatalog(this.defaultsPath));
 
-            this.container = new CompositionContainer(catalog, defaultCatalogEP);
+            this.container = new CompositionContainer(catalog, CompositionOptions.IsThreadSafe, defaultCatalogEP);
             defaultCatalogEP.SourceProvider = this.container;
 
             this.initialized = true;

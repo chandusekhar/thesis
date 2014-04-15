@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace DMT.Matcher.Module.Service
 {
     class SessionStore
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static SessionStore @default;
         private static readonly object padlock = new object();
 
@@ -30,7 +33,7 @@ namespace DMT.Matcher.Module.Service
             }
         }
 
-        private Dictionary<Guid, Session> sessions;
+        private ConcurrentDictionary<Guid, Session> sessions;
 
         public Session this[Guid id]
         {
@@ -39,19 +42,23 @@ namespace DMT.Matcher.Module.Service
 
         public SessionStore()
         {
-            sessions = new Dictionary<Guid, Session>();
+            sessions = new ConcurrentDictionary<Guid, Session>();
         }
 
         public Session CreateSession(Guid id)
         {
             var sess = new Session();
-            sessions.Add(id, sess);
+            if (!sessions.TryAdd(id, sess))
+            {
+                logger.Error("Could not add {0} id to session store.");
+            }
             return sess;
         }
 
         public bool DeleteSession(Guid id)
         {
-            return sessions.Remove(id);
+            Session s = null;
+            return sessions.TryRemove(id, out s);
         }
     }
 }
