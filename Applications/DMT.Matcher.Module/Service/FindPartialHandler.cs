@@ -8,6 +8,7 @@ using DMT.Common.Rest;
 using DMT.Common.Extensions;
 using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
+using DMT.Common.Composition;
 
 namespace DMT.Matcher.Module.Service
 {
@@ -15,6 +16,11 @@ namespace DMT.Matcher.Module.Service
     {
         [Import]
         IContextFactory contextFactory;
+
+        public FindPartialHandler()
+        {
+            CompositionService.Default.InjectOnce(this);
+        }
 
         public void Handle(Request request, Response response)
         {

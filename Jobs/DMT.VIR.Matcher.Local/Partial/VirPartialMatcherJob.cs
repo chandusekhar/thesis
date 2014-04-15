@@ -75,7 +75,7 @@ namespace DMT.VIR.Matcher.Local.Partial
         {
             var p = (Pattern)pattern;
             var node = this.model.GetNodeDictionary()[p.CurrentNode];
-            var lpm = new LocalOnlyPartialMatch(sessionId, node, p, framework);
+            var lpm = new RemotePartialMatch(sessionId, node, p, framework);
             lpm.StartAsync();
         }
 
@@ -89,7 +89,7 @@ namespace DMT.VIR.Matcher.Local.Partial
 
             foreach (var person in this.model.Nodes.OfType<Person>())
             {
-                var pm = new PartialMatch(person, framework);
+                var pm = new PartialMatch(person, framework, model);
                 pm.MatchFound += ReportMatchFound;
                 pm.MatchNotFound += UnsubscribeFromMatcher;
 

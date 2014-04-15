@@ -58,7 +58,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         /// </summary>
         public void Reset()
         {
-            patternNodes.Values.ForEach(pn => pn.MatchedNode = null);
+            patternNodes.Values.ForEach(pn => pn.Reset());
         }
 
         /// <summary>

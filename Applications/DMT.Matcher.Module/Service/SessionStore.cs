@@ -39,7 +39,7 @@ namespace DMT.Matcher.Module.Service
 
         public SessionStore()
         {
-            
+            sessions = new Dictionary<Guid, Session>();
         }
 
         public Session CreateSession(Guid id)

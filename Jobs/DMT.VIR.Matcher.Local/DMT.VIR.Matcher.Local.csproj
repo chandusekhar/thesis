@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Partial\LocalOnlyPartialMatch.cs" />
+    <Compile Include="Partial\RemotePartialMatch.cs" />
     <Compile Include="Partial\MatchNodeArg.cs" />
     <Compile Include="Partial\PartialMatch.cs" />
     <Compile Include="Partial\PartialMatchBase.cs" />

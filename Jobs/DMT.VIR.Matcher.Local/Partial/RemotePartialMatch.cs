@@ -10,7 +10,7 @@ using DMT.VIR.Matcher.Local.Patterns;
 
 namespace DMT.VIR.Matcher.Local.Partial
 {
-    class LocalOnlyPartialMatch : PartialMatchBase
+    class RemotePartialMatch : PartialMatchBase
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -18,7 +18,12 @@ namespace DMT.VIR.Matcher.Local.Partial
         private INode node;
         private Dictionary<string, MatcherFunc> matcherFuncs;
 
-        public LocalOnlyPartialMatch(Guid sessionId, INode node, Pattern pattern, IMatcherFramework framework)
+        protected override bool IsRemote
+        {
+            get { return true; }
+        }
+
+        public RemotePartialMatch(Guid sessionId, INode node, Pattern pattern, IMatcherFramework framework)
             : base(framework)
         {
             this.sessionId = sessionId;
@@ -58,6 +63,11 @@ namespace DMT.VIR.Matcher.Local.Partial
         {
             // always return false for remote node partial match
             return false;
+        }
+
+        protected override bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next)
+        {
+            throw new NotSupportedException();
         }
     }
 }

@@ -11,27 +11,41 @@ namespace DMT.VIR.Matcher.Local.Partial
 {
     class MatchNodeArg<T> where T : class, INode
     {
-        public INode NodeToMatch { get; set; }
-        public IMatchEdge IncomingEdge { get; set; }
-        public Predicate<T> Predicate { get; set; }
-        public PatternNode PatternNode { get; set; }
+        public INode NodeToMatch { get; private set; }
+        public Predicate<T> Predicate { get; private set; }
+        public PatternNode PatternNode { get; private set; }
+        public bool IsRemote { get; private set; }
+        public IId RemotePartitionId { get; private set; }
 
-        public bool IsRemote
+        public MatchNodeArg(INode node, PatternNode patternNode, Predicate<T> predicate, bool isRemote, IId partitionId)
+            : this(node, patternNode, predicate)
         {
-            get { return this.IncomingEdge.IsRemote; }
-        }
-
-        public MatchNodeArg()
-        {
+            this.IsRemote = isRemote;
+            this.RemotePartitionId = partitionId;
         }
 
         public MatchNodeArg(INode node, PatternNode patternNode, Predicate<T> predicate, IMatchEdge incomingEdge)
+            : this(node, patternNode, predicate)
+        {
+            if (incomingEdge != null)
+            {
+                this.IsRemote = incomingEdge.IsRemote;
+                this.RemotePartitionId = incomingEdge.RemotePartitionId;
+            }
+            else
+            {
+                this.IsRemote = false;
+                this.RemotePartitionId = null;
+            }
+        }
+
+        private MatchNodeArg(INode node, PatternNode patternNode, Predicate<T> predicate)
         {
             this.NodeToMatch = node;
-            this.IncomingEdge = incomingEdge;
             this.PatternNode = patternNode;
             this.Predicate = predicate;
         }
+
 
         public void MarkMatch()
         {

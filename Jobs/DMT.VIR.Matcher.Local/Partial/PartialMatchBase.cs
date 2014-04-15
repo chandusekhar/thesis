@@ -29,6 +29,15 @@ namespace DMT.VIR.Matcher.Local.Partial
             get { return this.framework; }
         }
 
+        /// <summary>
+        /// Determines whether this matcher instance is running a remote or
+        /// a normal match.
+        /// </summary>
+        protected virtual bool IsRemote
+        {
+            get { return false; }
+        }
+
         public PartialMatchBase(IMatcherFramework framework)
         {
             this.framework = framework;
@@ -61,6 +70,13 @@ namespace DMT.VIR.Matcher.Local.Partial
         protected abstract void Start();
 
         protected abstract bool HandleRemoteNode<T>(MatchNodeArg<T> args) where T : class, INode;
+
+        /// <summary>
+        /// This method is called when a remote partial match has returned but
+        /// there was no full match.
+        /// </summary>
+        /// <returns>true of there is a full match</returns>
+        protected abstract bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next);
 
         #region matcher functions
 
@@ -95,24 +111,16 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected bool TryMatchGroupLeader(INode node, IMatchEdge incomingEdge)
         {
-            return TryMatchNode(new MatchNodeArg<Membership>
-            {
-                NodeToMatch = node,
-                PatternNode = pattern.GetNodeByName(PatternNodes.GroupLeader),
-                Predicate = n => PatternCriteria.HasGroupLeader(n.Posts),
-                IncomingEdge = incomingEdge,
-            });
+            return TryMatchNode(new MatchNodeArg<Membership>(node, pattern.GetNodeByName(PatternNodes.GroupLeader), n => PatternCriteria.HasGroupLeader(n.Posts), incomingEdge));
         }
 
         protected bool TryMatchCommunityScore(INode node, IMatchEdge incomingEdge)
         {
-            return TryMatchNode(new MatchNodeArg<CommunityScore>
-            {
-                NodeToMatch = node,
-                PatternNode = pattern.GetNodeByName(PatternNodes.CommunityScore),
-                Predicate = new Predicate<CommunityScore>(PatternCriteria.CheckCommunityScore),
-                IncomingEdge = incomingEdge,
-            });
+            return TryMatchNode(new MatchNodeArg<CommunityScore>(
+                node,
+                pattern.GetNodeByName(PatternNodes.CommunityScore),
+                new Predicate<CommunityScore>(PatternCriteria.CheckCommunityScore),
+                incomingEdge));
         }
 
         protected bool TryMatchActiveMemebership(INode node, IMatchEdge incomingEdge)
@@ -128,13 +136,11 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected bool TryMatchGroup(INode node, IMatchEdge incomingEdge)
         {
-            return TryMatchNode(new MatchNodeArg<Group>
-            {
-                NodeToMatch = node,
-                PatternNode = pattern.GetNodeByName(PatternNodes.Group2),
-                IncomingEdge = incomingEdge,
-                Predicate = n => true,
-            });
+            return TryMatchNode(new MatchNodeArg<Group>(
+                node,
+                pattern.GetNodeByName(PatternNodes.Group2),
+                n => true,
+                incomingEdge));
         }
 
         protected bool TryMatchActiveMembershipForSemesterValuation(INode node, IMatchEdge incomingEdge)
@@ -172,13 +178,11 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected bool TryMatchNextSemesterValuation(INode node, IMatchEdge incomingEdge)
         {
-            return TryMatchNode(new MatchNodeArg<SemesterValuation>
-            {
-                NodeToMatch = node,
-                PatternNode = pattern.GetNodeByName(PatternNodes.SemesterValuationNext),
-                IncomingEdge = incomingEdge,
-                Predicate = n => n.Semester.Equals(PatternCriteria.Semester),
-            });
+            return TryMatchNode(new MatchNodeArg<SemesterValuation>(
+                node,
+                pattern.GetNodeByName(PatternNodes.SemesterValuationNext),
+                n => n.Semester.Equals(PatternCriteria.Semester),
+                incomingEdge));
         }
 
         private bool TryMatchNodeWithNext<T>(INode node, PatternNode patternNode, Predicate<T> predicate, MatcherFunc next, IMatchEdge incomingEdge) where T : class, INode
@@ -189,7 +193,9 @@ namespace DMT.VIR.Matcher.Local.Partial
             }
 
             bool isSubpatternMatch = false;
-            // TODO: a remote edgeket is bele kell venni
+
+            // patternNode.RemoteEdges is only populated when a
+            // remote node returns
             foreach (var edge in node.Edges.Cast<IMatchEdge>())
             {
                 INode neighbour = edge.GetOtherNode(node);
@@ -200,12 +206,17 @@ namespace DMT.VIR.Matcher.Local.Partial
                 }
             }
 
-
-            // TODO: ha remote, akkor ne törölje a pattern
-            if (!isSubpatternMatch)
+            // no match found in local partition -> check remotes as well
+            // but only if this is the initially started matching (not a remote one)
+            if (!isSubpatternMatch && !this.IsRemote)
             {
-                // clear
-                patternNode.MatchedNode = null;
+                isSubpatternMatch = FollowupOnRemoteNode(node, patternNode, next);
+
+                // when no match found clear the pattern node
+                if (!isSubpatternMatch)
+                {
+                    patternNode.Reset();
+                }
             }
 
             return isSubpatternMatch;
@@ -214,7 +225,7 @@ namespace DMT.VIR.Matcher.Local.Partial
         private bool TryMatchNode<T>(MatchNodeArg<T> args) where T : class, INode
         {
             // handling remote edge
-            if (args.IsRemote)
+            if (args.IsRemote && args.NodeToMatch is IRemoteNode)
             {
                 return HandleRemoteNode(args);
             }
@@ -223,6 +234,14 @@ namespace DMT.VIR.Matcher.Local.Partial
             if (typedNode != null && !args.PatternNode.IsMatched && args.Predicate(typedNode) && CheckNeighbours(args.NodeToMatch, args.PatternNode))
             {
                 args.MarkMatch();
+
+                if (this.IsRemote)
+                {
+                    // when searching in a remote partition 
+                    // on match set up pattern node's remote edges
+                    args.PatternNode.CopyRemoteEdgesFrom(typedNode);
+                }
+
                 return true;
             }
 

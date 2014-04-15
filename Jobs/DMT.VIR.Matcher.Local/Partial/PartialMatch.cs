@@ -19,6 +19,7 @@ namespace DMT.VIR.Matcher.Local.Partial
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private Person person;
+        private IModel model;
         private AutoResetEvent signal = new AutoResetEvent(false);
 
         public PartialMatchState State { get; private set; }
@@ -26,11 +27,12 @@ namespace DMT.VIR.Matcher.Local.Partial
         public event MatchFoundEventHandler MatchFound;
         public event MatchNotFoundEventHandler MatchNotFound;
 
-        public PartialMatch(Person person, IMatcherFramework framework)
+        public PartialMatch(Person person, IMatcherFramework framework, IModel model)
             : base(framework)
         {
             this.person = person;
             this.State = PartialMatchState.ReadyToStart;
+            this.model = model;
         }
 
         public void Cancel()
@@ -82,16 +84,31 @@ namespace DMT.VIR.Matcher.Local.Partial
             pattern.CurrentNode = args.NodeToMatch.Id;
             pattern.CurrentPatternNodeName = args.PatternNode.Name;
 
-            var result = Framework.BeginFindPartialMatch(args.IncomingEdge.RemotePartitionId, pattern);
+            var result = Framework.BeginFindPartialMatch(args.RemotePartitionId, pattern);
             this.State = PartialMatchState.Pending;
             result.Wait();
+
+            bool matched = result.MatchedPattern.GetMatchedNodes().Count() > pattern.GetMatchedNodes().Count;
 
             this.pattern.Merge((Pattern)result.MatchedPattern);
 
             this.State = PartialMatchState.Running;
-            // return result.HasMatches;
-            // TODO: determine whether there was a match or not
-            throw new NotImplementedException();
+            return matched;
+        }
+
+        protected override bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next)
+        {
+            foreach (var edge in patternNode.RemoteEdges)
+            {
+                INode n = edge.GetOtherNode(node);
+                // do not double check nodes!
+                if (!model.HashNode(n) && next(n, edge))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void OnMatchFound()
