@@ -16,7 +16,8 @@ namespace DMT.Matcher.Module.Service
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private const string NodesPath = "/nodes";
-        private const string FindPartialPath = "/find_partial";
+        private const string FindPartialPath = "/partial/find";
+        private const string DonePartialPath = "/partial/done";
 
         private string baseAddress;
 
@@ -44,7 +45,18 @@ namespace DMT.Matcher.Module.Service
 
         public void FindPartialMatch(Guid id, IPattern pattern)
         {
-            string path = string.Format("{0}/{1}", FindPartialPath, id);
+            string path = Uri.EscapeUriString(string.Format("{0}/{1}?callback={2}", FindPartialPath, id, MatcherModule.Instance.Info.Url));
+            SendPartialPattern(path, pattern);
+        }
+
+        public void DonePartialMatch(Guid sessionId, IPattern pattern)
+        {
+            string path = string.Format("{0}/{1}", DonePartialPath, sessionId);
+            SendPartialPattern(path, pattern);
+        }
+
+        private void SendPartialPattern(string path, IPattern pattern)
+        {
             using (WebClient wc = new WebClient { BaseAddress = this.baseAddress })
             using (Stream stream = wc.OpenWrite(path, HttpMethod.Post))
             using (XmlWriter writer = XmlWriter.Create(stream))
@@ -52,7 +64,10 @@ namespace DMT.Matcher.Module.Service
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Pattern");
 
-                pattern.Serialize(writer);
+                if (pattern != null)
+                {
+                    pattern.Serialize(writer);
+                }
 
                 writer.WriteEndElement();
                 writer.WriteEndDocument();

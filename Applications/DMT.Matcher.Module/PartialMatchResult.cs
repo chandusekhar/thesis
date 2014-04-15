@@ -15,16 +15,7 @@ namespace DMT.Matcher.Module
 
         public Guid Id { get; private set; }
 
-        public bool HasMatches
-        {
-            get { return this.Matches.Any(); }
-        }
-
-        public IEnumerable<IPattern> Matches
-        {
-            get;
-            set;
-        }
+        public IPattern MatchedPattern { get; set; }
 
         public PartialMatchResult()
         {

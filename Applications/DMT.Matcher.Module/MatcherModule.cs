@@ -47,6 +47,8 @@ namespace DMT.Matcher.Module
 
         public Guid Id { get { return this.id; } }
 
+        public MatcherInfo Info { get; private set; }
+
         internal Job Job
         {
             get { return this.job; }
@@ -132,7 +134,8 @@ namespace DMT.Matcher.Module
             service.Start();
 
             var client = new PartitionBrokerServiceClient(startArgs.PartitionServiceUri);
-            if (!client.RegisterMatcher(new MatcherInfo { Id = this.id, Port = startArgs.Port, Host = GetHost() }))
+            Info = new MatcherInfo { Id = this.id, Port = startArgs.Port, Host = GetHost() };
+            if (!client.RegisterMatcher(Info))
             {
                 logger.Fatal("Could not register with partitioning module. Shutting down.");
                 return;

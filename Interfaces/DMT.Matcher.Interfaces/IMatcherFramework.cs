@@ -31,7 +31,7 @@ namespace DMT.Matcher.Interfaces
         /// </summary>
         /// <param name="sessionId">the id of the session to end</param>
         /// <param name="matchedPatterns">the patterns that were found. empty if no pattern were found</param>
-        void EndFindPartialMatch(Guid sessionId, IEnumerable<IPattern> matchedPatterns);
+        void EndFindPartialMatch(Guid sessionId, IPattern matchedPattern);
 
         /// <summary>
         /// Gets a (remote) node from a given partition.

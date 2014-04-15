@@ -23,6 +23,7 @@ namespace DMT.Matcher.Module
         public MatcherFrameworkLink()
         {
             this.partitionRouting = new Dictionary<IId, MatcherInfo>();
+            this.results = new Dictionary<Guid, PartialMatchResult>();
         }
 
         public IPartialMatchResult BeginFindPartialMatch(IId partitionId, IPattern pattern)
@@ -38,9 +39,13 @@ namespace DMT.Matcher.Module
             return res;
         }
 
-        public void EndFindPartialMatch(Guid sessionId, IEnumerable<IPattern> matchedPatterns)
+        public void EndFindPartialMatch(Guid sessionId, IPattern matchedPattern)
         {
-            throw new NotImplementedException();
+            var session = SessionStore.Deafult[sessionId];
+            MatcherServiceClient client = new MatcherServiceClient(session.Url);
+            client.DonePartialMatch(sessionId, matchedPattern);
+
+            SessionStore.Deafult.DeleteSession(sessionId);
         }
 
         public INode GetNode(IId partitionId, IId nodeId)
@@ -57,10 +62,10 @@ namespace DMT.Matcher.Module
             return client.GetNode(nodeId);
         }
 
-        public void ReleasePartialMatchNode(Guid id, IEnumerable<IPattern> patterns)
+        public void ReleasePartialMatchNode(Guid id, IPattern pattern)
         {
             var res = results[id];
-            res.Matches = patterns;
+            res.MatchedPattern = pattern;
             res.Release();
         }
 

@@ -21,6 +21,9 @@ namespace DMT.Matcher.Module.Service
             var job = MatcherModule.Instance.Job;
             Guid sessionId = request.Params["id"].ParseGuid();
 
+            var session = SessionStore.Deafult.CreateSession(sessionId);
+            session.Url = request.Params["callback"];
+
             using (XmlReader reader = XmlReader.Create(request.Body))
             {
                 // xml structure in DMT.Matcher.Module.Service.MatcherServiceClient#FindPartialMatch

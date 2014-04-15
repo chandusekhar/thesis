@@ -86,14 +86,12 @@ namespace DMT.VIR.Matcher.Local.Partial
             this.State = PartialMatchState.Pending;
             result.Wait();
 
-            if (result.HasMatches)
-            {
-                logger.Debug("Found partial match");
-                this.pattern.Merge((Pattern)result.Matches.First());
-            }
+            this.pattern.Merge((Pattern)result.MatchedPattern);
 
             this.State = PartialMatchState.Running;
-            return result.HasMatches;
+            // return result.HasMatches;
+            // TODO: determine whether there was a match or not
+            throw new NotImplementedException();
         }
 
         private void OnMatchFound()

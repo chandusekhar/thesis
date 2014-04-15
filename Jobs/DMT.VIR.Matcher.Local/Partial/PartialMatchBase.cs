@@ -189,6 +189,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             }
 
             bool isSubpatternMatch = false;
+            // TODO: a remote edgeket is bele kell venni
             foreach (var edge in node.Edges.Cast<IMatchEdge>())
             {
                 INode neighbour = edge.GetOtherNode(node);
@@ -199,6 +200,8 @@ namespace DMT.VIR.Matcher.Local.Partial
                 }
             }
 
+
+            // TODO: ha remote, akkor ne törölje a pattern
             if (!isSubpatternMatch)
             {
                 // clear

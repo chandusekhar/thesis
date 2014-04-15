@@ -18,7 +18,8 @@ namespace DMT.Matcher.Module.Service
             RegisterRoute(HttpMethod.Post, "/start", new StartHandler());
             RegisterRoute(HttpMethod.Post, "/restart", new RestartHandler());
             RegisterRoute(HttpMethod.Post, "/cancel", new CancelHandler());
-            RegisterRoute(HttpMethod.Post, "/find_partial/{id}", new FindPartialHandler());
+            RegisterRoute(HttpMethod.Post, "/partial/find/{id}", new FindPartialHandler());
+            RegisterRoute(HttpMethod.Post, "/partial/done/{id}", new DonePartialHandler());
             RegisterRoute(HttpMethod.Get, "/nodes/{id}", new GetNodeHandler());
         }
     }

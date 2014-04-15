@@ -47,17 +47,11 @@ namespace DMT.VIR.Matcher.Local.Partial
             if (!matcherFuncs.ContainsKey(pattern.CurrentPatternNodeName))
             {
                 logger.Error("Not supported patter node: " + pattern.CurrentPatternNodeName);
-                Framework.EndFindPartialMatch(sessionId, new IPattern[0]);
+                Framework.EndFindPartialMatch(sessionId, null);
             }
 
-            List<IPattern> matchedPatterns = new List<IPattern>();
-
-            if (matcherFuncs[pattern.CurrentPatternNodeName](node, null)) 
-            {
-                matchedPatterns.Add(pattern);
-            }
-
-            Framework.EndFindPartialMatch(sessionId, matchedPatterns);
+            matcherFuncs[pattern.CurrentPatternNodeName](node, null);
+            Framework.EndFindPartialMatch(sessionId, pattern);
         }
 
         protected override bool HandleRemoteNode<T>(MatchNodeArg<T> args)

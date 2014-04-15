@@ -13,9 +13,7 @@ namespace DMT.Matcher.Interfaces
     /// </summary>
     public interface IPartialMatchResult
     {
-        bool HasMatches { get; }
-
-        IEnumerable<IPattern> Matches { get; }
+        IPattern MatchedPattern { get; }
 
         /// <summary>
         /// Wait for completion.
