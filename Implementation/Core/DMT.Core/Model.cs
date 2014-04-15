@@ -32,7 +32,6 @@ namespace DMT.Core
             this.nodesList = new List<INode>(nodes);
         }
 
-
         public IDictionary<IId, INode> GetNodeDictionary()
         {
             if (nodeDic == null)
@@ -41,6 +40,11 @@ namespace DMT.Core
             }
 
             return nodeDic;
+        }
+
+        public bool HashNode(INode node)
+        {
+            return GetNodeDictionary().ContainsKey(node.Id);
         }
     }
 }

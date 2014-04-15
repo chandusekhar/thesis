@@ -27,5 +27,12 @@ namespace DMT.Core.Interfaces
         /// </summary>
         /// <returns></returns>
         IDictionary<IId, INode> GetNodeDictionary();
+
+        /// <summary>
+        /// Determines whether a node is in this model or not.
+        /// </summary>
+        /// <param name="node">the node to check</param>
+        /// <returns>true if node is present in the model</returns>
+        bool HashNode(INode node);
     }
 }
