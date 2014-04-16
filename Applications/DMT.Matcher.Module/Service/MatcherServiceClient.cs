@@ -77,9 +77,12 @@ namespace DMT.Matcher.Module.Service
             }
             catch (WebException ex)
             {
-                using (StreamReader r = new StreamReader(ex.Response.GetResponseStream()))
+                if (ex.Response != null)
                 {
-                    logger.Error("Error happend during SendPartition: {0}", r.ReadToEnd());
+                    using (StreamReader r = new StreamReader(ex.Response.GetResponseStream()))
+                    {
+                        logger.Error("Error happend during SendPartition: {0}", r.ReadToEnd());
+                    }
                 }
 
                 throw;
