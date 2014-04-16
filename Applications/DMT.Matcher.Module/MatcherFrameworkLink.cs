@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,13 +18,13 @@ namespace DMT.Matcher.Module
     /// </summary>
     class MatcherFrameworkLink : IMatcherFramework
     {
-        private Dictionary<IId, MatcherInfo> partitionRouting;
-        private Dictionary<Guid, PartialMatchResult> results;
+        private ConcurrentDictionary<IId, MatcherInfo> partitionRouting;
+        private ConcurrentDictionary<Guid, PartialMatchResult> results;
 
         public MatcherFrameworkLink()
         {
-            this.partitionRouting = new Dictionary<IId, MatcherInfo>();
-            this.results = new Dictionary<Guid, PartialMatchResult>();
+            this.partitionRouting = new ConcurrentDictionary<IId, MatcherInfo>();
+            this.results = new ConcurrentDictionary<Guid, PartialMatchResult>();
         }
 
         public IPartialMatchResult BeginFindPartialMatch(IId partitionId, IPattern pattern)
@@ -32,7 +33,7 @@ namespace DMT.Matcher.Module
             MatcherServiceClient client = new MatcherServiceClient(matcher.Url);
 
             var res = new PartialMatchResult();
-            results.Add(res.Id, res);
+            results.TryAdd(res.Id, res);
 
             client.FindPartialMatch(res.Id, pattern);
 
@@ -64,10 +65,10 @@ namespace DMT.Matcher.Module
 
         public void ReleasePartialMatchNode(Guid id, IPattern pattern)
         {
-            var res = results[id];
+            PartialMatchResult res = null;
+            results.TryRemove(id, out res);
             res.MatchedPattern = pattern;
             res.Release();
-            results.Remove(id);
         }
 
         private MatcherInfo FindMatcher(IId partitionId)
@@ -75,7 +76,7 @@ namespace DMT.Matcher.Module
             if (!this.partitionRouting.ContainsKey(partitionId))
             {
                 MatcherInfo mi = MatcherModule.Instance.CreatePartitionServiceClient().FindMatcher(partitionId);
-                this.partitionRouting.Add(partitionId, mi);
+                this.partitionRouting.TryAdd(partitionId, mi);
             }
 
             return this.partitionRouting[partitionId];
