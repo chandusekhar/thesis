@@ -120,6 +120,11 @@ namespace DMT.VIR.Matcher.Local.Partial
         {
             sender.MatchFound -= ReportMatchFound;
             sender.MatchNotFound -= UnsubscribeFromMatcher;
+
+            lock (this)
+            {
+                this.matchers.Remove(sender);
+            }
         }
 
         private void OnDone(IEnumerable<IPattern> patterns)
