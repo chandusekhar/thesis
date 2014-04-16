@@ -67,6 +67,7 @@ namespace DMT.Matcher.Module
             var res = results[id];
             res.MatchedPattern = pattern;
             res.Release();
+            results.Remove(id);
         }
 
         private MatcherInfo FindMatcher(IId partitionId)
