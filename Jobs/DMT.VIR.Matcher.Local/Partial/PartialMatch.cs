@@ -98,9 +98,10 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected override bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next)
         {
+            System.Diagnostics.Debug.Assert(node.Id.Equals(patternNode.MatchedNode.Id));
             foreach (var edge in patternNode.RemoteEdges)
             {
-                INode n = edge.GetOtherNode(node);
+                INode n = edge.GetOtherNode(patternNode.MatchedNode);
                 // do not double check nodes!
                 if (!model.HashNode(n) && next(n, edge))
                 {
