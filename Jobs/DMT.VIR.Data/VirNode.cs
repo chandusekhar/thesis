@@ -20,6 +20,11 @@ namespace DMT.VIR.Data
 
         }
 
+        public static IEqualityComparer<INode> EqualityComparer()
+        {
+            return new VirNodeComparer();
+        }
+
         public void SortEdges()
         {
             this.edges.Sort(new Comparison<IEdge>(CompareEdgesBasedOnRemoteness));
@@ -50,6 +55,28 @@ namespace DMT.VIR.Data
             }
 
             throw new InvalidOperationException("Cannot decide which edge comes first...");
+        }
+
+        private class VirNodeComparer : IEqualityComparer<INode>
+        {
+            public bool Equals(INode x, INode y)
+            {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+                if ((x == null && y != null) || (x != null && y == null))
+                {
+                    return false;
+                }
+
+                return x.Id.Equals(y.Id);
+            }
+
+            public int GetHashCode(INode obj)
+            {
+                return obj.Id.GetHashCode();
+            }
         }
     }
 }

@@ -23,6 +23,12 @@ namespace DMT.VIR.Matcher.Local.Patterns
             get { return this.MatchedNode != null; }
         }
 
+        /// <summary>
+        /// Indicates whether this match was found in the local or
+        /// in a remote partition.
+        /// </summary>
+        public bool IsRemoteMatch { get; private set; }
+
         public string Name
         {
             get { return this.name; }
@@ -31,6 +37,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         public IEnumerable<IMatchEdge> RemoteEdges
         {
             get { return this.remoteEdgesList; }
+            set { this.remoteEdgesList = new List<IMatchEdge>(value); }
         }
 
         public PatternNode(IEntityFactory factory)
@@ -44,6 +51,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
         {
             this.name = name;
             this.remoteEdgesList = new List<IMatchEdge>();
+            this.IsRemoteMatch = false;
         }
 
         public PatternNode Copy()
@@ -70,17 +78,6 @@ namespace DMT.VIR.Matcher.Local.Patterns
                 MatchedNode.Serialize(writer);
             }
             writer.WriteEndElement();
-
-            // TODO serialize remote edges
-
-            writer.WriteStartElement("RemoteEdges");
-            foreach (var edge in this.remoteEdgesList)
-            {
-                writer.WriteStartElement("RemoteEdge");
-                edge.Serialize(writer);
-                writer.WriteEndElement();
-            }
-            writer.WriteEndElement();
         }
 
         public override void Deserialize(XmlReader reader, IContext context)
@@ -93,17 +90,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
                 var type = reader.GetAttribute("type");
                 this.MatchedNode = this.factory.CreateNode(type);
                 this.MatchedNode.Deserialize(reader.ReadSubtree(), context);
-            }
-
-            if (reader.Name != "RemoteEdges") { reader.ReadToFollowing("RemoteEdges"); }
-            if (!reader.IsEmptyElement)
-            {
-                while (reader.ReadToFollowing("RemoteEdge"))
-                {
-                    IMatchEdge e = (IMatchEdge)context.EntityFactory.CreateEdge();
-                    e.Deserialize(reader, context);
-                    this.remoteEdgesList.Add(e);
-                }
+                context.AddNode(MatchedNode);
             }
         }
 
@@ -122,6 +109,13 @@ namespace DMT.VIR.Matcher.Local.Patterns
         {
             this.MatchedNode = null;
             this.remoteEdgesList.Clear();
+        }
+
+        public void Merge(PatternNode other)
+        {
+            this.MatchedNode = other.MatchedNode;
+            this.RemoteEdges = other.RemoteEdges;
+            this.IsRemoteMatch = true;
         }
     }
 }

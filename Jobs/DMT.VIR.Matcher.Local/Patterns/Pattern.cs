@@ -9,6 +9,7 @@ using DMT.Common.Extensions;
 using DMT.Core.Interfaces;
 using DMT.Core.Interfaces.Serialization;
 using DMT.Matcher.Data.Interfaces;
+using DMT.VIR.Data;
 
 namespace DMT.VIR.Matcher.Local.Patterns
 {
@@ -33,7 +34,7 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public HashSet<INode> GetMatchedNodes()
         {
-            return new HashSet<INode>(this.patternNodes.Values.Where(pn => pn.IsMatched));
+            return new HashSet<INode>(this.patternNodes.Values.Where(pn => pn.IsMatched), VirNode.EqualityComparer());
         }
 
         IEnumerable<INode> IPattern.GetMatchedNodes()
@@ -120,7 +121,8 @@ namespace DMT.VIR.Matcher.Local.Patterns
             {
                 if (matchItem.Value.IsMatched && !patternNodes[matchItem.Key].IsMatched)
                 {
-                    patternNodes[matchItem.Key].MatchedNode = matchItem.Value.MatchedNode;
+                    var pn = patternNodes[matchItem.Key];
+                    pn.Merge(matchItem.Value);
                 }
             }
         }
@@ -142,6 +144,17 @@ namespace DMT.VIR.Matcher.Local.Patterns
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
+
+            // pattern nodes remote edges
+            // serializing remote edges with the node itself will cause collision 
+            writer.WriteStartElement("RemoteEdges");
+            foreach (var edge in this.patternNodes.Values.SelectMany(pn => pn.RemoteEdges).Distinct())
+            {
+                writer.WriteStartElement("RemoteEdge");
+                edge.Serialize(writer);
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
         }
 
         public void Deserialize(XmlReader reader, IContext context)
@@ -153,15 +166,38 @@ namespace DMT.VIR.Matcher.Local.Patterns
             this.CurrentNode = context.EntityFactory.CreateId();
             this.CurrentNode.Deserialize(reader, context);
 
+            if (reader.Name != "PatternNodes") { reader.ReadToFollowing("PatternNodes"); }
+            var subreader = reader.ReadSubtree();
             Dictionary<string, PatternNode> nodes = new Dictionary<string, PatternNode>();
-            while (reader.ReadToFollowing("PatternNode"))
+            while (subreader.ReadToFollowing("PatternNode"))
             {
                 var pn = new PatternNode(context.EntityFactory);
-                pn.Deserialize(reader, context);
+                pn.Deserialize(subreader.ReadSubtree(), context);
                 nodes.Add(pn.Name, pn);
             }
-
             this.patternNodes = nodes;
+
+            List<IMatchEdge> remoteEdges = new List<IMatchEdge>();
+            if (reader.Name != "RemoteEdges") { reader.ReadToFollowing("RemoteEdges"); }
+            subreader = reader.ReadSubtree();
+            while (subreader.ReadToFollowing("RemoteEdge"))
+            {
+                IMatchEdge e = (IMatchEdge)context.EntityFactory.CreateEdge();
+                e.Deserialize(subreader.ReadSubtree(), context);
+                remoteEdges.Add(e);
+            }
+
+            foreach (var pn in this.patternNodes.Values)
+            {
+                if (pn.IsMatched)
+                {
+                    pn.RemoteEdges = remoteEdges.Where(e =>
+                    {
+                        return e.EndA.Id.Equals(pn.MatchedNode.Id)
+                            || e.EndB.Id.Equals(pn.MatchedNode.Id);
+                    });
+                }
+            }
         }
 
         #endregion

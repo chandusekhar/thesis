@@ -65,6 +65,10 @@ namespace DMT.Core.Serialization
 
         public void AddNode(INode node)
         {
+            if (nodes.ContainsKey(node.Id) && System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debugger.Break();
+            }
             nodes.Add(node.Id, node);
         }
     }
