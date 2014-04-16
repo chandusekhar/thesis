@@ -27,6 +27,10 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
         public string CurrentPatternNodeName { get; set; }
 
+        // HACK: this should be in a wrapper object used as a request for remote partial searches
+        // but I'm pretty anxious to get this thing out already.
+        public bool MatchedFullSubpattern { get; set; }
+
         public Pattern()
         {
             this.patternNodes = new Dictionary<string, PatternNode>();
@@ -136,6 +140,8 @@ namespace DMT.VIR.Matcher.Local.Patterns
             this.CurrentNode.Serialize(writer);
             writer.WriteEndElement();
 
+            writer.WriteElementString("MatchedFullSubpattern", this.MatchedFullSubpattern.ToString());
+
             writer.WriteStartElement("PatternNodes");
             foreach (var patternNode in this.patternNodes.Values)
             {
@@ -165,6 +171,8 @@ namespace DMT.VIR.Matcher.Local.Patterns
 
             this.CurrentNode = context.EntityFactory.CreateId();
             this.CurrentNode.Deserialize(reader, context);
+
+            this.MatchedFullSubpattern = bool.Parse(reader.ReadElementContentAsString());
 
             if (reader.Name != "PatternNodes") { reader.ReadToFollowing("PatternNodes"); }
             var subreader = reader.ReadSubtree();

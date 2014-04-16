@@ -77,7 +77,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             this.signal.Set();
         }
 
-        protected override bool HandleRemoteNode<T>(MatchNodeArg<T> args)
+        protected override NodeMatchResult HandleRemoteNode<T>(MatchNodeArg<T> args)
         {
             // prepare pattern for remote partial search
             Pattern pattern = this.pattern.Copy();
@@ -90,10 +90,11 @@ namespace DMT.VIR.Matcher.Local.Partial
 
             bool matched = result.MatchedPattern.GetMatchedNodes().Count() > pattern.GetMatchedNodes().Count;
 
-            this.pattern.Merge((Pattern)result.MatchedPattern);
+            Pattern remotePattern = (Pattern)result.MatchedPattern;
+            this.pattern.Merge(remotePattern);
 
             this.State = PartialMatchState.Running;
-            return matched;
+            return new NodeMatchResult(matched, remotePattern.MatchedFullSubpattern);
         }
 
         protected override bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next)

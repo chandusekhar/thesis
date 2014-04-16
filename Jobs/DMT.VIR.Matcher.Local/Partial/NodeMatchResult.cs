@@ -6,10 +6,21 @@ using System.Threading.Tasks;
 
 namespace DMT.VIR.Matcher.Local.Partial
 {
-    enum NodeMatchResult
+    class NodeMatchResult
     {
-        NoMatch,
-        RemoteMatch,
-        LocalMatch
+        public bool IsMatched { get; private set; }
+        public bool IsFullSubpatternMatched { get; private set; }
+
+        public NodeMatchResult(bool matched)
+            : this(matched, false)
+        {
+
+        }
+
+        public NodeMatchResult(bool matched, bool subpatternfullymatched)
+        {
+            this.IsMatched = matched;
+            this.IsFullSubpatternMatched = subpatternfullymatched;
+        }
     }
 }

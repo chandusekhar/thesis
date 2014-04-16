@@ -69,7 +69,7 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected abstract void Start();
 
-        protected abstract bool HandleRemoteNode<T>(MatchNodeArg<T> args) where T : class, INode;
+        protected abstract NodeMatchResult HandleRemoteNode<T>(MatchNodeArg<T> args) where T : class, INode;
 
         /// <summary>
         /// This method is called when a remote partial match has returned but
@@ -111,7 +111,11 @@ namespace DMT.VIR.Matcher.Local.Partial
 
         protected bool TryMatchGroupLeader(INode node, IMatchEdge incomingEdge)
         {
-            return TryMatchNode(new MatchNodeArg<Membership>(node, pattern.GetNodeByName(PatternNodes.GroupLeader), n => PatternCriteria.HasGroupLeader(n.Posts), incomingEdge));
+            return TryMatchNode(new MatchNodeArg<Membership>(
+                node,
+                pattern.GetNodeByName(PatternNodes.GroupLeader),
+                n => PatternCriteria.HasGroupLeader(n.Posts),
+                incomingEdge)).IsMatched;
         }
 
         protected bool TryMatchCommunityScore(INode node, IMatchEdge incomingEdge)
@@ -120,7 +124,7 @@ namespace DMT.VIR.Matcher.Local.Partial
                 node,
                 pattern.GetNodeByName(PatternNodes.CommunityScore),
                 new Predicate<CommunityScore>(PatternCriteria.CheckCommunityScore),
-                incomingEdge));
+                incomingEdge)).IsMatched;
         }
 
         protected bool TryMatchActiveMemebership(INode node, IMatchEdge incomingEdge)
@@ -140,7 +144,7 @@ namespace DMT.VIR.Matcher.Local.Partial
                 node,
                 pattern.GetNodeByName(PatternNodes.Group2),
                 n => true,
-                incomingEdge));
+                incomingEdge)).IsMatched;
         }
 
         protected bool TryMatchActiveMembershipForSemesterValuation(INode node, IMatchEdge incomingEdge)
@@ -182,14 +186,22 @@ namespace DMT.VIR.Matcher.Local.Partial
                 node,
                 pattern.GetNodeByName(PatternNodes.SemesterValuationNext),
                 n => n.Semester.Equals(PatternCriteria.Semester),
-                incomingEdge));
+                incomingEdge)).IsMatched;
         }
 
         private bool TryMatchNodeWithNext<T>(INode node, PatternNode patternNode, Predicate<T> predicate, MatcherFunc next, IMatchEdge incomingEdge) where T : class, INode
         {
-            if (!TryMatchNode(new MatchNodeArg<T>(node, patternNode, predicate, incomingEdge)))
+            var res = TryMatchNode(new MatchNodeArg<T>(node, patternNode, predicate, incomingEdge));
+            if (!res.IsMatched)
             {
                 return false;
+            }
+
+            // when already matched the whole subpattern, no need to look further
+            // this can happen if returning from a remote match
+            if (res.IsMatched && res.IsFullSubpatternMatched)
+            {
+                return true;
             }
 
             bool isSubpatternMatch = false;
@@ -222,7 +234,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             return isSubpatternMatch;
         }
 
-        private bool TryMatchNode<T>(MatchNodeArg<T> args) where T : class, INode
+        private NodeMatchResult TryMatchNode<T>(MatchNodeArg<T> args) where T : class, INode
         {
             // handling remote edge
             if (args.IsRemote && args.NodeToMatch is IRemoteNode)
@@ -246,10 +258,10 @@ namespace DMT.VIR.Matcher.Local.Partial
                     args.PatternNode.CopyRemoteEdgesFrom(typedNode);
                 }
 
-                return true;
+                return new NodeMatchResult(true);
             }
 
-            return false;
+            return new NodeMatchResult(false);
         }
 
         private bool CheckNeighbours(INode node, PatternNode patternNode)

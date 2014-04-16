@@ -55,14 +55,14 @@ namespace DMT.VIR.Matcher.Local.Partial
                 Framework.EndFindPartialMatch(sessionId, null);
             }
 
-            matcherFuncs[pattern.CurrentPatternNodeName](node, null);
+            pattern.MatchedFullSubpattern = matcherFuncs[pattern.CurrentPatternNodeName](node, null);
             Framework.EndFindPartialMatch(sessionId, pattern);
         }
 
-        protected override bool HandleRemoteNode<T>(MatchNodeArg<T> args)
+        protected override NodeMatchResult HandleRemoteNode<T>(MatchNodeArg<T> args)
         {
             // always return false for remote node partial match
-            return false;
+            return new NodeMatchResult(false);
         }
 
         protected override bool FollowupOnRemoteNode(INode node, PatternNode patternNode, MatcherFunc next)
