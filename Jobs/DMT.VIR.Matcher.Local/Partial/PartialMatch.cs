@@ -111,6 +111,7 @@ namespace DMT.VIR.Matcher.Local.Partial
                 // do not double check nodes!
                 if (!model.HashNode(n) && next(n, edge))
                 {
+                    logger.Trace("Matched node/subpattern in a third partition!");
                     return true;
                 }
             }
