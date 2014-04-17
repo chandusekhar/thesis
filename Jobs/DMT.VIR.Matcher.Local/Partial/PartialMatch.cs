@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DMT.Core.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.VIR.Data;
+using DMT.VIR.Matcher.Local.Diagnostics;
 using DMT.VIR.Matcher.Local.Patterns;
 
 namespace DMT.VIR.Matcher.Local.Partial
@@ -83,10 +84,14 @@ namespace DMT.VIR.Matcher.Local.Partial
             Pattern pattern = this.pattern.Copy();
             pattern.CurrentNode = args.NodeToMatch.Id;
             pattern.CurrentPatternNodeName = args.PatternNode.Name;
-
-            var result = Framework.BeginFindPartialMatch(args.RemotePartitionId, pattern);
             this.State = PartialMatchState.Pending;
-            result.Wait();
+
+            IPartialMatchResult result = null;
+            using (MatcherMetric.RegisterWaitTime("partial remote match"))
+            {
+                result = Framework.BeginFindPartialMatch(args.RemotePartitionId, pattern);
+                result.Wait();
+            }
 
             bool matched = result.MatchedPattern.GetMatchedNodes().Count() > pattern.GetMatchedNodes().Count;
 

@@ -8,6 +8,7 @@ using DMT.Core.Interfaces;
 using DMT.Matcher.Data.Interfaces;
 using DMT.Matcher.Interfaces;
 using DMT.VIR.Data;
+using DMT.VIR.Matcher.Local.Diagnostics;
 using DMT.VIR.Matcher.Local.Patterns;
 
 namespace DMT.VIR.Matcher.Local.Partial
@@ -56,11 +57,18 @@ namespace DMT.VIR.Matcher.Local.Partial
             {
                 try
                 {
-                    Start(cts.Token);
+                    using (MatcherMetric.Deafult.Start())
+                    {
+                        Start(cts.Token);
+                    }
                 }
                 catch (OperationCanceledException)
                 {
                     logger.Info("{0} was cancelled.", this.Name);
+                }
+                finally
+                {
+                    MatcherMetric.Deafult.LogResults();
                 }
             }, cts.Token);
         }

@@ -243,8 +243,8 @@ namespace DMT.VIR.Matcher.Local.Partial
             }
 
             T typedNode = args.NodeToMatch as T;
-            if (typedNode != null 
-                    && !args.PatternNode.IsMatched 
+            if (typedNode != null
+                    && !args.PatternNode.IsMatched
                     && args.Predicate(typedNode)
                     && !this.pattern.GetMatchedNodes().Contains(typedNode)
                     && CheckNeighbours(args.NodeToMatch, args.PatternNode))
