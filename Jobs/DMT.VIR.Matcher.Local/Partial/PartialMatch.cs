@@ -109,7 +109,7 @@ namespace DMT.VIR.Matcher.Local.Partial
             {
                 INode n = edge.GetOtherNode(patternNode.MatchedNode);
                 // do not double check nodes!
-                if (!model.HashNode(n) && next(n, edge))
+                if (!model.HasNode(n) && next(n, edge))
                 {
                     logger.Trace("Matched node/subpattern in a third partition!");
                     return true;

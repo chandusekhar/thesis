@@ -42,7 +42,7 @@ namespace DMT.Core
             return nodeDic;
         }
 
-        public bool HashNode(INode node)
+        public bool HasNode(INode node)
         {
             return GetNodeDictionary().ContainsKey(node.Id);
         }

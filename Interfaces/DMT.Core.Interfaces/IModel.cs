@@ -33,6 +33,6 @@ namespace DMT.Core.Interfaces
         /// </summary>
         /// <param name="node">the node to check</param>
         /// <returns>true if node is present in the model</returns>
-        bool HashNode(INode node);
+        bool HasNode(INode node);
     }
 }
