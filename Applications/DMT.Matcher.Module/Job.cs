@@ -44,6 +44,7 @@ namespace DMT.Matcher.Module
                 throw new JobAlreadyStartedException(string.Format("Job with name {0} has already started.", this.job.Name));
             }
 
+            this.MatcherFramwork.Reset();
             this.job.StartAsync(model, mode);
 
             logger.Info("Matcher job (name: {0}) has been started in {1} mode", this.job.Name, mode);

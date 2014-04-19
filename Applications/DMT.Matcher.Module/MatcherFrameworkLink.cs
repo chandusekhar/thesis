@@ -71,6 +71,11 @@ namespace DMT.Matcher.Module
             res.Release();
         }
 
+        public void Reset()
+        {
+            this.results.Clear();
+        }
+
         private MatcherInfo FindMatcher(IId partitionId)
         {
             if (!this.partitionRouting.ContainsKey(partitionId))
