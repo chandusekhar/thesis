@@ -200,10 +200,11 @@ namespace DMT.VIR.Matcher.Local
                     {
                         continue;
                     }
-                    if (edge.GetOtherNode(ms) is Group)
+                    Group g = ConvertNode<Group>(edge, edge.GetOtherNode(ms));
+                    if (g != null)
                     {
                         // match nodes when there is an available group in the local partition
-                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.Group2, edge.GetOtherNode(ms));
+                        this.pattern.SetMatchedNodeForPatternNode(PatternNodes.Group2, g);
                         this.pattern.SetMatchedNodeForPatternNode(PatternNodes.ActiveMembership2, ms);
                         return true;
                     }
