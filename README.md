@@ -1,74 +1,37 @@
 # Distributed model transformations (DMT)
 
-Thesis project at Budapest University of Technology and Economics. 
+Thesis project at Budapest University of Technology and Economics.
 
 2013, Tamas Michelberger, tomi.michel@gmail.com
 
 ## Overview
 
-What is the goal of the project, etc.
+A proof-of-concept implementation of distributed pattern matching written in C#.
 
-## Project architecture overview
+## Setup and run
 
-Master-slave...
+1. Run `setup-http-permission.ps1` in an elevated power shell terminal
 
-### Sub-modules:
+		$ Set-ExecutionPolicy RemoteSigned
+		# or
+		$ Set-ExecutionPolicy Unrestricted
+		# setup permisson to listen on localhost
+		$ .\setup-http-permission.ps1
 
-Broken into three big subcategories. Complete separation of interface and
-implementation achieved by cutting out the interfaces into separate assemblies.
+2. Open the solution (it is a VS 2012 solution).
+3. Set up nuget to download dependencies during build.
+4. Build the solution.
 
-Interface modules can only reference other interface modules. Implementation
-modules have two categories. One that cannot use anything other than the
-interface and the common library. The other category is for internal usage. Its
-aim is to extend implementation, reuse code, and to support OO features like
-inheritance.
+Before running the application, edit the App.config files for the `DMT.Partition.App` and `DMT.Matcher.App` executables.
 
-To preserve full consistency during dependency injection interfaces that will be
-exported cannot extend other interfaces from other assemblies. For example there
-is an `IPartitionEntityFactory` interface for instantiating partition specific
-entities. If it had extended the `IEntityFactory` it could have caused
-inconsistency when `IEntityFactory` is redefined by a plug-in, but
-`IPartitionEntityFactory` is not.
+To run the application start `DMT.Partition.App`:
 
-#### Interfaces
+	$ DMT.Partition.App.exe
+		-m \path\to\model.xml
+		-j \path\to\DMT\Jobs\DMT.VIR.Matcher.Local\bin\Debug\DMT.VIR.Matcher.Local.dll
+		--mode=FirstOnly
 
-* __DMT.Core.Interfaces__
-	* Shared interfaces between Partition and Matcher.
-	* E.g. `INode`, `IEdge`
-* __DMT.Partition.Interfaces__
-	* Interfaces for partitioning the model-graph.
-	* Extension point: by implementing these interfaces a custom partitioner can be introduced.
-* __DMT.Matcher.Interfaces__
-	* Interfaces for matching and transformation.
-	* It is intended to be a gray-box. There will be some predefined extension point in this assembly which can be used to control the matching and transformation process.
+## Model format
 
-#### Implementation
-
-* __DMT.Core__: implementation for the core interfaces
-* __DMT.Partition.Core__
-	* partial implementation of DMT.Partition.Interface
-	* extends DMT.Core
-	* for internal usage
-* __DMT.Partition__
-	* Default implementation of the partitioner interfaces. It is completely transparent. It only uses interfaces all the instantiation happen though dependency injection.
-* __DMT.Matcher__
-	* Default implementation for the (model) matcher and transformer
-	* Runnable
-* __DMT.Common__: shared utility classes
-
-#### Application
-
-* __DMT.Master.Module__
-	* Master module
-		* Coordinates the matchers.
-		* Initiates the model transformation.
-		* Collects information about the matching process.
-	* (Web interface as UI.)
-	* Contains everything for Master module, but separate so it can be reused in different executable environments (console app, azure worker role, etc)
-* __DMT.Master.App__: merely a facade for DMT.Master.Module, a console application
-* __DMT.Slave.Module__
-	* Slave module
-	* Administrative tasks (communicating between instances, reporting back to master module, etc.).
-* __DMT.Slave.App__:  merely a facade for DMT.Slave.Module, a console application
-
-For more information on submodules see the corresponding README files in the module directories.
+The model is stored in an XML file. The exact format can be seen in the *.xml files under the `test-data` directory.
+vir-model.xml contains all the types of nodes with their properties, but it is **not** a valid model!

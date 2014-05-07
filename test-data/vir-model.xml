@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Model>
+    <Nodes>
+		<Node type="Person">
+			<Id>3157472d-7655-4646-b74f-4ac4c8729e13</Id>
+			<FirstName>John</FirstName>
+			<LastName>Smith</LastName>
+		</Node>
+		<Node type="CommunityScore">
+			<Id>655a9265-136f-42ea-bb8c-c60f1eadf103</Id>
+			<Semester>
+				<FirstYear>1999</FirstYear>
+				<SecondYear>2000</SecondYear>
+				<Period>Spring</Period>
+			</Semester>
+			<Score>5</Score>
+		</Node>
+		<Node type="Group">
+			<Id>4a4e0c13-75d2-4c63-9bcb-a8b6eb39c7f9</Id>
+			<Name>Group1</Name>
+		</Node>
+		<Node type="Membership">
+			<Id>30b4ccd2-7cca-4113-849a-7ec30a1467fb</Id>
+			<Start>2006.07.20. 0:00:00</Start>
+			<End>2006.07.20. 0:00:00</End>
+			<Posts>körvezető:mindenes</Posts>
+		</Node>
+		<Node type="Membership">
+			<Id>30b4ccd1-7cca-4113-849a-7ec30a1467fb</Id>
+			<Start>2006.07.20. 0:00:00</Start>
+			<End>2006.07.20. 0:00:00</End>
+			<Posts>volt körvezető:</Posts>
+		</Node>
+		<Node type="SemesterValuation">
+			<Id>b2b6d7bb-423c-482f-9acd-eec3c3ae4014</Id>
+			<Semester>
+				<FirstYear>2004</FirstYear>
+				<SecondYear>2005</SecondYear>
+				<Period>Autumn</Period>
+			</Semester>
+			<Score>50</Score>
+			<State>ELFOGADVA</State>
+		</Node>
+    </Nodes>
+    <Edges>
+        <Edge>
+            <Id>fcbf2cac-074a-4ff3-b8ab-1c976289f81f</Id>
+            <EndA>5537b137-1a57-4107-bd64-9bf855aea1be</EndA>
+            <EndB>3118c8c9-e83d-4363-a849-b0e13431fbaa</EndB>
+            <Direction>Both</Direction>
+        </Edge>
+        <Edge>
+            <Id>631c3c92-8a58-43cc-be96-72f3714c9a21</Id>
+            <EndA>5537b137-1a57-4107-bd64-9bf855aea1be</EndA>
+            <EndB>644dce7a-4525-40fb-be6e-4c4d277d37e6</EndB>
+            <Direction>Both</Direction>
+        </Edge>
+    </Edges>
+</Model>

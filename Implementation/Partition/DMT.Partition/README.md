@@ -14,16 +14,6 @@ The partitioning process can be split up to three big phases:
 In this higher-level algorithm every phase is separated and visible only by its
 interface, so it can be easily re-implemented and swapped out.
 
-**Warning**
-
-This library only partially implements interfaces from `DMT.Partition.Interfaces`
-library.  It has to be used alongside the `DMT.Core.Partition` lib or any other
-lib that implements  the same feature as the earlier mentioned library.
-Currently these are:
-
-* `ISuperNode`
-* `IPartitionEntityFactory`
-
 Usage
 -----
 
