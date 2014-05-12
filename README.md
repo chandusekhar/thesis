@@ -2,7 +2,7 @@
 
 Thesis project at Budapest University of Technology and Economics.
 
-2013, Tamas Michelberger, tomi.michel@gmail.com
+2013-2014, Tamas Michelberger, tomi.michel@gmail.com
 
 ## Overview
 
