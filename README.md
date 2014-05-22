@@ -2,7 +2,10 @@
 
 Thesis project at Budapest University of Technology and Economics.
 
-2013-2014, Tamas Michelberger, tomi.michel@gmail.com
+2013-2014, Tamas Michelberger, tomi.michel [at] gmail.com
+
+The thesis itself can be found in the [docs](docs/) folder. If you (re)use anything from
+this project, please drop me a line.
 
 ## Overview
 
