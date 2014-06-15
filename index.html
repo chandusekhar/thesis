@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Elosztott modelltranszformációk</title>
+
+		<meta name="description" content="Elosztott modelltranformáció">
+		<meta name="author" content="Tamas Michelberger">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<!-- 1. bevezető -->
+				<section>
+					<h1 style="line-height: 135px;">
+						Modell-transzformáció elosztott futtatása
+					</h1>
+					<h3>Michelberger Tamás</h3>
+					<p>
+						Konzulens: Mezei Gergely
+					</p>
+				</section>
+
+				<!-- 2. modelltranszformáció -->
+				<section>
+					<h1>Modell-transzformáció</h1>
+				</section>
+				<section>
+					<h1>Model = Gráf</h1>
+					<h3>minta keresés = izomorf részgráf keresés</h3>
+					<h3>modell transzformáció = gráf transzformáció</h3>
+				</section>
+
+				<!-- 3. elosztottság -->
+				<section>
+					<h1>Miért elosztott?</h1>
+				</section>
+				<section>
+					<ul>
+						<li>A modellek túl nagyra nőhetnek.</li>
+						<li>Egy-egy csomópont feldolgozása időigényes lehet.</li>
+						<li>Egyetlen gépen a skálázódás limitált.</li>
+					</ul>
+				</section>
+
+				<!-- 4. hogyan lesz elosztott -->
+				<section>
+					<h1>Hogyan lesz elosztott?</h1>
+				</section>
+				<section>
+					<ol>
+						<li>Gráf particionálás (problématér felvágása)</li>
+						<li>Partíciók szétosztása a feldolgozó egységek között</li>
+						<li>Minták keresése</li>
+						<li>Eredmények összegyűjtése</li>
+					</ol>
+				</section>
+
+
+				<!-- 5. gráf particionálás -->
+				<section>
+					<h1>Gráf particionálás</h1>
+				</section>
+				<section>
+					<h3>Három lépés</h3>
+					<ol>
+						<li>csomópontok összehúzása</li>
+						<li>partícionálás</li>
+						<li>finomítás</li>
+					</ol>
+				</section>
+
+				<!-- 6. elosztott mintaillesztés -->
+				<section>
+					<h1>Elosztott mintaillesztés</h1>
+				</section>
+				<section>
+					<section>
+						<h1>Három stratégia</h1>
+					</section>
+					<section>
+						<h3>Lokális keresés</h3>
+						<img src="img/6-5-local-matcher.png">
+					</section>
+					<section>
+						<h3>Proxy alapú keresés</h3>
+						<img src="img/6-7-proxy-matcher-ver1.png">
+					</section>
+					<section>
+						<h3>Részelges keresés a partíciókban</h3>
+						<img src="img/6-8-partial-match-1.png">
+					</section>
+				</section>
+
+				<!-- 7. implementáció -->
+				<section>
+					<h1>Implementáció</h1>
+				</section>
+				<section>
+					<ul>
+						<li>Önálló alkalmazás, nem integrálódik már meglévő eszközökkel</li>
+						<li>Jól definiált API-n keresztül érhető el</li>
+						<li>Architektúra céljai: kiterjeszthetőség, pluginnezhetőség</li>
+						<li>Kommunikáció a feldolgozó egységek között REST interfészen keresztül (HTTP)</li>
+					</ul>
+				</section>
+
+				<!-- 8. eredmények -->
+				<section><h1>Eredmények</h1></section>
+				<section>
+					<p>Futtatás egy gépen (10 ms-os késleltetéssel):</p>
+					<pre><code data-trim>
+Sum wait time for remote matches: 0,00 s
+Elapsed time for the whole matching: 618,50 s
+0 % of the time was spent on waiting for remote matches to finish.
+					</code></pre>
+
+				<p>Elosztott futtatás (2 partíció, 10 ms késleltetés):</p>
+				<pre><code data-trim>
+Sum wait time for remote matches: 329,80 s
+Elapsed time for the whole matching: 530,33 s
+62,18 % of the time was spent on waiting for remote matches to finish.
+				</code></pre>
+				</section>
+
+				<!-- 9. kérdések & válaszok -->
+				<section>
+					<h1>Köszönöm a figyelmet!</h1>
+					<h3>Kérdések?</h3>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
